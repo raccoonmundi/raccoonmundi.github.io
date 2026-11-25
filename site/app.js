@@ -37,7 +37,8 @@
       contestadoKm: function (km) { return km + ' km² contested (grey zone)'; },
       variacao: function (v, d) { return (v > 0 ? '+' : v < 0 ? '−' : '±') + num(Math.abs(v)) + ' km² occupied since ' + d; },
       fonteGuerra: function (d) { return 'DeepStateMap, ' + d + '. Includes Crimea and the parts of Donetsk and Luhansk occupied since 2014.'; },
-      dicaArea: 'click for news',
+      dicaArea: 'click for news', quemDisputa: 'Disputed by', emGuerra: 'At war', quemControla: 'Who controls it', porque: 'Why',
+      disputasDoPais: 'Territorial disputes involving this country',
       ocupacaoUA: function (d) { return 'Part of the territory is under Russian military occupation, according to DeepStateMap (Ukrainian front-line mapping project) on ' + d + '.'; },
       creditoGuerra: 'Occupied areas: ',
       agora: 'just now', ha: function (n, u) { return n + ' ' + u + ' ago'; }, u: { m: 'min', h: 'h', d: 'd' },
@@ -74,7 +75,8 @@
       contestadoKm: function (km) { return km + ' km² em zona contestada'; },
       variacao: function (v, d) { return (v > 0 ? '+' : v < 0 ? '−' : '±') + num(Math.abs(v)) + ' km² ocupados desde ' + d; },
       fonteGuerra: function (d) { return 'DeepStateMap, ' + d + '. Inclui a Crimeia e as partes de Donetsk e Luhansk ocupadas desde 2014.'; },
-      dicaArea: 'clique para ver as notícias',
+      dicaArea: 'clique para ver as notícias', quemDisputa: 'Quem disputa', emGuerra: 'Em guerra', quemControla: 'Quem controla hoje', porque: 'Por quê',
+      disputasDoPais: 'Disputas territoriais envolvendo o país',
       ocupacaoUA: function (d) { return 'Parte do território está sob ocupação militar russa, segundo o DeepStateMap (projeto ucraniano de mapeamento da linha de frente) em ' + d + '.'; },
       creditoGuerra: 'Áreas ocupadas: ',
       agora: 'agora', ha: function (n, u) { return 'há ' + n + ' ' + u; }, u: { m: 'min', h: 'h', d: 'd' },
@@ -157,6 +159,7 @@
   function nomePais(iso) { var p = D.paises[iso]; return p ? (estado.l === 'pt' ? p.nome_pt : p.nome_en) : iso; }
   function nomeRegiao(id) { var r = D.macroPorId[id]; return r ? (estado.l === 'pt' ? r.nome_pt : r.nome_en) : id; }
   function nomeArea(a) { return estado.l === 'pt' ? a.nome_pt : a.nome_en; }
+  function campoArea(a, k) { return estado.l === 'pt' ? a[k + '_pt'] : (a[k + '_en'] || a[k + '_pt']); }
   function itensDaArea(id) { // notícias que citam o lugar e, numa guerra, as do tema em foco ligado a ela
     var tema = (D.areaPorId[id] || {}).tema;
     return D.itens.filter(function (i) { return ((i.areas || []).indexOf(id) >= 0 || (tema && (i.temas || []).indexOf(tema) >= 0)) && noPeriodo(i); })
@@ -314,7 +317,8 @@
   function ligarArea(f, layer) {
     var a = D.areaPorId[f.properties.a]; if (!a) return;
     layer.on('mouseover', function () {
-      layer.bindTooltip(nomeArea(a) + ' · ' + t('dicaArea'), { sticky: true, className: 'rotulo-mapa', direction: 'top', offset: [0, -8] }).openTooltip();
+      var dica = el('div', {}, [el('strong', { text: nomeArea(a) }), el('br'), campoArea(a, 'quem') || '', el('br'), el('span', { class: 'dica', text: t('dicaArea') })]);
+      layer.bindTooltip(dica, { sticky: true, className: 'rotulo-mapa', direction: 'top', offset: [0, -8] }).openTooltip();
       layer.setStyle({ weight: 2.4, opacity: 1 });
     });
     layer.on('mouseout', function () { layer.unbindTooltip(); layer.setStyle(f.properties.tipo ? estiloGuerra(f) : estiloDisputa()); });
@@ -585,11 +589,11 @@
       if (G.guerraMeta && s.id === 'UA') add(el('p', { class: 'aviso guerra' }, [t('ocupacaoUA')(dataCurta(G.guerraMeta.data)) + ' ',
         el('a', { href: '#a=ucrania', text: t('verArea') + ' →', on: { click: function (e) { e.preventDefault(); selecionar({ tipo: 'a', id: 'ucrania' }, true); } } })]));
       var dele = D.areas.filter(function (a) { return (a.paises || []).indexOf(s.id) >= 0 && (a.id !== 'ucrania' || s.id !== 'UA'); });
-      if (dele.length) {
-        add(el('div', { class: 'secao', text: t('areasDoPais') }));
-        add(el('div', { class: 'lista-paises areas' }, dele.map(function (a) {
-          return el('button', { type: 'button', class: 'area-' + a.tipo, on: { click: function () { selecionar({ tipo: 'a', id: a.id }, true); } } }, [nomeArea(a)]);
-        })));
+      if (dele.length) { // aviso de disputa, como o de guerra: qual área e quem disputa
+        add(el('div', { class: 'aviso disputa' }, [el('div', { class: 'titulo-aviso', text: t('disputasDoPais') })].concat(dele.map(function (a) {
+          return el('p', {}, [el('a', { href: '#a=' + a.id, text: nomeArea(a), on: { click: function (e) { e.preventDefault(); selecionar({ tipo: 'a', id: a.id }, true); } } }),
+            ' · ' + campoArea(a, 'quem')]);
+        }))));
       }
       if (p.ver !== undefined) {
         add(el('p', { class: 'aviso' }, p.ver ? [t('ver'), el('a', { href: '#p=' + p.ver, text: nomePais(p.ver), on: { click: function (e) { e.preventDefault(); selecionar({ tipo: 'p', id: p.ver }, true); } } }), '.'] : [t('semFonte')]));
@@ -604,8 +608,13 @@
       add(el('button', { type: 'button', class: 'voltar', text: t('voltar')(t('mundo')), on: { click: function () { selecionar(null, false); } } }));
       add(el('div', { class: 'tipo', text: ar.tipo === 'guerra' ? t('areaGuerra') : t('areaDisputa') }));
       add(el('h2', { text: nomeArea(ar) }));
-      add(el('p', { class: 'contexto', text: estado.l === 'pt' ? ar.contexto_pt : ar.contexto_en }));
+      add(el('dl', { class: 'ficha-area ' + ar.tipo }, [
+        el('dt', { text: ar.tipo === 'guerra' ? t('emGuerra') : t('quemDisputa') }), el('dd', { class: 'lados', text: campoArea(ar, 'quem') }),
+        el('dt', { text: t('quemControla') }), el('dd', { text: campoArea(ar, 'controle') }),
+        el('dt', { text: t('porque') }), el('dd', { text: campoArea(ar, 'motivo') })
+      ]));
       if (ar.deepstate && G.guerraMeta && G.guerraMeta.ocupado_km2) add(dadosGuerra(G.guerraMeta));
+      if (campoArea(ar, 'nota')) add(el('p', { class: 'nota-area', text: campoArea(ar, 'nota') }));
       add(el('div', { class: 'secao', text: t('paisesEnvolvidos') }));
       add(el('div', { class: 'lista-paises' }, (ar.paises || []).filter(function (i) { return D.paises[i]; }).map(botaoPais)));
       add(el('div', { class: 'secao', text: t('noticiasArea') }));

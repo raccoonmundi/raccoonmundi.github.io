@@ -179,6 +179,16 @@ button { font: inherit; color: inherit; }
 .lista-paises button .n { color: var(--tinta-3); margin-left: 4px; }
 .lista-paises.areas button { background: var(--superficie); border-color: var(--borda); }
 .lista-paises.areas button.area-guerra { border-color: var(--aviso-guerra); color: var(--aviso-guerra); }
+.ficha-area { margin: 6px 0 10px; font-size: 13.5px; line-height: 1.45; }
+.ficha-area dt { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-3); margin-top: 8px; }
+.ficha-area dd { margin: 2px 0 0; }
+.ficha-area dd.lados { font-size: 16px; font-weight: 700; }
+.ficha-area.guerra dd.lados { color: var(--aviso-guerra); }
+.nota-area { font-size: 12px; color: var(--tinta-3); margin: 4px 0 8px; }
+.painel .aviso.disputa { border-left-color: var(--tinta-2); background: var(--realce); }
+.painel .aviso.disputa .titulo-aviso { font-weight: 700; margin-bottom: 2px; }
+.painel .aviso.disputa p { margin: 3px 0; }
+.leaflet-tooltip.rotulo-mapa .dica { font-weight: 400; opacity: .75; }
 .dados-guerra { border: 1px solid var(--linha); border-left: 3px solid var(--aviso-guerra); border-radius: 6px; padding: 8px 10px; margin: 4px 0 8px; font-size: 13px; }
 .dados-guerra p { margin: 2px 0; }
 .dados-guerra .grande { font-size: 15px; font-weight: 700; }
