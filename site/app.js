@@ -104,11 +104,13 @@
     isos.forEach(function (iso) { (D.porPais[iso] || []).forEach(function (it) { if (noPeriodo(it)) out.push(it); }); });
     return out.sort(function (a, b) { return b.visto_em < a.visto_em ? -1 : 1; });
   }
-  function variar(itens, limite, maxPorPais) { // evita que um país domine a lista da região
-    var cont = {}, out = [];
+  function variar(itens, limite, maxPorPais) { // evita repetição e que um país domine a lista
+    var cont = {}, vistos = {}, out = [];
     for (var i = 0; i < itens.length && out.length < limite; i++) {
+      var k = (itens[i].titulo_original || '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+      if (vistos[k]) continue;
       var p = itens[i].pais; cont[p] = (cont[p] || 0) + 1;
-      if (cont[p] <= maxPorPais) out.push(itens[i]);
+      if (cont[p] <= maxPorPais) { out.push(itens[i]); vistos[k] = 1; }
     }
     return out;
   }
@@ -330,7 +332,7 @@
         add(el('p', { class: 'aviso', text: t('semColeta') }));
       } else {
         add(el('p', { class: 'resumo', text: resumo(itp) }));
-        lista(itp.slice(0, 10)).forEach(add);
+        lista(variar(itp, 10, 10)).forEach(add);
       }
     } else if (s.tipo === 't') {
       var tm = D.temaPorId[s.id];

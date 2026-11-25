@@ -237,21 +237,24 @@ def preparar_temas(temas):
     for tm in temas:
         if tm.get("ativo") is False:
             continue
-        grupos = [[t.lower() for t in g] for g in tm.get("nomes", []) if g]
+        # cada nome casa no começo de palavra: "iran" pega "iranian", mas não "piranha"
+        grupos = [[re.compile(r"(?<!\w)" + re.escape(t.lower())) for t in g] for g in tm.get("nomes", []) if g]
         if grupos:
             prontos.append({"id": tm["id"], "paises": set(tm.get("paises", [])), "grupos": grupos,
                             "temas_gdelt": set(tm.get("temas_gdelt", []))})
     return prontos
 
 
-def temas_do_registro(iso, texto, temas_reg, prontos):
+def temas_do_registro(iso, texto, temas_reg, prontos, pontos):
     out = []
+    if pontos < 2:  # tema em foco exige matéria claramente geopolítica
+        return out
     for tm in prontos:
         if tm["paises"] and iso not in tm["paises"]:
             continue
         if tm["temas_gdelt"] and not (tm["temas_gdelt"] & temas_reg):
             continue
-        if all(any(t in texto for t in g) for g in tm["grupos"]):
+        if all(any(t.search(texto) for t in g) for g in tm["grupos"]):
             out.append(tm["id"])
     return out
 
@@ -447,7 +450,7 @@ def main():
                     "veiculo": dominio, "idioma": nome_idioma, "lc": lc, "visto_em": quando, "url": url,
                     "midia_estatal": any(dominio == e or dominio.endswith("." + e) for e in estatal),
                     "midia_exilio": any(dominio == e or dominio.endswith("." + e) for e in exilio),
-                    "temas": temas_do_registro(iso, titulo.lower() + " | " + nomes_do_registro(c), temas_reg, temas),
+                    "temas": temas_do_registro(iso, titulo.lower() + " | " + nomes_do_registro(c), temas_reg, temas, pontos),
                     "pontos": pontos,
                 }
 
