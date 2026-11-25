@@ -157,8 +157,9 @@
   function nomePais(iso) { var p = D.paises[iso]; return p ? (estado.l === 'pt' ? p.nome_pt : p.nome_en) : iso; }
   function nomeRegiao(id) { var r = D.macroPorId[id]; return r ? (estado.l === 'pt' ? r.nome_pt : r.nome_en) : id; }
   function nomeArea(a) { return estado.l === 'pt' ? a.nome_pt : a.nome_en; }
-  function itensDaArea(id) {
-    return D.itens.filter(function (i) { return (i.areas || []).indexOf(id) >= 0 && noPeriodo(i); })
+  function itensDaArea(id) { // notícias que citam o lugar e, numa guerra, as do tema em foco ligado a ela
+    var tema = (D.areaPorId[id] || {}).tema;
+    return D.itens.filter(function (i) { return ((i.areas || []).indexOf(id) >= 0 || (tema && (i.temas || []).indexOf(tema) >= 0)) && noPeriodo(i); })
       .sort(function (a, b) { return b.visto_em < a.visto_em ? -1 : 1; });
   }
   function nomeTema(tm) { return estado.l === 'pt' ? (tm.nome_pt || tm.nome_en) : (tm.nome_en || tm.nome_pt); }

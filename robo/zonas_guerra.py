@@ -96,10 +96,19 @@ def mapa_de_uma_semana_atras(sessao):
         anteriores = [i for i in ids if i <= alvo]
         if not anteriores:
             return None
-        r = sessao.get(f"https://deepstatemap.live/api/history/{anteriores[-1]}", timeout=90)
-        r.raise_for_status()
-        d = r.json()
-        return d if (d.get("map") or {}).get("features") else None
+        for url in (f"https://deepstatemap.live/api/history/{anteriores[-1]}/geojson",
+                    f"https://deepstatemap.live/api/history/{anteriores[-1]}"):
+            r = sessao.get(url, timeout=90)
+            if r.status_code == 404:
+                continue
+            r.raise_for_status()
+            d = r.json()
+            if d.get("type") == "FeatureCollection":  # o endpoint /geojson devolve o mapa direto
+                d = {"id": anteriores[-1], "map": d}
+            if (d.get("map") or {}).get("features"):
+                return d
+        print("::warning::mapa de 7 dias atrás não encontrado no DeepStateMap; a variação usa o histórico guardado")
+        return None
     except Exception as e:  # noqa: BLE001
         print(f"::warning::mapa de 7 dias atrás indisponível ({e}); a variação usa o histórico guardado")
         return None
