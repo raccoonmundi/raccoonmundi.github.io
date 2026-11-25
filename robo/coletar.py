@@ -275,6 +275,25 @@ def temas_do_registro(iso, texto, temas_reg, prontos, pontos):
     return out
 
 
+# ---------------------------------------------------------------- áreas em guerra ou disputadas
+def preparar_areas(areas):
+    """Cada área tem uma lista de lugares; a matéria entra na área se citar um deles."""
+    return [{"id": a["id"], "nomes": [re.compile(r"(?<!\w)" + re.escape(n.lower())) for n in a.get("nomes", [])]}
+            for a in areas if a.get("nomes")]
+
+
+def areas_do_texto(texto, prontas):
+    return [a["id"] for a in prontas if any(n.search(texto) for n in a["nomes"])]
+
+
+def conferir_areas_pelo_titulo(itens, prontas):
+    """Depois da tradução, a área só fica se o título (em inglês ou original) citar um dos lugares."""
+    por_id = {a["id"]: a for a in prontas}
+    for it in itens:
+        texto = ((it.get("titulo_en") or "") + " | " + it["titulo_original"]).lower()
+        it["areas"] = [a for a in it.get("areas", []) if a in por_id and any(n.search(texto) for n in por_id[a]["nomes"])]
+
+
 # ---------------------------------------------------------------- tradução
 def traduzir(itens, anteriores, log):
     for it in itens:
@@ -374,6 +393,7 @@ def resumo_markdown(saida, extra, segundos):
         linhas.append(f"| {iso} | {r['candidatas']} | {saida['volume'].get(iso, 0)} | {r['no_mapa']} | "
                       f"{', '.join(r['idiomas'])} | {', '.join(r['veiculos'])} |")
     linhas += ["", "**Temas em foco:** " + (", ".join(f"{k}: {v}" for k, v in extra["temas"].items()) or "nenhuma matéria")]
+    linhas += ["", "**Áreas em guerra ou disputadas:** " + (", ".join(f"{k}: {v}" for k, v in extra.get("areas", {}).items()) or "nenhuma matéria")]
     if extra.get("traducao"):
         linhas += ["", f"**Tradução:** {json.dumps(extra['traducao'], ensure_ascii=False)}"]
     return "\n".join(linhas) + "\n"
@@ -393,6 +413,7 @@ def main():
     cfg = json.load(open(os.path.join(RAIZ, "robo", "config.json"), encoding="utf-8"))
     paises = carregar("paises.json", {})
     temas = preparar_temas(carregar("temas.json", []))
+    areas = preparar_areas(carregar("areas.json", []))
     anterior = carregar("noticias.json", {})
     anteriores = {i["id"]: i for i in anterior.get("itens", [])}
 
@@ -461,12 +482,14 @@ def main():
                 id_ = hashlib.sha1(url.encode("utf-8")).hexdigest()[:12]
                 if id_ in candidatas:
                     continue
+                texto_nomes = titulo.lower() + " | " + nomes_do_registro(c)
                 candidatas[id_] = {
                     "id": id_, "pais": iso, "titulo_original": titulo, "titulo_en": None, "titulo_pt": None,
                     "veiculo": dominio, "idioma": nome_idioma, "lc": lc, "visto_em": quando, "url": url,
                     "midia_estatal": any(dominio == e or dominio.endswith("." + e) for e in estatal),
                     "midia_exilio": any(dominio == e or dominio.endswith("." + e) for e in exilio),
-                    "temas": temas_do_registro(iso, titulo.lower() + " | " + nomes_do_registro(c), temas_reg, temas, pontos),
+                    "temas": temas_do_registro(iso, texto_nomes, temas_reg, temas, pontos),
+                    "areas": areas_do_texto(texto_nomes, areas) if pontos >= 2 else [],
                     "pontos": pontos,
                 }
 
@@ -479,7 +502,8 @@ def main():
         if pais_de(dom) != it["pais"] or any(dom == b or dom.endswith("." + b) for b in bloqueio):
             continue  # correções de país ou bloqueios novos valem também para o histórico
         candidatas[id_] = dict(it, titulo_original=limpar_titulo(it["titulo_original"], dom), midia_estatal=any(dom == e or dom.endswith("." + e) for e in estatal),
-                               midia_exilio=any(dom == e or dom.endswith("." + e) for e in exilio))
+                               midia_exilio=any(dom == e or dom.endswith("." + e) for e in exilio), areas=it.get("areas", []))
+        candidatas[id_].pop("extra_area", None)
     por_pais = {}
     for it in candidatas.values():
         if ler_iso(it["visto_em"]) >= limite:
@@ -506,6 +530,24 @@ def main():
                           "idiomas": sorted({i["idioma"] for i in escolhidos}),
                           "veiculos": [v for v, _ in sorted(veic.items(), key=lambda x: -x[1])[:4]]}
 
+    # 3b. notícias sobre as áreas em guerra ou disputadas, de qualquer país coletado (além do limite por país)
+    no_mapa = {i["id"] for i in itens}
+    for ar in areas:
+        lst = sorted((it for it in candidatas.values() if ar["id"] in it.get("areas", []) and ler_iso(it["visto_em"]) >= limite),
+                     key=lambda x: x["visto_em"], reverse=True)
+        vistos = {chave_titulo(i["titulo_original"]) for i in itens if ar["id"] in i.get("areas", [])}
+        for it in lst:
+            if len(vistos) >= cfg.get("max_por_area", 10):
+                break
+            k = chave_titulo(it["titulo_original"])
+            if k in vistos:
+                continue
+            vistos.add(k)
+            if it["id"] not in no_mapa:
+                it["extra_area"] = True
+                itens.append(it)
+                no_mapa.add(it["id"])
+
     # 4. volume das últimas 24 h: soma das contagens por arquivo de 15 min, guardadas entre execuções
     contagens = {k: v for k, v in anterior.get("contagens", {}).items()
                  if ler_carimbo(k) >= t_agora - dt.timedelta(hours=24)}
@@ -527,6 +569,13 @@ def main():
         trad = traduzir(itens, anteriores, log)
 
     conferir_temas_pelo_titulo(itens, temas)
+    conferir_areas_pelo_titulo(itens, areas)
+    itens = [i for i in itens if not (i.get("extra_area") and not i["areas"])]  # entrou só pela área e o título não a cita
+    areas_rel = {}
+    for it in itens:
+        it.pop("extra_area", None)
+        for a in it["areas"]:
+            areas_rel[a] = areas_rel.get(a, 0) + 1
     temas_rel = {}
     for it in itens:
         for t in it["temas"]:
@@ -544,7 +593,7 @@ def main():
         "contagens": contagens,
         "itens": itens,
     }
-    extra = {"arquivos": n_arquivos, "registros": n_registros, "temas": temas_rel, "traducao": trad}
+    extra = {"arquivos": n_arquivos, "registros": n_registros, "temas": temas_rel, "areas": areas_rel, "traducao": trad}
     md = resumo_markdown(saida, extra, time.time() - inicio)
     if n_arquivos or anteriores:  # sem arquivo novo, regrava o histórico com as correções atuais
         with open(os.path.join(DADOS, "noticias.json"), "w", encoding="utf-8") as f:

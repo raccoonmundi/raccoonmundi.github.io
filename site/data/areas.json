@@ -1,0 +1,429 @@
+[
+ {
+  "id": "ucrania",
+  "tipo": "guerra",
+  "deepstate": "russia-ucrania",
+  "nome_pt": "Ocupação russa na Ucrânia",
+  "nome_en": "Russian occupation of Ukraine",
+  "contexto_pt": "A Rússia ocupa a Crimeia desde 2014 e, desde a invasão em larga escala de fevereiro de 2022, partes do leste e do sul da Ucrânia. As áreas hachuradas seguem o DeepStateMap e são atualizadas pelo robô a cada coleta.",
+  "contexto_en": "Russia has occupied Crimea since 2014 and, since the full-scale invasion of February 2022, parts of eastern and southern Ukraine. The hatched areas follow DeepStateMap and are refreshed by the robot on every run.",
+  "paises": [
+   "UA",
+   "RU"
+  ],
+  "ne": [
+   "Crimean Peninsula",
+   "Donetsk People's Republic",
+   "Luhansk People's Republic"
+  ],
+  "nomes": [
+   "crimea",
+   "sevastopol",
+   "donetsk",
+   "donbas",
+   "donbass",
+   "luhansk",
+   "lugansk",
+   "zaporizhzhia",
+   "zaporizhia",
+   "zaporozhye",
+   "kherson",
+   "mariupol",
+   "melitopol",
+   "berdiansk",
+   "berdyansk",
+   "enerhodar",
+   "bakhmut",
+   "avdiivka",
+   "pokrovsk",
+   "myrnohrad",
+   "kostiantynivka",
+   "konstantinovka",
+   "kramatorsk",
+   "sloviansk",
+   "slovyansk",
+   "slavyansk",
+   "kupiansk",
+   "kupyansk",
+   "huliaipole",
+   "gulyaipole",
+   "siversk",
+   "chasiv yar",
+   "toretsk",
+   "vovchansk",
+   "occupied territor"
+  ]
+ },
+ {
+  "id": "caxemira",
+  "tipo": "disputa",
+  "nome_pt": "Caxemira",
+  "nome_en": "Kashmir",
+  "contexto_pt": "Índia e Paquistão disputam a região desde 1947 e a administram em partes separadas pela Linha de Controle. As duas potências nucleares já entraram em guerra por ela mais de uma vez.",
+  "contexto_en": "India and Pakistan have disputed the region since 1947 and administer it in parts divided by the Line of Control. The two nuclear powers have gone to war over it more than once.",
+  "paises": [
+   "IN",
+   "PK"
+  ],
+  "ne": [
+   "Kashmir",
+   "Gilgit-Baltistan",
+   "Siachen Glacier"
+  ],
+  "nomes": [
+   "kashmir",
+   "srinagar",
+   "jammu",
+   "muzaffarabad",
+   "gilgit",
+   "baltistan",
+   "siachen",
+   "line of control",
+   "pahalgam",
+   "poonch"
+  ]
+ },
+ {
+  "id": "india-china",
+  "tipo": "disputa",
+  "nome_pt": "Fronteira Índia–China",
+  "nome_en": "India–China border",
+  "contexto_pt": "Índia e China disputam trechos da fronteira no Himalaia, separados pela Linha de Controle Real. A China administra Aksai Chin e o vale de Shaksgam, que a Índia reivindica; a Índia administra Arunachal Pradesh, que a China reivindica. Houve confrontos mortais no vale de Galwan em 2020.",
+  "contexto_en": "India and China dispute stretches of their Himalayan border, divided by the Line of Actual Control. China administers Aksai Chin and the Shaksgam valley, claimed by India; India administers Arunachal Pradesh, claimed by China. Deadly clashes took place in the Galwan valley in 2020.",
+  "paises": [
+   "IN",
+   "CN"
+  ],
+  "ne": [
+   "Aksai Chin",
+   "Trans-Karakoram Tract",
+   "Demchok",
+   "Samdu Valleys",
+   "Bara Hotii Valleys",
+   "Tirpani Valleys",
+   "Arunachal Pradesh"
+  ],
+  "nomes": [
+   "aksai chin",
+   "arunachal",
+   "galwan",
+   "demchok",
+   "depsang",
+   "tawang",
+   "line of actual control",
+   "india-china border",
+   "sino-indian",
+   "zangnan",
+   "shaksgam"
+  ]
+ },
+ {
+  "id": "junagadh",
+  "tipo": "disputa",
+  "nome_pt": "Junagadh e Manavadar",
+  "nome_en": "Junagadh and Manavadar",
+  "contexto_pt": "Área do estado indiano de Gujarat que o Paquistão incluiu no seu mapa oficial em 2020, retomando uma reivindicação de 1947. A Índia administra o território.",
+  "contexto_en": "An area of India's Gujarat state that Pakistan included in its official map in 2020, reviving a 1947 claim. India administers the territory.",
+  "paises": [
+   "IN",
+   "PK"
+  ],
+  "ne": [
+   "Junagadh State"
+  ],
+  "nomes": [
+   "junagadh",
+   "manavadar"
+  ]
+ },
+ {
+  "id": "golan",
+  "tipo": "disputa",
+  "nome_pt": "Colinas de Golã",
+  "nome_en": "Golan Heights",
+  "contexto_pt": "Israel ocupa as colinas desde 1967 e as anexou em 1981. A Síria reivindica o território, e a maior parte dos países o considera ocupado; os EUA reconhecem a soberania israelense desde 2019.",
+  "contexto_en": "Israel has occupied the heights since 1967 and annexed them in 1981. Syria claims the territory and most countries regard it as occupied; the US has recognised Israeli sovereignty since 2019.",
+  "paises": [
+   "IL",
+   "SY"
+  ],
+  "ne": [
+   "Golan Heights"
+  ],
+  "nomes": [
+   "golan",
+   "quneitra"
+  ]
+ },
+ {
+  "id": "saara-ocidental",
+  "tipo": "disputa",
+  "nome_pt": "Saara Ocidental",
+  "nome_en": "Western Sahara",
+  "contexto_pt": "Marrocos controla a maior parte do território e o reivindica inteiro; a Frente Polisário, apoiada pela Argélia, defende a independência e controla a faixa a leste do muro de areia. Desde 2025 o Conselho de Segurança da ONU apoia o plano marroquino de autonomia como base das negociações.",
+  "contexto_en": "Morocco controls most of the territory and claims all of it; the Algeria-backed Polisario Front seeks independence and holds the strip east of the sand berm. Since 2025 the UN Security Council has backed Morocco's autonomy plan as the basis for talks.",
+  "paises": [
+   "MA",
+   "DZ"
+  ],
+  "ne": [
+   "Western Sahara"
+  ],
+  "nomes": [
+   "western sahara",
+   "polisario",
+   "sahrawi",
+   "laayoune",
+   "minurso",
+   "moroccan sahara"
+  ]
+ },
+ {
+  "id": "chipre-norte",
+  "tipo": "disputa",
+  "nome_pt": "Chipre do Norte",
+  "nome_en": "Northern Cyprus",
+  "contexto_pt": "Desde a intervenção turca de 1974, o norte da ilha é governado pela República Turca do Chipre do Norte, reconhecida só pela Turquia. A República de Chipre, membro da União Europeia, reivindica a ilha inteira; uma zona-tampão da ONU separa os dois lados.",
+  "contexto_en": "Since Turkey's 1974 intervention, the north of the island has been run by the Turkish Republic of Northern Cyprus, recognised only by Turkey. The Republic of Cyprus, an EU member, claims the whole island; a UN buffer zone separates the two sides.",
+  "paises": [
+   "CY",
+   "TR"
+  ],
+  "ne": [
+   "Turkish Republic of Northern Cyprus"
+  ],
+  "nomes": [
+   "northern cyprus",
+   "north cyprus",
+   "turkish cypriot",
+   "trnc",
+   "cyprus talks",
+   "cyprus reunification",
+   "kktc"
+  ]
+ },
+ {
+  "id": "curilas",
+  "tipo": "disputa",
+  "nome_pt": "Ilhas Curilas",
+  "nome_en": "Kuril Islands",
+  "contexto_pt": "A Rússia controla as ilhas desde o fim da Segunda Guerra Mundial; o Japão reivindica as quatro mais ao sul, que chama de Territórios do Norte. A disputa impede até hoje um tratado de paz entre os dois países.",
+  "contexto_en": "Russia has held the islands since the end of the Second World War; Japan claims the four southernmost, which it calls the Northern Territories. The dispute still prevents a peace treaty between the two countries.",
+  "paises": [
+   "RU",
+   "JP"
+  ],
+  "ne": [
+   "Kuril Islands"
+  ],
+  "nomes": [
+   "kuril",
+   "kurile",
+   "northern territories",
+   "iturup",
+   "etorofu",
+   "kunashir",
+   "shikotan",
+   "habomai"
+  ]
+ },
+ {
+  "id": "somalilandia",
+  "tipo": "disputa",
+  "nome_pt": "Somalilândia",
+  "nome_en": "Somaliland",
+  "contexto_pt": "Declarou independência da Somália em 1991 e tem governo próprio desde então. A Somália considera o território parte do país; Israel foi o primeiro e é o único país a reconhecê-la, desde dezembro de 2025.",
+  "contexto_en": "It declared independence from Somalia in 1991 and has governed itself since. Somalia considers it part of its territory; Israel became the first and only country to recognise it, in December 2025.",
+  "paises": [
+   "SO",
+   "IL"
+  ],
+  "ne": [
+   "Somaliland"
+  ],
+  "nomes": [
+   "somaliland",
+   "hargeisa",
+   "berbera"
+  ]
+ },
+ {
+  "id": "abecasia",
+  "tipo": "disputa",
+  "nome_pt": "Abecásia",
+  "nome_en": "Abkhazia",
+  "contexto_pt": "Região separatista da Geórgia, governada por autoridades apoiadas pela Rússia, que mantém tropas no território e a reconheceu depois da guerra de 2008. A Geórgia e a maior parte dos países a consideram território georgiano ocupado.",
+  "contexto_en": "A breakaway region of Georgia run by Russian-backed authorities; Russia keeps troops there and recognised it after the 2008 war. Georgia and most countries regard it as occupied Georgian territory.",
+  "paises": [
+   "GE",
+   "RU"
+  ],
+  "ne": [
+   "Abkhazia"
+  ],
+  "nomes": [
+   "abkhazia",
+   "abkhaz",
+   "sukhumi",
+   "sokhumi"
+  ]
+ },
+ {
+  "id": "ossetia-sul",
+  "tipo": "disputa",
+  "nome_pt": "Ossétia do Sul",
+  "nome_en": "South Ossetia",
+  "contexto_pt": "Região separatista da Geórgia, governada por autoridades apoiadas pela Rússia, que mantém tropas no território e a reconheceu depois da guerra de 2008. A Geórgia e a maior parte dos países a consideram território georgiano ocupado.",
+  "contexto_en": "A breakaway region of Georgia run by Russian-backed authorities; Russia keeps troops there and recognised it after the 2008 war. Georgia and most countries regard it as occupied Georgian territory.",
+  "paises": [
+   "GE",
+   "RU"
+  ],
+  "ne": [
+   "South Ossetia"
+  ],
+  "nomes": [
+   "south ossetia",
+   "tskhinvali"
+  ]
+ },
+ {
+  "id": "transnistria",
+  "tipo": "disputa",
+  "nome_pt": "Transnístria",
+  "nome_en": "Transnistria",
+  "contexto_pt": "Região separatista da Moldávia desde a guerra de 1992, com governo próprio que nenhum país reconhece e tropas russas no território. A Moldávia busca reintegrar a região.",
+  "contexto_en": "A breakaway region of Moldova since the 1992 war, with a self-proclaimed government recognised by no country and Russian troops on its soil. Moldova seeks to reintegrate the region.",
+  "paises": [
+   "MD",
+   "RU"
+  ],
+  "ne": [
+   "Transnistria"
+  ],
+  "nomes": [
+   "transnistria",
+   "transdniestria",
+   "transnistrian",
+   "tiraspol",
+   "pridnestrovie"
+  ]
+ },
+ {
+  "id": "nagorno-karabakh",
+  "tipo": "disputa",
+  "nome_pt": "Nagorno-Karabakh",
+  "nome_en": "Nagorno-Karabakh",
+  "contexto_pt": "Enclave de maioria armênia no Azerbaijão, controlado por separatistas desde os anos 1990. Em setembro de 2023 o Azerbaijão retomou todo o território, a maior parte da população armênia deixou a região e a república separatista foi dissolvida em 2024. O Natural Earth ainda marca a área como disputada.",
+  "contexto_en": "An Armenian-majority enclave in Azerbaijan held by separatists from the 1990s. In September 2023 Azerbaijan retook all of it, most of the Armenian population left and the breakaway republic was dissolved in 2024. Natural Earth still marks the area as disputed.",
+  "paises": [
+   "AZ",
+   "AM"
+  ],
+  "ne": [
+   "Nagorno-Karabakh"
+  ],
+  "nomes": [
+   "karabakh",
+   "stepanakert",
+   "khankendi",
+   "lachin"
+  ]
+ },
+ {
+  "id": "abyei",
+  "tipo": "disputa",
+  "nome_pt": "Abyei",
+  "nome_en": "Abyei",
+  "contexto_pt": "Área na fronteira entre Sudão e Sudão do Sul reivindicada pelos dois países desde a independência sul-sudanesa, em 2011. Uma força de paz da ONU atua na região.",
+  "contexto_en": "An area on the Sudan–South Sudan border claimed by both countries since South Sudan's independence in 2011. A UN peacekeeping force operates there.",
+  "paises": [
+   "SD",
+   "SS"
+  ],
+  "ne": [
+   "Abyei"
+  ],
+  "nomes": [
+   "abyei",
+   "unisfa"
+  ]
+ },
+ {
+  "id": "ilemi",
+  "tipo": "disputa",
+  "nome_pt": "Triângulo de Ilemi",
+  "nome_en": "Ilemi Triangle",
+  "contexto_pt": "Área na fronteira do Quênia com o Sudão do Sul e a Etiópia, administrada pelo Quênia e reivindicada pelo Sudão do Sul.",
+  "contexto_en": "An area where Kenya meets South Sudan and Ethiopia, administered by Kenya and claimed by South Sudan.",
+  "paises": [
+   "KE",
+   "SS"
+  ],
+  "ne": [
+   "Ilemi Triangle"
+  ],
+  "nomes": [
+   "ilemi"
+  ]
+ },
+ {
+  "id": "tigri",
+  "tipo": "disputa",
+  "nome_pt": "Região de Tigri",
+  "nome_en": "Tigri Area",
+  "contexto_pt": "Área de floresta entre os rios Courantyne e New River, administrada pela Guiana e reivindicada pelo Suriname.",
+  "contexto_en": "A forested area between the Courantyne and New rivers, administered by Guyana and claimed by Suriname.",
+  "paises": [
+   "GY",
+   "SR"
+  ],
+  "ne": [
+   "Tigri Area"
+  ],
+  "nomes": [
+   "tigri",
+   "new river triangle"
+  ]
+ },
+ {
+  "id": "lawa",
+  "tipo": "disputa",
+  "nome_pt": "Nascente do rio Lawa",
+  "nome_en": "Lawa Headwaters",
+  "contexto_pt": "Trecho da fronteira entre o Suriname e a Guiana Francesa (França), disputado porque os dois lados divergem sobre qual afluente marca o limite.",
+  "contexto_en": "A stretch of the border between Suriname and French Guiana (France), disputed because the two sides disagree on which tributary marks the line.",
+  "paises": [
+   "SR",
+   "FR"
+  ],
+  "ne": [
+   "Lawa Headwaters"
+  ],
+  "nomes": [
+   "lawa river",
+   "marouini"
+  ]
+ },
+ {
+  "id": "sabah",
+  "tipo": "disputa",
+  "nome_pt": "Sabá (Bornéu do Norte)",
+  "nome_en": "Sabah (North Borneo)",
+  "contexto_pt": "Estado da Malásia no norte de Bornéu, administrado pela Malásia desde 1963 e reivindicado pelas Filipinas como herança do antigo Sultanato de Sulu.",
+  "contexto_en": "A Malaysian state in northern Borneo, administered by Malaysia since 1963 and claimed by the Philippines as a legacy of the former Sultanate of Sulu.",
+  "paises": [
+   "MY",
+   "PH"
+  ],
+  "ne": [
+   "North Borneo"
+  ],
+  "nomes": [
+   "north borneo",
+   "sulu sultanate",
+   "sultan of sulu",
+   "sabah claim"
+  ]
+ }
+]

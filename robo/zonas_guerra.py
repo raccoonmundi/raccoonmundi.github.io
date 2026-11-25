@@ -11,8 +11,10 @@ Se a fonte falhar, o arquivo anterior fica como está.
 """
 import datetime as dt
 import json
+import math
 import os
 import sys
+import time
 
 import requests
 from shapely.geometry import mapping, shape
@@ -22,6 +24,24 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SAIDA = os.path.join(RAIZ, "site", "geo", "zonas_guerra.geojson")
 URL = "https://deepstatemap.live/api/history/last"
 TIPOS = {"geojson.status.occupied": "ocupado", "geojson.status.unknown": "contestado"}
+AREA_UCRANIA_KM2 = 603628  # território reconhecido, com a Crimeia
+RAIO_KM = 6371.0088
+
+
+def area_anel(coords):
+    """Área de um anel lon/lat sobre a esfera (Chamberlain & Duquette, 2007)."""
+    s = 0.0
+    for (x1, y1), (x2, y2) in zip(coords, coords[1:] + coords[:1]):
+        s += math.radians(x2 - x1) * (2 + math.sin(math.radians(y1)) + math.sin(math.radians(y2)))
+    return abs(s) * RAIO_KM * RAIO_KM / 2
+
+
+def area_km2(g):
+    if g.is_empty:
+        return 0.0
+    polis = list(g.geoms) if g.geom_type == "MultiPolygon" else [g]
+    return sum(area_anel([c[:2] for c in p.exterior.coords]) - sum(area_anel([c[:2] for c in i.coords]) for i in p.interiors)
+               for p in polis)
 
 
 def arredonda(coords):
@@ -30,14 +50,9 @@ def arredonda(coords):
     return [arredonda(c) for c in coords]
 
 
-def main():
-    try:
-        r = requests.get(URL, headers={"User-Agent": "mapa-raccoon-mundi/1.0 (+https://github.com/KaueMB23/mapa-raccoon-mundi)"}, timeout=90)
-        r.raise_for_status()
-        dados = r.json()
-    except Exception as e:  # noqa: BLE001
-        print(f"::warning::DeepStateMap indisponível ({e}); áreas em guerra mantidas.")
-        return 0
+def ocupacao(dados, extras):
+    """Áreas ocupada e contestada de um mapa do DeepStateMap. O DeepStateMap só desenha como "ocupado" o que
+    a Rússia tomou depois de fevereiro de 2022; a Crimeia e o Donbas ocupados desde 2014 vêm do Natural Earth."""
     grupos = {"ocupado": [], "contestado": []}
     for f in (dados.get("map") or {}).get("features", []):
         geo = f.get("geometry") or {}
@@ -54,24 +69,88 @@ def main():
         except Exception:  # noqa: BLE001
             continue
     if not grupos["ocupado"]:
+        return None, None, 0
+    ocupado = unary_union(grupos["ocupado"] + extras)
+    contestado = unary_union(grupos["contestado"]).difference(ocupado) if grupos["contestado"] else None
+    return ocupado, contestado, len(grupos["ocupado"])
+
+
+def areas_de_2014():
+    """Crimeia e partes de Donetsk e Luhansk ocupadas desde 2014, do arquivo de áreas disputadas (Natural Earth)."""
+    try:
+        areas = json.load(open(os.path.join(RAIZ, "site", "data", "areas.json"), encoding="utf-8"))
+        nomes = {n for a in areas if a.get("deepstate") == "russia-ucrania" for n in a.get("ne", [])}
+        geo = json.load(open(os.path.join(RAIZ, "site", "geo", "disputadas.geojson"), encoding="utf-8"))
+        return [shape(f["geometry"]).buffer(0) for f in geo["features"] if f["properties"].get("nome_en") in nomes]
+    except Exception as e:  # noqa: BLE001
+        print(f"::warning::sem as áreas ocupadas desde 2014 ({e})")
+        return []
+
+
+def mapa_de_uma_semana_atras(sessao):
+    """Mapa do DeepStateMap de cerca de 7 dias atrás, para a variação semanal. Se falhar, volta None."""
+    try:
+        lista = sessao.get("https://deepstatemap.live/api/history/public", timeout=90).json()
+        alvo = time.time() - 7 * 86400
+        ids = sorted(int(x["id"]) for x in lista if str(x.get("id", "")).isdigit())
+        anteriores = [i for i in ids if i <= alvo]
+        if not anteriores:
+            return None
+        r = sessao.get(f"https://deepstatemap.live/api/history/{anteriores[-1]}", timeout=90)
+        r.raise_for_status()
+        d = r.json()
+        return d if (d.get("map") or {}).get("features") else None
+    except Exception as e:  # noqa: BLE001
+        print(f"::warning::mapa de 7 dias atrás indisponível ({e}); a variação usa o histórico guardado")
+        return None
+
+
+def main():
+    sessao = requests.Session()
+    sessao.headers["User-Agent"] = "mapa-raccoon-mundi/1.0 (+https://github.com/KaueMB23/mapa-raccoon-mundi)"
+    try:
+        r = sessao.get(URL, timeout=90)
+        r.raise_for_status()
+        dados = r.json()
+    except Exception as e:  # noqa: BLE001
+        print(f"::warning::DeepStateMap indisponível ({e}); áreas em guerra mantidas.")
+        return 0
+    extras = areas_de_2014()
+    ocupado, contestado, n_poligonos = ocupacao(dados, extras)
+    if ocupado is None:
         print("::warning::DeepStateMap sem áreas ocupadas na resposta; áreas em guerra mantidas.")
         return 0
     data = data_do_mapa(dados)
-    ocupado = unary_union(grupos["ocupado"])
     feats = [{"type": "Feature", "properties": {"tipo": "ocupado", "conflito": "russia-ucrania"},
               "geometry": arredonda_geo(ocupado.simplify(0.01, preserve_topology=True))}]
-    if grupos["contestado"]:
-        contestado = unary_union(grupos["contestado"]).difference(ocupado)
-        if not contestado.is_empty:
-            feats.append({"type": "Feature", "properties": {"tipo": "contestado", "conflito": "russia-ucrania"},
-                          "geometry": arredonda_geo(contestado.simplify(0.01, preserve_topology=True))})
+    if contestado is not None and not contestado.is_empty:
+        feats.append({"type": "Feature", "properties": {"tipo": "contestado", "conflito": "russia-ucrania"},
+                      "geometry": arredonda_geo(contestado.simplify(0.01, preserve_topology=True))})
+    km_ocupado = round(area_km2(ocupado))
+    km_contestado = round(area_km2(contestado)) if contestado is not None and not contestado.is_empty else 0
+    # histórico das áreas (uma entrada por data do mapa) para mostrar a variação no painel
+    historico = []
+    try:
+        historico = json.load(open(SAIDA, encoding="utf-8")).get("historico", [])
+    except Exception:  # noqa: BLE001
+        pass
+    if not any(h["data"] <= (dt.date.fromisoformat(data) - dt.timedelta(days=6)).isoformat() for h in historico):
+        antigo = mapa_de_uma_semana_atras(sessao)
+        if antigo:
+            oc_ant, ct_ant, _ = ocupacao(antigo, extras)
+            if oc_ant is not None:
+                historico.append({"data": data_do_mapa(antigo), "ocupado_km2": round(area_km2(oc_ant)),
+                                  "contestado_km2": round(area_km2(ct_ant)) if ct_ant is not None and not ct_ant.is_empty else 0})
+    historico = [h for h in historico if h.get("data") != data] + [{"data": data, "ocupado_km2": km_ocupado, "contestado_km2": km_contestado}]
+    historico = sorted({h["data"]: h for h in historico}.values(), key=lambda h: h["data"])[-120:]
     saida = {"type": "FeatureCollection", "fonte": "DeepStateMap", "fonte_url": "https://deepstatemap.live",
-             "data": data, "paises": ["UA", "RU"], "features": feats}
+             "data": data, "paises": ["UA", "RU"], "ocupado_km2": km_ocupado, "contestado_km2": km_contestado,
+             "ocupado_pct": round(100 * km_ocupado / AREA_UCRANIA_KM2, 1), "historico": historico, "features": feats}
     with open(SAIDA, "w", encoding="utf-8") as f:
         json.dump(saida, f, separators=(",", ":"))
-    area = sum(g.area for g in grupos["ocupado"])
-    print(f"áreas em guerra: {len(grupos['ocupado'])} polígonos ocupados, {len(grupos['contestado'])} contestados, "
-          f"data {data}, {os.path.getsize(SAIDA) // 1024} KB (área bruta {area:.1f} graus²)")
+    print(f"áreas em guerra: {n_poligonos} polígonos ocupados, data {data}, {os.path.getsize(SAIDA) // 1024} KB; "
+          f"ocupado {km_ocupado} km² ({saida['ocupado_pct']}%, com Crimeia e Donbas de 2014), contestado {km_contestado} km²; "
+          f"histórico: {[(h['data'], h['ocupado_km2']) for h in historico[-3:]]}")
     return 0
 
 

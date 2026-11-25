@@ -28,7 +28,15 @@
       creditos: 'Map: Raccoon Mundi, with data from ',
       legTitulo: 'Geopolitical stories, last 24 h', menos: 'fewer', mais: 'more',
       legSem: 'No stories', legSemColeta: 'Not collected yet', legDisputa: 'Disputed area (Natural Earth)',
-      legOcupado: function (d) { return 'Military occupation (DeepStateMap, ' + d + ')'; }, legContestado: 'Contested zone',
+      legOcupado: function (d) { return 'Military occupation (DeepStateMap, ' + d + ')'; }, legContestado: 'Contested zone', legClique: 'Click a hatched area for its news',
+      areaGuerra: 'War zone', areaDisputa: 'Disputed area', areasDoPais: 'Wars and disputes', areasIrPara: 'Wars and disputes',
+      paisesEnvolvidos: 'Countries involved', noticiasArea: 'News about the area', verArea: 'See the occupied area',
+      semNoticiasArea: function (h) { return 'No stories about this area in the last ' + h + ' h from the countries collected so far.'; },
+      ocupadoKm: function (km, pct) { return km + ' km² occupied (' + pct + ' of Ukraine)'; },
+      contestadoKm: function (km) { return km + ' km² contested (grey zone)'; },
+      variacao: function (v, d) { return (v > 0 ? '+' : v < 0 ? '−' : '±') + num(Math.abs(v)) + ' km² occupied since ' + d; },
+      fonteGuerra: function (d) { return 'DeepStateMap, ' + d + '. Includes Crimea and the parts of Donetsk and Luhansk occupied since 2014.'; },
+      dicaArea: 'click for news',
       ocupacaoUA: function (d) { return 'Part of the territory is under Russian military occupation, according to DeepStateMap (Ukrainian front-line mapping project) on ' + d + '.'; },
       creditoGuerra: 'Occupied areas: ',
       agora: 'just now', ha: function (n, u) { return n + ' ' + u + ' ago'; }, u: { m: 'min', h: 'h', d: 'd' },
@@ -56,7 +64,15 @@
       creditos: 'Mapa: Raccoon Mundi, com dados do ',
       legTitulo: 'Notícias geopolíticas, últimas 24 h', menos: 'menos', mais: 'mais',
       legSem: 'Sem notícias', legSemColeta: 'Ainda sem coleta', legDisputa: 'Área disputada (Natural Earth)',
-      legOcupado: function (d) { return 'Ocupação militar (DeepStateMap, ' + d + ')'; }, legContestado: 'Zona contestada',
+      legOcupado: function (d) { return 'Ocupação militar (DeepStateMap, ' + d + ')'; }, legContestado: 'Zona contestada', legClique: 'Clique numa área hachurada para ver as notícias',
+      areaGuerra: 'Área em guerra', areaDisputa: 'Área disputada', areasDoPais: 'Guerras e disputas', areasIrPara: 'Guerras e disputas',
+      paisesEnvolvidos: 'Países envolvidos', noticiasArea: 'Notícias sobre a área', verArea: 'Ver a área ocupada',
+      semNoticiasArea: function (h) { return 'Nenhuma notícia sobre a área nas últimas ' + h + ' h, entre os países coletados até agora.'; },
+      ocupadoKm: function (km, pct) { return km + ' km² ocupados (' + pct + ' da Ucrânia)'; },
+      contestadoKm: function (km) { return km + ' km² em zona contestada'; },
+      variacao: function (v, d) { return (v > 0 ? '+' : v < 0 ? '−' : '±') + num(Math.abs(v)) + ' km² ocupados desde ' + d; },
+      fonteGuerra: function (d) { return 'DeepStateMap, ' + d + '. Inclui a Crimeia e as partes de Donetsk e Luhansk ocupadas desde 2014.'; },
+      dicaArea: 'clique para ver as notícias',
       ocupacaoUA: function (d) { return 'Parte do território está sob ocupação militar russa, segundo o DeepStateMap (projeto ucraniano de mapeamento da linha de frente) em ' + d + '.'; },
       creditoGuerra: 'Áreas ocupadas: ',
       agora: 'agora', ha: function (n, u) { return 'há ' + n + ' ' + u; }, u: { m: 'min', h: 'h', d: 'd' },
@@ -108,7 +124,7 @@
   var LIMIAR_PAISES = 4;
 
   var estado = { l: 'en', h: 24, modo: 'regioes', sel: null };
-  var D = { paises: {}, macros: [], macroPorId: {}, temas: [], temaPorId: {}, itens: [], porPais: {},
+  var D = { paises: {}, macros: [], macroPorId: {}, temas: [], temaPorId: {}, areas: [], areaPorId: {}, itens: [], porPais: {},
             volume: {}, coletados: null, gerado: null, teste: false };
   var camadaGuerra = null;
   var mapa, svg, camadaPaises, camadaMacros, camadaDisputa, camadaDestaque = null, macroLayer = {}, modoAuto = 'regioes';
@@ -138,6 +154,11 @@
   function urlSegura(u) { return typeof u === 'string' && /^https?:\/\//i.test(u); }
   function nomePais(iso) { var p = D.paises[iso]; return p ? (estado.l === 'pt' ? p.nome_pt : p.nome_en) : iso; }
   function nomeRegiao(id) { var r = D.macroPorId[id]; return r ? (estado.l === 'pt' ? r.nome_pt : r.nome_en) : id; }
+  function nomeArea(a) { return estado.l === 'pt' ? a.nome_pt : a.nome_en; }
+  function itensDaArea(id) {
+    return D.itens.filter(function (i) { return (i.areas || []).indexOf(id) >= 0 && noPeriodo(i); })
+      .sort(function (a, b) { return b.visto_em < a.visto_em ? -1 : 1; });
+  }
   function nomeTema(tm) { return estado.l === 'pt' ? (tm.nome_pt || tm.nome_en) : (tm.nome_en || tm.nome_pt); }
 
   /* ---------- dados ---------- */
@@ -203,7 +224,8 @@
     var q = new URLSearchParams(location.hash.replace(/^#/, ''));
     if (q.get('l') === 'pt' || q.get('l') === 'en') estado.l = q.get('l');
     if (['12', '24', '48'].indexOf(q.get('h')) >= 0) estado.h = +q.get('h');
-    if (q.get('t') && D.temaPorId[q.get('t')]) estado.sel = { tipo: 't', id: q.get('t') };
+    if (q.get('a') && D.areaPorId[q.get('a')]) estado.sel = { tipo: 'a', id: q.get('a') };
+    else if (q.get('t') && D.temaPorId[q.get('t')]) estado.sel = { tipo: 't', id: q.get('t') };
     else if (q.get('p') && D.paises[q.get('p')]) estado.sel = { tipo: 'p', id: q.get('p') };
     else if (q.get('r') && D.macroPorId[q.get('r')]) estado.sel = { tipo: 'r', id: q.get('r') };
     else estado.sel = null;
@@ -255,6 +277,8 @@
     if (s.tipo === 'r') {
       contorno = G.macros.features.filter(function (f) { return f.properties.r === s.id; });
       preench = G.paises.features.filter(function (f) { return f.properties.r === s.id; });
+    } else if (s.tipo === 'a') {
+      preench = contorno = featuresDaArea(s.id);
     } else {
       var alvo = s.tipo === 'p' ? [s.id] : ((D.temaPorId[s.id] || {}).paises || []);
       preench = contorno = G.paises.features.filter(function (f) { return alvo.indexOf(f.properties.k) >= 0; });
@@ -264,7 +288,10 @@
     var sombra = L.geoJSON(fc(contorno), { renderer: svg, smoothFactor: 0.4, interactive: false,
       style: { stroke: false, fillColor: P.sombra, fillOpacity: P.sombraOp } });
     var cima = L.geoJSON(fc(preench), { renderer: svg, smoothFactor: 0.4, interactive: false,
-      style: function (f) { var e = estiloPais(f); return { fillColor: e.fillColor, fillOpacity: 1, color: e.color, opacity: e.opacity, weight: e.weight }; } });
+      style: function (f) {
+        if (s.tipo === 'a') { var h = f.properties.tipo ? estiloGuerra(f) : estiloDisputa(); return { fillColor: h.fillColor, fillOpacity: 1, color: h.color, opacity: 1, weight: h.weight, dashArray: null }; }
+        var e = estiloPais(f); return { fillColor: e.fillColor, fillOpacity: 1, color: e.color, opacity: e.opacity, weight: e.weight };
+      } });
     var borda = L.geoJSON(fc(contorno), { renderer: svg, smoothFactor: 0.4, interactive: false,
       style: { fill: false, color: P.destaque, weight: 2, lineJoin: 'round' } });
     camadaDestaque = L.layerGroup([sombra, cima, borda]).addTo(mapa);
@@ -273,6 +300,25 @@
     borda.eachLayer(function (l) { l._path.setAttribute('transform', 'translate(0 -2)'); });
     if (camadaDisputa) camadaDisputa.bringToFront();
     if (camadaGuerra) camadaGuerra.bringToFront();
+    if (s.tipo === 'a') { sombra.bringToFront(); cima.bringToFront(); borda.bringToFront(); } // a área selecionada fica por cima das outras hachuras
+  }
+  function featuresDaArea(id) {
+    var fs = (G.disputa ? G.disputa.features : []).filter(function (f) { return f.properties.a === id; });
+    if (G.guerra) fs = fs.concat(G.guerra.features.filter(function (f) { return f.properties.a === id; }));
+    return fs;
+  }
+  /* Áreas hachuradas clicáveis: abrem o painel da área com contexto, dados e notícias. */
+  function ligarArea(f, layer) {
+    var a = D.areaPorId[f.properties.a]; if (!a) return;
+    layer.on('mouseover', function () {
+      layer.bindTooltip(nomeArea(a) + ' · ' + t('dicaArea'), { sticky: true, className: 'rotulo-mapa', direction: 'top', offset: [0, -8] }).openTooltip();
+      layer.setStyle({ weight: 2.4, opacity: 1 });
+    });
+    layer.on('mouseout', function () { layer.unbindTooltip(); layer.setStyle(f.properties.tipo ? estiloGuerra(f) : estiloDisputa()); });
+    layer.on('click', function (e) {
+      L.DomEvent.stopPropagation(e); layer.unbindTooltip();
+      selecionar({ tipo: 'a', id: a.id }, mapa.getZoom() < 4);
+    });
   }
   function rotuloHover(f) {
     var k = f.properties.k, r = f.properties.r;
@@ -305,6 +351,13 @@
       var pts = ((D.temaPorId[id] || {}).paises || []).map(function (k) { var p = D.paises[k]; return p && p.lx !== undefined ? [p.ly, p.lx] : null; })
         .filter(Boolean);
       if (pts.length) voarParaArea(L.latLngBounds(pts).pad(0.35), 4);
+    } else if (tipo === 'a') {
+      var ba = null;
+      featuresDaArea(id).forEach(function (f) {
+        if (f.properties.copia !== 0) return;
+        var bb = L.geoJSON(f).getBounds(); ba = ba ? ba.extend(bb) : bb;
+      });
+      if (ba) voarParaArea(ba.pad(0.15), 6);
     } else if (tipo === 'p') {
       if (VISTAS_PAIS[id]) { voarPara(VISTAS_PAIS[id][0], VISTAS_PAIS[id][1]); return; }
       var b = null;
@@ -427,14 +480,15 @@
     } }).addTo(mapa);
     camadaMacros = L.geoJSON(geoMacros, { renderer: svg, smoothFactor: 0.4, interactive: false, style: estiloMacro,
       onEachFeature: function (f, layer) { if (f.properties.copia === 0) macroLayer[f.properties.r] = layer; } }).addTo(mapa);
-    camadaDisputa = L.geoJSON(geoDisputa, { renderer: svg, smoothFactor: 0.4, interactive: false,
-      style: estiloDisputa }).addTo(mapa);
-    if (G.guerra) camadaGuerra = L.geoJSON(G.guerra, { renderer: svg, smoothFactor: 0.4, interactive: false, style: estiloGuerra }).addTo(mapa);
+    camadaDisputa = L.geoJSON(geoDisputa, { renderer: svg, smoothFactor: 0.4, style: estiloDisputa, onEachFeature: ligarArea }).addTo(mapa);
+    if (G.guerra) camadaGuerra = L.geoJSON(G.guerra, { renderer: svg, smoothFactor: 0.4, style: estiloGuerra, onEachFeature: ligarArea }).addTo(mapa);
     criarHachura();
     mapa.createPane('rotulos').style.zIndex = 450;
     camadaRotulos = L.layerGroup().addTo(mapa);
     mapa.on('moveend', atualizarRotulos);
-    mapa.on('movestart zoomstart', function () { camadaPaises.eachLayer(function (l) { l.unbindTooltip(); }); });
+    mapa.on('movestart zoomstart', function () {
+      [camadaPaises, camadaDisputa, camadaGuerra].forEach(function (c) { if (c) c.eachLayer(function (l) { l.unbindTooltip(); }); });
+    });
     mapa.on('zoomend', function () {
       var m = mapa.getZoom() >= LIMIAR_PAISES ? 'paises' : 'regioes';
       if (m !== modoAuto) { modoAuto = m; if (estado.modo !== m) { estado.modo = m; atualizarModo(); restyle(); } }
@@ -525,7 +579,15 @@
       add(el('button', { type: 'button', class: 'voltar', text: t('voltar')(nomeRegiao(p.r)), on: { click: function () { selecionar({ tipo: 'r', id: p.r }, true); } } }));
       add(el('div', { class: 'tipo', text: t('pais') + ' · ' + nomeRegiao(p.r) }));
       add(el('h2', { text: nomePais(s.id) }));
-      if (G.guerraMeta && s.id === 'UA') add(el('p', { class: 'aviso guerra', text: t('ocupacaoUA')(dataCurta(G.guerraMeta.data)) }));
+      if (G.guerraMeta && s.id === 'UA') add(el('p', { class: 'aviso guerra' }, [t('ocupacaoUA')(dataCurta(G.guerraMeta.data)) + ' ',
+        el('a', { href: '#a=ucrania', text: t('verArea') + ' →', on: { click: function (e) { e.preventDefault(); selecionar({ tipo: 'a', id: 'ucrania' }, true); } } })]));
+      var dele = D.areas.filter(function (a) { return (a.paises || []).indexOf(s.id) >= 0 && (a.id !== 'ucrania' || s.id !== 'UA'); });
+      if (dele.length) {
+        add(el('div', { class: 'secao', text: t('areasDoPais') }));
+        add(el('div', { class: 'lista-paises areas' }, dele.map(function (a) {
+          return el('button', { type: 'button', class: 'area-' + a.tipo, on: { click: function () { selecionar({ tipo: 'a', id: a.id }, true); } } }, [nomeArea(a)]);
+        })));
+      }
       if (p.ver !== undefined) {
         add(el('p', { class: 'aviso' }, p.ver ? [t('ver'), el('a', { href: '#p=' + p.ver, text: nomePais(p.ver), on: { click: function (e) { e.preventDefault(); selecionar({ tipo: 'p', id: p.ver }, true); } } }), '.'] : [t('semFonte')]));
       } else if (!coletado(s.id)) {
@@ -534,6 +596,18 @@
         add(el('p', { class: 'resumo', text: resumo(itp) }));
         lista(variar(itp, 10, 10)).forEach(add);
       }
+    } else if (s.tipo === 'a') {
+      var ar = D.areaPorId[s.id], ita = itensDaArea(s.id);
+      add(el('button', { type: 'button', class: 'voltar', text: t('voltar')(t('mundo')), on: { click: function () { selecionar(null, false); } } }));
+      add(el('div', { class: 'tipo', text: ar.tipo === 'guerra' ? t('areaGuerra') : t('areaDisputa') }));
+      add(el('h2', { text: nomeArea(ar) }));
+      add(el('p', { class: 'contexto', text: estado.l === 'pt' ? ar.contexto_pt : ar.contexto_en }));
+      if (ar.deepstate && G.guerraMeta && G.guerraMeta.ocupado_km2) add(dadosGuerra(G.guerraMeta));
+      add(el('div', { class: 'secao', text: t('paisesEnvolvidos') }));
+      add(el('div', { class: 'lista-paises' }, (ar.paises || []).filter(function (i) { return D.paises[i]; }).map(botaoPais)));
+      add(el('div', { class: 'secao', text: t('noticiasArea') }));
+      if (ita.length) { add(el('p', { class: 'resumo', text: resumo(ita) })); lista(variar(ita, 15, 5)).forEach(add); }
+      else add(el('p', { class: 'vazio', text: t('semNoticiasArea')(estado.h) }));
     } else if (s.tipo === 't') {
       var tm = D.temaPorId[s.id];
       var itt = D.itens.filter(function (i) { return (i.temas || []).indexOf(s.id) >= 0 && noPeriodo(i); })
@@ -550,6 +624,18 @@
     c.scrollTop = 0;
     var h2 = c.querySelector('h2'), viva = document.getElementById('anuncio');
     if (viva && h2) viva.textContent = h2.textContent;
+  }
+  function dadosGuerra(m) { // área ocupada, zona contestada e variação na última semana
+    var linhas = [el('p', { class: 'grande', text: t('ocupadoKm')(num(m.ocupado_km2), num(m.ocupado_pct) + '%') })];
+    if (m.contestado_km2) linhas.push(el('p', { text: t('contestadoKm')(num(m.contestado_km2)) }));
+    var h = (m.historico || []).slice().sort(function (a, b) { return a.data < b.data ? -1 : 1; }), ult = h[h.length - 1];
+    if (ult) {
+      var limite = new Date(Date.parse(ult.data) - 6 * 864e5).toISOString().slice(0, 10);
+      var base = h.filter(function (x) { return x.data <= limite; }).pop();
+      if (base) linhas.push(el('p', { text: t('variacao')(ult.ocupado_km2 - base.ocupado_km2, dataCurta(base.data)) }));
+    }
+    linhas.push(el('p', { class: 'fonte', text: t('fonteGuerra')(dataCurta(m.data)) }));
+    return el('div', { class: 'dados-guerra' }, linhas);
   }
   function renderRodape() {
     var r = document.getElementById('rodape'); r.textContent = '';
@@ -573,6 +659,7 @@
       g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.legOcupado }), t('legOcupado')(dataCurta(G.guerraMeta.data))]));
       g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.legContestado }), t('legContestado')]));
     }
+    if (D.areas.length) g.appendChild(el('div', { class: 'dica', text: t('legClique') }));
   }
   function renderTemas() {
     var n = document.getElementById('temas'); n.textContent = '';
@@ -596,7 +683,10 @@
     Object.keys(D.paises).filter(function (k) { return D.paises[k].r; })
       .sort(function (a, b) { return nomePais(a).localeCompare(nomePais(b), estado.l); })
       .forEach(function (k) { g2.appendChild(el('option', { value: 'p:' + k, text: nomePais(k) })); });
-    s.appendChild(g1); s.appendChild(g2);
+    var g3 = el('optgroup', { label: t('areasIrPara') });
+    D.areas.slice().sort(function (a, b) { return nomeArea(a).localeCompare(nomeArea(b), estado.l); })
+      .forEach(function (a) { g3.appendChild(el('option', { value: 'a:' + a.id, text: nomeArea(a) })); });
+    s.appendChild(g1); s.appendChild(g2); if (D.areas.length) s.appendChild(g3);
   }
   function atualizarBotoes() {
     document.querySelectorAll('#idioma button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.l === estado.l ? 'true' : 'false'); });
@@ -636,7 +726,7 @@
   function selecionar(sel, mover) {
     estado.sel = sel;
     gravarRota();
-    if (sel && (sel.tipo === 'p' || sel.tipo === 't') && estado.modo !== 'paises') { estado.modo = 'paises'; atualizarModo(); }
+    if (sel && sel.tipo !== 'r' && estado.modo !== 'paises') { estado.modo = 'paises'; atualizarModo(); }
     renderTemas(); renderPainel(); restyle();
     if (sel && mover) enquadrar(sel.tipo, sel.id);
     if (sel) document.getElementById('painel').classList.add('aberto');
@@ -679,8 +769,11 @@
     carregar('data/paises.json'), carregar('data/macrorregioes.json'), carregar('data/temas.json'),
     carregar('data/noticias.json').catch(function () { return {}; }),
     carregar('geo/paises.geojson'), carregar('geo/macrorregioes.geojson'), carregar('geo/disputadas.geojson'),
-    carregar('geo/zonas_guerra.geojson').catch(function () { return null; })
+    carregar('geo/zonas_guerra.geojson').catch(function () { return null; }),
+    carregar('data/areas.json').catch(function () { return []; })
   ]).then(function (r) {
+    D.areas = r[8] || [];
+    D.areas.forEach(function (a) { D.areaPorId[a.id] = a; });
     D.paises = r[0]; D.macros = r[1]; D.temas = r[2] || [];
     D.macros.forEach(function (m) { D.macroPorId[m.id] = m; });
     D.temas.forEach(function (tm) { D.temaPorId[tm.id] = tm; });
@@ -691,8 +784,20 @@
     Object.keys(D.porPais).forEach(function (k) { D.porPais[k].sort(function (a, b) { return b.visto_em < a.visto_em ? -1 : 1; }); });
     calcularEscalas();
     lerRota();
+    var guerraOk = r[7] && r[7].features && r[7].features.length;
+    var guerraComCrimeia = guerraOk && r[7].ocupado_km2 !== undefined; // arquivo novo já soma a Crimeia e o Donbas de 2014
+    var areaDoNE = {}, areaDoConflito = {};
+    D.areas.forEach(function (a) { (a.ne || []).forEach(function (n) { areaDoNE[n] = a; }); if (a.deepstate) areaDoConflito[a.deepstate] = a.id; });
+    // com o mapa de guerra carregado, a Crimeia e o Donbas de 2014 aparecem nele (não duas vezes)
+    r[6].features = r[6].features.filter(function (f) { var a = areaDoNE[f.properties.nome_en]; return !(guerraComCrimeia && a && a.deepstate); });
+    r[6].features.forEach(function (f) { var a = areaDoNE[f.properties.nome_en]; if (a) f.properties.a = a.id; });
     G.paises = tresMundos(r[4]); G.macros = tresMundos(r[5]); G.disputa = tresMundos(r[6]);
-    if (r[7] && r[7].features && r[7].features.length) { G.guerra = tresMundos(r[7]); G.guerraMeta = { data: r[7].data, paises: r[7].paises || [] }; }
+    if (guerraOk) {
+      r[7].features.forEach(function (f) { f.properties.a = areaDoConflito[f.properties.conflito]; });
+      G.guerra = tresMundos(r[7]);
+      G.guerraMeta = { data: r[7].data, paises: r[7].paises || [], ocupado_km2: r[7].ocupado_km2, contestado_km2: r[7].contestado_km2,
+        ocupado_pct: r[7].ocupado_pct, historico: r[7].historico || [] };
+    }
     montarMapa(G.paises, G.macros, G.disputa);
     ligarControles();
     renderTudo();
