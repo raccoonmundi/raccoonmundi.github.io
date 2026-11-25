@@ -32,7 +32,7 @@
       ocupacaoUA: function (d) { return 'Part of the territory is under Russian military occupation, according to DeepStateMap (Ukrainian front-line mapping project) on ' + d + '.'; },
       creditoGuerra: 'Occupied areas: ',
       agora: 'just now', ha: function (n, u) { return n + ' ' + u + ' ago'; }, u: { m: 'min', h: 'h', d: 'd' },
-      erro: 'Could not load the map data. Try reloading the page.', expandir: 'Expand panel'
+      erro: 'Could not load the map data. Try reloading the page.', expandir: 'Expand panel', legenda: 'Legend'
     },
     pt: {
       mapa: 'MAPA', titulo: 'O mundo pela imprensa local', irPara: 'Ir para', escolha: 'Ir para…',
@@ -60,7 +60,7 @@
       ocupacaoUA: function (d) { return 'Parte do território está sob ocupação militar russa, segundo o DeepStateMap (projeto ucraniano de mapeamento da linha de frente) em ' + d + '.'; },
       creditoGuerra: 'Áreas ocupadas: ',
       agora: 'agora', ha: function (n, u) { return 'há ' + n + ' ' + u; }, u: { m: 'min', h: 'h', d: 'd' },
-      erro: 'Não foi possível carregar os dados do mapa. Tente recarregar a página.', expandir: 'Expandir painel'
+      erro: 'Não foi possível carregar os dados do mapa. Tente recarregar a página.', expandir: 'Expandir painel', legenda: 'Legenda'
     }
   };
   var IDIOMAS_PT = {
@@ -250,19 +250,34 @@
     var vp = coletado(k) ? (volPais(k) || 0) : null;
     return nomePais(k) + (vp === null ? '' : ' · ' + t('noticias')(vp));
   }
+  function margemGaveta() { // altura da gaveta do painel no celular (cobre a parte de baixo do mapa)
+    if (window.innerWidth >= 820) return 0;
+    var p = document.getElementById('painel');
+    return p.classList.contains('aberto') ? 0 : p.offsetHeight;
+  }
+  function voarPara(centro, zoom) {
+    var m = margemGaveta();
+    if (m) { var pt = mapa.project(centro, zoom).add([0, m / 2]); centro = mapa.unproject(pt, zoom); }
+    mapa.flyTo(centro, zoom, { duration: 0.6 });
+  }
+  function voarParaArea(b, zmax) {
+    mapa.flyToBounds(b, { paddingTopLeft: [24, 24], paddingBottomRight: [24, 24 + margemGaveta()], maxZoom: zmax, duration: 0.6 });
+  }
   function enquadrar(tipo, id) {
     if (tipo === 'r') {
-      if (VISTAS[id]) mapa.flyTo(VISTAS[id][0], VISTAS[id][1], { duration: 0.6 });
-      else if (macroLayer[id]) mapa.flyToBounds(macroLayer[id].getBounds(), { padding: [20, 20], maxZoom: 5, duration: 0.6 });
-    } else if (tipo === 't') {
-      mapa.flyTo([28, 15], window.innerWidth < 820 ? 1 : 2, { duration: 0.6 });
+      if (VISTAS[id]) voarPara(VISTAS[id][0], VISTAS[id][1] - (window.innerWidth < 820 ? 0.5 : 0));
+      else if (macroLayer[id]) voarParaArea(macroLayer[id].getBounds(), 5);
+    } else if (tipo === 't') { // tema: enquadra os países envolvidos pelos pontos dos nomes
+      var pts = ((D.temaPorId[id] || {}).paises || []).map(function (k) { var p = D.paises[k]; return p && p.lx !== undefined ? [p.ly, p.lx] : null; })
+        .filter(Boolean);
+      if (pts.length) voarParaArea(L.latLngBounds(pts).pad(0.35), 4);
     } else if (tipo === 'p') {
-      if (VISTAS_PAIS[id]) { mapa.flyTo(VISTAS_PAIS[id][0], VISTAS_PAIS[id][1], { duration: 0.6 }); return; }
+      if (VISTAS_PAIS[id]) { voarPara(VISTAS_PAIS[id][0], VISTAS_PAIS[id][1]); return; }
       var b = null;
       camadaPaises.eachLayer(function (l) {
         if (l.feature.properties.k === id && l.feature.properties.copia === 0) b = b ? b.extend(l.getBounds()) : L.latLngBounds(l.getBounds().getSouthWest(), l.getBounds().getNorthEast());
       });
-      if (b && b.getEast() - b.getWest() < 180) mapa.flyToBounds(b, { padding: [30, 30], maxZoom: 6, duration: 0.6 });
+      if (b && b.getEast() - b.getWest() < 180) voarParaArea(b, 6);
     }
   }
   /* Mapa contínuo: cada camada é desenhada três vezes (mundo à esquerda, central e à direita).
@@ -455,7 +470,8 @@
         })));
       }
       add(el('div', { class: 'secao', text: t('destaques') }));
-      lista(variar(todos, 12, 2)).forEach(add);
+      var fortes = todos.filter(function (i) { return (i.pontos || 0) >= 3; }); // no "Mundo", primeiro as mais geopolíticas
+      lista(variar(fortes.length >= 12 ? fortes : todos, 12, 2)).forEach(add);
     } else if (s.tipo === 'r') {
       var r = D.macroPorId[s.id], it = itensDe(r.paises);
       add(el('button', { type: 'button', class: 'voltar', text: t('voltar')(t('mundo')), on: { click: function () { selecionar(null, false); mapa.flyTo([28, 15], 2, { duration: 0.6 }); } } }));
@@ -586,6 +602,10 @@
       selecionar({ tipo: v.slice(0, 1), id: v.slice(2) }, true); e.target.value = '';
     });
     document.getElementById('alca').addEventListener('click', function () { document.getElementById('painel').classList.toggle('aberto'); });
+    document.getElementById('legenda-botao').addEventListener('click', function () {
+      var g = document.getElementById('legenda'), aberta = g.classList.toggle('aberta');
+      this.setAttribute('aria-expanded', aberta ? 'true' : 'false');
+    });
     window.addEventListener('hashchange', function () { lerRota(); renderTudo(); if (estado.sel) enquadrar(estado.sel.tipo, estado.sel.id); });
   }
 
