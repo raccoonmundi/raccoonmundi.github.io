@@ -330,6 +330,55 @@ def classificar(iso, temas_reg, pontos, locs, proprios, estados, piloto, estado_
     return None, None
 
 
+class SinaisEstrangeiros:
+    """Sinais de outro país num título: nome do país (paises.json), sigla, gentílico, capital, líder ou
+    instituição internacional (robo/sinais.json). Confirmam o nível 1 depois da tradução."""
+    def __init__(self, paises, extras):
+        self.lista = []  # (regex, país dono do sinal; None = internacional)
+        def add(termo, iso):
+            caso = termo.startswith("=")
+            t = termo[1:] if caso else termo.lower()
+            if len(t) < 3 and not caso:
+                return
+            self.lista.append((re.compile(r"(?<!\w)" + re.escape(t) + r"(?!\w)", 0 if caso else re.I), iso, caso))
+        for iso, v in paises.items():
+            for k in ("nome_en", "nome_pt"):
+                if v.get(k):
+                    add(v[k], iso)
+        for iso, termos in extras.items():
+            if iso.startswith("_") and iso != "_intl":
+                continue
+            for t in termos:
+                add(t, None if iso == "_intl" else iso)
+
+    def tem_estrangeiro(self, pais, *titulos):
+        for rx, iso, caso in self.lista:
+            if iso == pais:
+                continue
+            for t in titulos:
+                if t and rx.search(t):
+                    return True
+        return False
+
+
+def conferir_nivel_pelo_titulo(itens, sinais):
+    """Nível 1 precisa de sinal de outro país no título, a menos que a matéria só cite lugares estrangeiros.
+    Nível 2 com tema geopolítico e sinal estrangeiro no título sobe para o nível 1."""
+    mudou = {"1->2": 0, "2->1": 0}
+    for it in itens:
+        n = it.get("nivel")
+        if n not in (1, 2):
+            continue
+        sinal = sinais.tem_estrangeiro(it["pais"], it.get("titulo_en"), it.get("titulo_pt"), it["titulo_original"])
+        if n == 1 and not sinal and not it.get("ex"):
+            it["nivel"] = 2
+            mudou["1->2"] += 1
+        elif n == 2 and sinal and it.get("pontos", 0) >= 2:
+            it["nivel"] = 1
+            mudou["2->1"] += 1
+    return mudou
+
+
 # ---------------------------------------------------------------- temas em foco
 def preparar_temas(temas):
     prontos = []
@@ -493,6 +542,7 @@ def resumo_markdown(saida, extra, segundos):
         linhas.append(f"| {iso} | {r['candidatas']} | {saida['volume'].get(iso, 0)} | {r['no_mapa']} | "
                       f"{nv.get('1', 0)} / {nv.get('2', 0)} / {nv.get('3', 0)} ({r.get('estados', 0)}) | {', '.join(r['idiomas'])} | {', '.join(r['veiculos'])} | {r.get('fontes_vistas', '')} | {', '.join(r.get('fora_da_lista', []))} |")
     linhas += ["", "**Temas em foco:** " + (", ".join(f"{k}: {v}" for k, v in extra["temas"].items()) or "nenhuma matéria")]
+    linhas += ["", f"**Nível conferido pelo título:** {extra.get('niveis_titulo', {})}"]
     linhas += ["", "**Áreas em guerra ou disputadas:** " + (", ".join(f"{k}: {v}" for k, v in extra.get("areas", {}).items()) or "nenhuma matéria")]
     if extra.get("traducao"):
         linhas += ["", f"**Tradução:** {json.dumps(extra['traducao'], ensure_ascii=False)}"]
@@ -535,6 +585,7 @@ def main():
         log(f"Sem lista de veículos conhecidos (nada entra no mapa): {', '.join(sorted(alvo - fontes.paises))}")
     fora_da_lista, da_lista = {}, {}  # para o relatório: o que o GDELT viu de cada país
     estados = Estados(carregar("estados.json", {}))
+    sinais = SinaisEstrangeiros(paises, json.load(open(os.path.join(RAIZ, "robo", "sinais.json"), encoding="utf-8")))
     piloto = set(cfg.get("nivel3_paises", []))
     proprios_de = {iso: set(v.get("fips") or [iso]) for iso, v in paises.items()}  # códigos FIPS, como nos lugares do GDELT
 
@@ -588,7 +639,9 @@ def main():
                         f = fora_da_lista.setdefault(iso, {})
                         f[dominio] = f.get(dominio, 0) + 1
                     continue
-                nivel, estado = classificar(iso, temas_reg, pontos, locais_do_registro(c), proprios_de.get(iso, {iso}),
+                locs = locais_do_registro(c)
+                so_exterior = bool(locs) and all(cc not in proprios_de.get(iso, {iso}) for cc, _ in locs)
+                nivel, estado = classificar(iso, temas_reg, pontos, locs, proprios_de.get(iso, {iso}),
                                             estados, piloto, estados.da_url(iso, host, url),
                                             estados.por_uf.get((iso, (fonte[2] or "").lower())) if fonte and fonte[2] else None)
                 if nivel is None:
@@ -619,7 +672,7 @@ def main():
                     "midia_exilio": casa(exilio, dominio, host),
                     "temas": temas_do_registro(iso, texto_nomes, temas_reg, temas, pontos) if nivel <= 2 else [],
                     "areas": areas_do_texto(texto_nomes, areas) if pontos >= 2 and nivel <= 2 else [],
-                    "pontos": pontos, "nivel": nivel, "estado": estado,
+                    "pontos": pontos, "nivel": nivel, "estado": estado, "ex": 1 if so_exterior else 0,
                 }
 
     # 3. junta com as matérias das execuções anteriores (até 48 h) e escolhe as de cada país
@@ -728,6 +781,7 @@ def main():
 
     conferir_temas_pelo_titulo(itens, temas)
     conferir_areas_pelo_titulo(itens, areas)
+    mudancas_nivel = conferir_nivel_pelo_titulo(itens, sinais)
     itens = [i for i in itens if not (i.get("extra_area") and not i["areas"])]  # entrou só pela área e o título não a cita
     areas_rel = {}
     for it in itens:
@@ -753,7 +807,8 @@ def main():
         "contagens": contagens,
         "itens": itens,
     }
-    extra = {"arquivos": n_arquivos, "registros": n_registros, "temas": temas_rel, "areas": areas_rel, "traducao": trad}
+    extra = {"arquivos": n_arquivos, "registros": n_registros, "temas": temas_rel, "areas": areas_rel, "traducao": trad,
+             "niveis_titulo": mudancas_nivel}
     md = resumo_markdown(saida, extra, time.time() - inicio)
     if n_arquivos or anteriores:  # sem arquivo novo, regrava o histórico com as correções atuais
         with open(os.path.join(DADOS, "noticias.json"), "w", encoding="utf-8") as f:
