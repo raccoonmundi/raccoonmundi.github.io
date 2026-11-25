@@ -10,7 +10,7 @@
       mapa: 'MAP', titulo: 'The world through its local press', irPara: 'Go to', escolha: 'Go to…',
       regioes: 'Regions', paises: 'Countries', mundo: 'World', regiao: 'Region', pais: 'Country',
       tema: 'In focus', emFoco: 'IN FOCUS', ultimas: 'Latest from the local press',
-      noticias: function (n) { return n === 1 ? '1 story' : n + ' stories'; },
+      noticias: function (n) { return n === 1 ? '1 story' : num(n) + ' stories'; },
       dePaises: function (m) { return m === 1 ? 'from 1 country' : 'from ' + m + ' countries'; },
       periodo: function (h) { return 'last ' + h + ' h'; },
       voltar: function (nome) { return '← ' + nome; },
@@ -19,7 +19,7 @@
       semColeta: 'This country is not collected yet in the test phase.',
       semFonte: 'GDELT has no source code for this territory.',
       ver: 'No separate collection for this territory. See ',
-      abrir: 'Open story ↗', lerTraduzido: 'Read translated', estatal: 'State media', exilio: 'Media in exile', original: 'Original',
+      abrir: 'Open story ↗', lerTraduzido: 'Read translated', traduzir: 'Translate', estatal: 'State media', exilio: 'Media in exile', original: 'Original',
       atualizado: function (t) { return 'Updated ' + t + ' (Brasília time).'; },
       aindaNao: 'The first collection has not run yet.',
       teste: function (n) { return 'Test phase: ' + n + ' countries collected.'; },
@@ -38,7 +38,7 @@
       mapa: 'MAPA', titulo: 'O mundo pela imprensa local', irPara: 'Ir para', escolha: 'Ir para…',
       regioes: 'Regiões', paises: 'Países', mundo: 'Mundo', regiao: 'Região', pais: 'País',
       tema: 'Em foco', emFoco: 'EM FOCO', ultimas: 'O mais recente da imprensa local',
-      noticias: function (n) { return n === 1 ? '1 notícia' : n + ' notícias'; },
+      noticias: function (n) { return n === 1 ? '1 notícia' : num(n) + ' notícias'; },
       dePaises: function (m) { return m === 1 ? 'de 1 país' : 'de ' + m + ' países'; },
       periodo: function (h) { return 'últimas ' + h + ' h'; },
       voltar: function (nome) { return '← ' + nome; },
@@ -47,7 +47,7 @@
       semColeta: 'Este país ainda não é coletado na fase de teste.',
       semFonte: 'O GDELT não tem código de fonte para este território.',
       ver: 'Território sem coleta própria. Veja ',
-      abrir: 'Abrir matéria ↗', lerTraduzido: 'Ler traduzido', estatal: 'Mídia estatal', exilio: 'Mídia no exílio', original: 'Original',
+      abrir: 'Abrir matéria ↗', lerTraduzido: 'Ler traduzido', traduzir: 'Traduzir', estatal: 'Mídia estatal', exilio: 'Mídia no exílio', original: 'Original',
       atualizado: function (t) { return 'Atualizado em ' + t + ' (horário de Brasília).'; },
       aindaNao: 'A primeira coleta ainda não rodou.',
       teste: function (n) { return 'Fase de teste: ' + n + ' países coletados.'; },
@@ -98,6 +98,7 @@
   };
 
   function t(k) { return T[estado.l][k]; }
+  function num(n) { return Number(n).toLocaleString(estado.l === 'pt' ? 'pt-BR' : 'en-US'); }
   function el(tag, attrs, filhos) {
     var e = document.createElement(tag);
     if (attrs) Object.keys(attrs).forEach(function (k) {
@@ -389,24 +390,35 @@
   }
 
   /* ---------- painel ---------- */
+  var ICONE_TRADUZIR = 'M5 4h7M8.5 4v1.5c0 2.6-1.6 4.9-4 6M6 7.5c.9 1.7 2.4 3 4.2 3.7M11 20l4-9 4 9M12.3 17h5.4';
+  function iconeTraduzir() {
+    var ns = 'http://www.w3.org/2000/svg', sv = document.createElementNS(ns, 'svg'), pa = document.createElementNS(ns, 'path');
+    sv.setAttribute('viewBox', '0 0 24 24'); sv.setAttribute('width', '14'); sv.setAttribute('height', '14'); sv.setAttribute('aria-hidden', 'true');
+    pa.setAttribute('d', ICONE_TRADUZIR); pa.setAttribute('fill', 'none'); pa.setAttribute('stroke', 'currentColor');
+    pa.setAttribute('stroke-width', '1.8'); pa.setAttribute('stroke-linecap', 'round'); pa.setAttribute('stroke-linejoin', 'round');
+    sv.appendChild(pa); return sv;
+  }
+  /* Cartão de notícia: o título é o único link para a matéria; numa linha só, veículo · idioma · hora,
+     selos e o atalho de tradução da página. */
   function cartao(it) {
     var exib = estado.l === 'pt' ? (it.titulo_pt || it.titulo_en || it.titulo_original) : (it.titulo_en || it.titulo_original);
     var link = urlSegura(it.url) ? it.url : null;
-    var titulo = el('p', { class: 'titulo' }, [link ? el('a', { href: link, target: '_blank', rel: 'noopener', text: exib }) : exib]);
+    var titulo = el('h3', { class: 'titulo' }, [link ? el('a', { href: link, target: '_blank', rel: 'noopener', text: exib }) : exib]);
     var filhos = [titulo];
-    if (exib !== it.titulo_original) filhos.push(el('p', { class: 'original', text: t('original') + ': ' + it.titulo_original }));
+    if (exib !== it.titulo_original) filhos.push(el('p', { class: 'original', lang: it.lc || '', text: it.titulo_original }));
     var idioma = estado.l === 'pt' ? (IDIOMAS_PT[it.idioma] || it.idioma) : it.idioma;
     var meta = el('div', { class: 'meta' }, [
-      el('span', { text: it.veiculo }),
-      idioma ? el('span', { text: '· ' + idioma }) : null,
-      el('span', { title: fmtData[estado.l].format(new Date(it.visto_em)), text: '· ' + relativo(it.visto_em) }),
+      el('span', { class: 'veiculo', text: it.veiculo }),
+      idioma ? el('span', { class: 'ponto', text: idioma }) : null,
+      el('time', { class: 'ponto', datetime: it.visto_em, title: fmtData[estado.l].format(new Date(it.visto_em)), text: relativo(it.visto_em) }),
       it.midia_estatal ? el('span', { class: 'selo', text: t('estatal') }) : null,
       it.midia_exilio ? el('span', { class: 'selo exilio', text: t('exilio') }) : null
     ]);
     if (link) {
-      meta.appendChild(el('a', { href: link, target: '_blank', rel: 'noopener', text: t('abrir') }));
-      meta.appendChild(el('a', { href: 'https://translate.google.com/translate?sl=auto&tl=' + estado.l + '&u=' + encodeURIComponent(link),
-        target: '_blank', rel: 'noopener', text: t('lerTraduzido') }));
+      var tr = el('a', { class: 'traduzir', href: 'https://translate.google.com/translate?sl=auto&tl=' + estado.l + '&u=' + encodeURIComponent(link),
+        target: '_blank', rel: 'noopener', title: t('lerTraduzido'), 'aria-label': t('lerTraduzido') + ': ' + exib });
+      tr.appendChild(iconeTraduzir()); tr.appendChild(document.createTextNode(t('traduzir')));
+      meta.appendChild(tr);
     }
     filhos.push(meta);
     return el('article', { class: 'item' }, filhos);
@@ -422,7 +434,7 @@
   function botaoPais(iso) {
     var n = itensDe([iso]).length, col = coletado(iso);
     return el('button', { type: 'button', class: col && n ? '' : 'sem', on: { click: function () { selecionar({ tipo: 'p', id: iso }, true); } } },
-      [nomePais(iso), col ? el('span', { class: 'n', text: String(n) }) : null]);
+      [nomePais(iso), col ? el('span', { class: 'n', text: num(n) }) : null]);
   }
   function renderPainel() {
     var c = document.getElementById('painel-conteudo'); c.textContent = '';
@@ -439,7 +451,7 @@
         add(el('div', { class: 'secao', text: t('regioesMaisAtivas') }));
         add(el('div', { class: 'lista-paises' }, regs.map(function (x) {
           return el('button', { type: 'button', on: { click: function () { selecionar({ tipo: 'r', id: x.r.id }, true); } } },
-            [nomeRegiao(x.r.id), el('span', { class: 'n', text: String(x.v) })]);
+            [nomeRegiao(x.r.id), el('span', { class: 'n', text: num(x.v) })]);
         })));
       }
       add(el('div', { class: 'secao', text: t('destaques') }));
@@ -483,6 +495,8 @@
       lista(variar(itt, 15, 4)).forEach(add);
     }
     c.scrollTop = 0;
+    var h2 = c.querySelector('h2'), viva = document.getElementById('anuncio');
+    if (viva && h2) viva.textContent = h2.textContent;
   }
   function renderRodape() {
     var r = document.getElementById('rodape'); r.textContent = '';
