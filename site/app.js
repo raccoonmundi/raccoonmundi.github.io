@@ -27,7 +27,10 @@
       fronteiras: 'Borders: Natural Earth (de facto status); disputed areas are hatched.',
       creditos: 'Map: Raccoon Mundi, with data from ',
       legTitulo: 'Geopolitical stories, last 24 h', menos: 'fewer', mais: 'more',
-      legSem: 'No stories', legSemColeta: 'Not collected yet', legDisputa: 'Disputed area',
+      legSem: 'No stories', legSemColeta: 'Not collected yet', legDisputa: 'Disputed area (Natural Earth)',
+      legOcupado: function (d) { return 'Military occupation (DeepStateMap, ' + d + ')'; }, legContestado: 'Contested zone',
+      ocupacaoUA: function (d) { return 'Part of the territory is under Russian military occupation, according to DeepStateMap (Ukrainian front-line mapping project) on ' + d + '.'; },
+      creditoGuerra: 'Occupied areas: ',
       agora: 'just now', ha: function (n, u) { return n + ' ' + u + ' ago'; }, u: { m: 'min', h: 'h', d: 'd' },
       erro: 'Could not load the map data. Try reloading the page.', expandir: 'Expand panel'
     },
@@ -52,7 +55,10 @@
       fronteiras: 'Fronteiras: Natural Earth (situação de fato); áreas disputadas hachuradas.',
       creditos: 'Mapa: Raccoon Mundi, com dados do ',
       legTitulo: 'Notícias geopolíticas, últimas 24 h', menos: 'menos', mais: 'mais',
-      legSem: 'Sem notícias', legSemColeta: 'Ainda sem coleta', legDisputa: 'Área disputada',
+      legSem: 'Sem notícias', legSemColeta: 'Ainda sem coleta', legDisputa: 'Área disputada (Natural Earth)',
+      legOcupado: function (d) { return 'Ocupação militar (DeepStateMap, ' + d + ')'; }, legContestado: 'Zona contestada',
+      ocupacaoUA: function (d) { return 'Parte do território está sob ocupação militar russa, segundo o DeepStateMap (projeto ucraniano de mapeamento da linha de frente) em ' + d + '.'; },
+      creditoGuerra: 'Áreas ocupadas: ',
       agora: 'agora', ha: function (n, u) { return 'há ' + n + ' ' + u; }, u: { m: 'min', h: 'h', d: 'd' },
       erro: 'Não foi possível carregar os dados do mapa. Tente recarregar a página.', expandir: 'Expandir painel'
     }
@@ -78,6 +84,7 @@
   var estado = { l: 'en', h: 24, modo: 'regioes', sel: null };
   var D = { paises: {}, macros: [], macroPorId: {}, temas: [], temaPorId: {}, itens: [], porPais: {},
             volume: {}, coletados: null, gerado: null, teste: false };
+  var camadaGuerra = null;
   var mapa, svg, camadaPaises, camadaMacros, camadaDisputa, camadaDestaque = null, macroLayer = {}, modoAuto = 'regioes';
   var G = {}; // contornos carregados (países e macrorregiões)
   var camadaRotulos = null;
@@ -150,6 +157,11 @@
   /* ---------- tempo ---------- */
   var fmtData = { en: new Intl.DateTimeFormat('en-GB', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }),
                   pt: new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) };
+  function dataCurta(d) { // '2026-11-24' -> 24/11/2026 (PT) ou 24 Nov 2026 (EN)
+    if (!d || !/^\d{4}-\d{2}-\d{2}/.test(d)) return d || '';
+    var dt = new Date(d.slice(0, 10) + 'T12:00:00Z');
+    return dt.toLocaleDateString(estado.l === 'pt' ? 'pt-BR' : 'en-GB', { day: '2-digit', month: estado.l === 'pt' ? '2-digit' : 'short', year: 'numeric', timeZone: 'UTC' });
+  }
   function relativo(iso) {
     var min = Math.round((Date.now() - Date.parse(iso)) / 60000);
     if (min < 2) return t('agora');
@@ -225,6 +237,7 @@
     cima.eachLayer(function (l) { l._path.setAttribute('transform', 'translate(0 -2)'); });
     borda.eachLayer(function (l) { l._path.setAttribute('transform', 'translate(0 -2)'); });
     if (camadaDisputa) camadaDisputa.bringToFront();
+    if (camadaGuerra) camadaGuerra.bringToFront();
   }
   function rotuloHover(f) {
     var k = f.properties.k, r = f.properties.r;
@@ -315,13 +328,19 @@
   }
   function criarHachura() {
     var c = svg._container; if (!c || c.querySelector('#hachura')) return;
-    var ns = 'http://www.w3.org/2000/svg', defs = document.createElementNS(ns, 'defs'), p = document.createElementNS(ns, 'pattern');
-    p.setAttribute('id', 'hachura'); p.setAttribute('patternUnits', 'userSpaceOnUse'); p.setAttribute('width', '6'); p.setAttribute('height', '6');
-    p.setAttribute('patternTransform', 'rotate(45)');
-    var r = document.createElementNS(ns, 'rect'); r.setAttribute('width', '6'); r.setAttribute('height', '6'); r.setAttribute('fill', 'rgba(255,255,255,0.15)');
-    var ln = document.createElementNS(ns, 'line'); ln.setAttribute('x1', '0'); ln.setAttribute('y1', '0'); ln.setAttribute('x2', '0'); ln.setAttribute('y2', '6');
-    ln.setAttribute('stroke', '#4a5660'); ln.setAttribute('stroke-width', '1.4'); ln.setAttribute('stroke-opacity', '0.55');
-    p.appendChild(r); p.appendChild(ln); defs.appendChild(p);
+    var ns = 'http://www.w3.org/2000/svg', defs = document.createElementNS(ns, 'defs');
+    var padrao = function (id, tam, ang, fundo, traco, larg, opac) {
+      var p = document.createElementNS(ns, 'pattern');
+      p.setAttribute('id', id); p.setAttribute('patternUnits', 'userSpaceOnUse'); p.setAttribute('width', tam); p.setAttribute('height', tam);
+      p.setAttribute('patternTransform', 'rotate(' + ang + ')');
+      var r = document.createElementNS(ns, 'rect'); r.setAttribute('width', tam); r.setAttribute('height', tam); r.setAttribute('fill', fundo);
+      var ln = document.createElementNS(ns, 'line'); ln.setAttribute('x1', '0'); ln.setAttribute('y1', '0'); ln.setAttribute('x2', '0'); ln.setAttribute('y2', tam);
+      ln.setAttribute('stroke', traco); ln.setAttribute('stroke-width', larg); ln.setAttribute('stroke-opacity', opac);
+      p.appendChild(r); p.appendChild(ln); defs.appendChild(p);
+    };
+    padrao('hachura', '7', 45, 'rgba(255,255,255,0.35)', '#2b3a44', '1.8', '0.75');          // área disputada
+    padrao('hachura-guerra', '8', -45, 'rgba(143,29,13,0.16)', '#8f1d0d', '2.6', '0.85');     // ocupação militar
+    padrao('hachura-contestada', '5', -45, 'rgba(143,29,13,0.06)', '#8f1d0d', '1', '0.5');    // zona contestada
     var fl = document.createElementNS(ns, 'filter'); fl.setAttribute('id', 'sombra');
     fl.setAttribute('x', '-30%'); fl.setAttribute('y', '-30%'); fl.setAttribute('width', '160%'); fl.setAttribute('height', '160%');
     var bl = document.createElementNS(ns, 'feGaussianBlur'); bl.setAttribute('stdDeviation', '5');
@@ -351,7 +370,13 @@
     camadaMacros = L.geoJSON(geoMacros, { renderer: svg, smoothFactor: 0.4, interactive: false, style: estiloMacro,
       onEachFeature: function (f, layer) { if (f.properties.copia === 0) macroLayer[f.properties.r] = layer; } }).addTo(mapa);
     camadaDisputa = L.geoJSON(geoDisputa, { renderer: svg, smoothFactor: 0.4, interactive: false,
-      style: { fillColor: 'url(#hachura)', fillOpacity: 1, color: '#4a5660', weight: 0.6, dashArray: '2 2' } }).addTo(mapa);
+      style: { fillColor: 'url(#hachura)', fillOpacity: 1, color: '#2b3a44', weight: 1.1, opacity: 0.85, dashArray: '4 3' } }).addTo(mapa);
+    if (G.guerra) camadaGuerra = L.geoJSON(G.guerra, { renderer: svg, smoothFactor: 0.4, interactive: false,
+      style: function (f) {
+        return f.properties.tipo === 'ocupado'
+          ? { fillColor: 'url(#hachura-guerra)', fillOpacity: 1, color: '#8f1d0d', weight: 1.4, opacity: 0.95 }
+          : { fillColor: 'url(#hachura-contestada)', fillOpacity: 1, color: '#8f1d0d', weight: 0.8, opacity: 0.7, dashArray: '2 3' };
+      } }).addTo(mapa);
     criarHachura();
     mapa.createPane('rotulos').style.zIndex = 450;
     camadaRotulos = L.layerGroup().addTo(mapa);
@@ -435,6 +460,7 @@
       add(el('button', { type: 'button', class: 'voltar', text: t('voltar')(nomeRegiao(p.r)), on: { click: function () { selecionar({ tipo: 'r', id: p.r }, true); } } }));
       add(el('div', { class: 'tipo', text: t('pais') + ' · ' + nomeRegiao(p.r) }));
       add(el('h2', { text: nomePais(s.id) }));
+      if (G.guerraMeta && s.id === 'UA') add(el('p', { class: 'aviso guerra', text: t('ocupacaoUA')(dataCurta(G.guerraMeta.data)) }));
       if (p.ver !== undefined) {
         add(el('p', { class: 'aviso' }, p.ver ? [t('ver'), el('a', { href: '#p=' + p.ver, text: nomePais(p.ver), on: { click: function (e) { e.preventDefault(); selecionar({ tipo: 'p', id: p.ver }, true); } } }), '.'] : [t('semFonte')]));
       } else if (!coletado(s.id)) {
@@ -464,6 +490,7 @@
     if (D.teste && D.coletados) r.appendChild(el('p', { text: t('teste')(D.coletados.length) }));
     r.appendChild(el('p', { text: t('aviso') }));
     r.appendChild(el('p', { text: t('fronteiras') }));
+    if (G.guerraMeta) r.appendChild(el('p', {}, [t('creditoGuerra'), el('a', { href: 'https://deepstatemap.live', target: '_blank', rel: 'noopener', text: 'DeepStateMap' }), ', ' + dataCurta(G.guerraMeta.data) + '.']));
     r.appendChild(el('p', {}, [t('creditos'), el('a', { href: 'https://www.naturalearthdata.com', target: '_blank', rel: 'noopener', text: 'Natural Earth' }),
       estado.l === 'pt' ? ' e do ' : ' and ', el('a', { href: 'https://www.gdeltproject.org', target: '_blank', rel: 'noopener', text: 'GDELT' }), '.']));
   }
@@ -474,7 +501,11 @@
     g.appendChild(el('div', { style: 'display:flex;justify-content:space-between' }, [el('span', { text: t('menos') }), el('span', { text: t('mais') })]));
     g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + COR_ZERO + ';border:1px solid #d6cfc2' }), t('legSem')]));
     if (D.teste || !D.gerado) g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + COR_SEM_COLETA }), t('legSemColeta')]));
-    g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:repeating-linear-gradient(45deg,#e9e3d7 0 2px,#8a939b 2px 3px)' }), t('legDisputa')]));
+    g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:repeating-linear-gradient(45deg,#efe9df 0 3px,#2b3a44 3px 4.5px);border:1px dashed #2b3a44' }), t('legDisputa')]));
+    if (G.guerraMeta) {
+      g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:repeating-linear-gradient(-45deg,#f1d9d2 0 3px,#8f1d0d 3px 5px);border:1px solid #8f1d0d' }), t('legOcupado')(dataCurta(G.guerraMeta.data))]));
+      g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:repeating-linear-gradient(-45deg,#f7ece8 0 2px,#c08070 2px 3px);border:1px dashed #8f1d0d' }), t('legContestado')]));
+    }
   }
   function renderTemas() {
     var n = document.getElementById('temas'); n.textContent = '';
@@ -550,7 +581,8 @@
   Promise.all([
     carregar('data/paises.json'), carregar('data/macrorregioes.json'), carregar('data/temas.json'),
     carregar('data/noticias.json').catch(function () { return {}; }),
-    carregar('geo/paises.geojson'), carregar('geo/macrorregioes.geojson'), carregar('geo/disputadas.geojson')
+    carregar('geo/paises.geojson'), carregar('geo/macrorregioes.geojson'), carregar('geo/disputadas.geojson'),
+    carregar('geo/zonas_guerra.geojson').catch(function () { return null; })
   ]).then(function (r) {
     D.paises = r[0]; D.macros = r[1]; D.temas = r[2] || [];
     D.macros.forEach(function (m) { D.macroPorId[m.id] = m; });
@@ -563,6 +595,7 @@
     calcularEscalas();
     lerRota();
     G.paises = tresMundos(r[4]); G.macros = tresMundos(r[5]); G.disputa = tresMundos(r[6]);
+    if (r[7] && r[7].features && r[7].features.length) { G.guerra = tresMundos(r[7]); G.guerraMeta = { data: r[7].data, paises: r[7].paises || [] }; }
     montarMapa(G.paises, G.macros, G.disputa);
     ligarControles();
     renderTudo();
