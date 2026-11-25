@@ -34,6 +34,9 @@
       fronteiras: 'Borders: Natural Earth (de facto status); disputed areas are hatched.',
       creditos: 'Map: Raccoon Mundi, with data from ',
       legTitulo: 'Geopolitical stories, last 24 h', menos: 'fewer', mais: 'more',
+      corPor: 'Color by', corVolume: 'Volume', corTom: 'Tone', legTituloTom: 'Tone of the coverage, last 24 h',
+      tomMenos: 'more negative', tomMais: 'less negative', tomMedio: function (v) { return 'tone ' + v; },
+      tomPainel: function (v) { return 'Average tone of the coverage (24 h): ' + v + ' (GDELT scale, negative = more negative wording).'; },
       legSem: 'No stories', legSemColeta: 'Not collected yet', legDisputa: 'Disputed area (Natural Earth)',
       legOcupado: function (d) { return 'Military occupation (DeepStateMap, ' + d + ')'; }, legContestado: 'Contested zone', legClique: 'Click a hatched area for its news',
       areaGuerra: 'War zone', areaDisputa: 'Disputed area', areasDoPais: 'Wars and disputes', areasIrPara: 'Wars and disputes',
@@ -78,6 +81,9 @@
       fronteiras: 'Fronteiras: Natural Earth (situação de fato); áreas disputadas hachuradas.',
       creditos: 'Mapa: Raccoon Mundi, com dados do ',
       legTitulo: 'Notícias geopolíticas, últimas 24 h', menos: 'menos', mais: 'mais',
+      corPor: 'Cor por', corVolume: 'Quantidade', corTom: 'Tom', legTituloTom: 'Tom da cobertura, últimas 24 h',
+      tomMenos: 'mais negativo', tomMais: 'menos negativo', tomMedio: function (v) { return 'tom ' + v; },
+      tomPainel: function (v) { return 'Tom médio da cobertura (24 h): ' + v + ' (escala do GDELT; negativo = linguagem mais negativa).'; },
       legSem: 'Sem notícias', legSemColeta: 'Ainda sem coleta', legDisputa: 'Área disputada (Natural Earth)',
       legOcupado: function (d) { return 'Ocupação militar (DeepStateMap, ' + d + ')'; }, legContestado: 'Zona contestada', legClique: 'Clique numa área hachurada para ver as notícias',
       areaGuerra: 'Área em guerra', areaDisputa: 'Área disputada', areasDoPais: 'Guerras e disputas', areasIrPara: 'Guerras e disputas',
@@ -109,6 +115,7 @@
   var PALETAS = {
     claro: {
       cores: ['#f6e3d6', '#eebfa2', '#e0916a', '#c9643a', '#a8400f'],
+      tons: ['#a8352c', '#dc8a76', '#eee5d9', '#93c3bf', '#2f8580'],
       zero: '#e9e3d7', semColeta: '#dcd7ce', semRegiao: '#e4dfd6', amostraBorda: '#d6cfc2',
       bordaRegiao: '#ffffff', bordaMacro: '#ffffff', bordaPais: '#7d776c', bordaEstado: 'rgba(255,255,255,0.95)',
       destaque: '#1f2a33', sombra: '#1f2a33', sombraOp: 0.45,
@@ -120,6 +127,7 @@
     },
     escuro: {
       cores: ['#4b3126', '#713c23', '#9d4b23', '#cc602b', '#f3874e'],
+      tons: ['#d2604f', '#8a4a40', '#3b4046', '#3e706c', '#6ec0b8'],
       zero: '#2c333a', semColeta: '#20272e', semRegiao: '#262d34', amostraBorda: '#454f58',
       bordaRegiao: '#111820', bordaMacro: '#0d151b', bordaPais: '#5b656e', bordaEstado: 'rgba(13,21,27,0.95)',
       destaque: '#f3ede3', sombra: '#000000', sombraOp: 0.8,
@@ -139,7 +147,8 @@
   var VISTAS_PAIS = { 'US': [[40, -98], 3], 'RU': [[62, 95], 2.5], 'NZ': [[-41, 173], 4.5], 'FJ': [[-17.8, 178], 6] };
   var LIMIAR_PAISES = 4;
 
-  var estado = { l: 'en', h: 24, modo: 'regioes', sel: null };
+  var estado = { l: 'en', h: 24, modo: 'regioes', sel: null, cor: 'volume' };
+  var LIMITES_TOM = [-4, -3, -2, -1];
   var D = { paises: {}, macros: [], macroPorId: {}, temas: [], temaPorId: {}, areas: [], areaPorId: {}, estados: {}, estadoPorId: {}, itens: [], porPais: {},
             volume: {}, coletados: null, gerado: null, teste: false };
   var camadaGuerra = null, camadaEstados = null;
@@ -224,7 +233,32 @@
     if (!v.length) return [1, 2, 3, 4];
     return [0.2, 0.4, 0.6, 0.8].map(function (q) { return v[Math.floor(q * (v.length - 1))]; });
   }
+  function textoHover(k, r) { // nome + notícias (+ tom, no modo de cor por tom)
+    var tom = estado.cor === 'tom' ? (estado.modo === 'regioes' ? tomRegiao(r) : (coletado(k) ? D.tom[k] : null)) : null;
+    var sufixo = tom === null || tom === undefined ? '' : ' · ' + t('tomMedio')(fmtTom(tom));
+    if (estado.modo === 'regioes') { var vr = volRegiao(r); return nomeRegiao(r) + (vr === null ? '' : ' · ' + t('noticias')(vr)) + sufixo; }
+    var vp = coletado(k) ? (volPais(k) || 0) : null;
+    return nomePais(k) + (vp === null ? '' : ' · ' + t('noticias')(vp)) + sufixo;
+  }
+  function tomRegiao(id) { // média dos países da região, pesada pela quantidade de notícias
+    var r = D.macroPorId[id], s = 0, n = 0;
+    r.paises.forEach(function (iso) { var t = D.tom[iso], v = volPais(iso) || 0; if (t !== undefined && v) { s += t * v; n += v; } });
+    return n ? s / n : null;
+  }
+  function corTom(v) {
+    if (v === null || v === undefined) return P.semColeta;
+    for (var i = 0; i < LIMITES_TOM.length; i++) if (v <= LIMITES_TOM[i]) return P.tons[i];
+    return P.tons[P.tons.length - 1];
+  }
+  /* cor de um país (modo Países) ou da região dele (modo Regiões), por quantidade ou por tom */
+  function corDoValor(k, r) {
+    if (estado.cor === 'tom') return estado.modo === 'regioes' ? corTom(tomRegiao(r)) : corTom(coletado(k) ? D.tom[k] : null);
+    return estado.modo === 'regioes' ? cor(volRegiao(r), LIMITES_REGIAO) : cor(coletado(k) ? (volPais(k) || 0) : null, LIMITES_PAIS);
+  }
+  function fmtTom(v) { return (v > 0 ? '+' : '') + Number(v).toLocaleString(estado.l === 'pt' ? 'pt-BR' : 'en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
   function calcularEscalas() {
+    var ts = Object.keys(D.tom).filter(coletado).map(function (k) { return D.tom[k]; }).sort(function (a, b) { return a - b; });
+    if (ts.length >= 5) LIMITES_TOM = [0.2, 0.4, 0.6, 0.8].map(function (q) { return ts[Math.floor(q * (ts.length - 1))]; });
     LIMITES_PAIS = quintis((D.coletados || []).map(function (iso) { return volPais(iso) || 0; }));
     LIMITES_REGIAO = quintis(D.macros.map(function (r) { return volRegiao(r.id) || 0; }));
   }
@@ -250,6 +284,7 @@
   function lerRota() {
     var q = new URLSearchParams(location.hash.replace(/^#/, ''));
     if (q.get('l') === 'pt' || q.get('l') === 'en') estado.l = q.get('l');
+    estado.cor = q.get('c') === 'tom' ? 'tom' : 'volume';
     if (['12', '24', '48'].indexOf(q.get('h')) >= 0) estado.h = +q.get('h');
     if (q.get('e') && D.estadoPorId[q.get('e')]) estado.sel = { tipo: 'e', id: q.get('e') };
     else if (q.get('a') && D.areaPorId[q.get('a')]) estado.sel = { tipo: 'a', id: q.get('a') };
@@ -264,6 +299,7 @@
     if (estado.sel) q.set(estado.sel.tipo, estado.sel.id);
     if (estado.l !== 'en') q.set('l', estado.l);
     if (estado.h !== 24) q.set('h', String(estado.h));
+    if (estado.cor === 'tom') q.set('c', 'tom');
     var h = q.toString();
     history.replaceState(null, '', h ? '#' + h : location.pathname + location.search);
   }
@@ -272,7 +308,7 @@
   function estiloPais(f) {
     var k = f.properties.k, r = f.properties.r, tema = estado.sel && estado.sel.tipo === 't' ? D.temaPorId[estado.sel.id] : null;
     if (!r) return { fillColor: P.semRegiao, fillOpacity: 1, color: P.bordaRegiao, weight: 0.4 };
-    var fill = estado.modo === 'regioes' ? cor(volRegiao(r), LIMITES_REGIAO) : cor(coletado(k) ? (volPais(k) || 0) : null, LIMITES_PAIS);
+    var fill = corDoValor(k, r);
     var s = estado.modo === 'regioes'
       ? { fillColor: fill, fillOpacity: 1, color: P.bordaRegiao, weight: 0.4, opacity: 0.9, lineJoin: 'round' }
       : { fillColor: fill, fillOpacity: 1, color: P.bordaPais, weight: 0.8, opacity: 0.85, lineJoin: 'round' };
@@ -387,12 +423,7 @@
   function rotuloHover(f) {
     var k = f.properties.k, r = f.properties.r;
     if (!r) return null;
-    if (estado.modo === 'regioes') {
-      var vr = volRegiao(r);
-      return nomeRegiao(r) + (vr === null ? '' : ' · ' + t('noticias')(vr));
-    }
-    var vp = coletado(k) ? (volPais(k) || 0) : null;
-    return nomePais(k) + (vp === null ? '' : ' · ' + t('noticias')(vp));
+    return textoHover(k, r);
   }
   function margemGaveta() { // altura da gaveta do painel no celular (cobre a parte de baixo do mapa)
     if (window.innerWidth >= 820) return 0;
@@ -671,6 +702,7 @@
         add(el('p', { class: 'aviso', text: t('semColeta') }));
       } else {
         add(el('p', { class: 'resumo', text: resumo(itp) }));
+        if (estado.cor === 'tom' && D.tom[s.id] !== undefined) add(el('p', { class: 'dica-secao', text: t('tomPainel')(fmtTom(D.tom[s.id])) }));
         if (D.estados[s.id]) { // piloto: estados com as notícias locais
           var ests = D.estados[s.id].map(function (e) { return { e: e, n: itensDoEstado(e.id).length }; })
             .sort(function (a, b) { return (b.n - a.n) || a.e.nome.localeCompare(b.e.nome); });
@@ -749,12 +781,19 @@
     r.appendChild(el('p', {}, [t('creditos'), el('a', { href: 'https://www.naturalearthdata.com', target: '_blank', rel: 'noopener', text: 'Natural Earth' }),
       estado.l === 'pt' ? ' e do ' : ' and ', el('a', { href: 'https://www.gdeltproject.org', target: '_blank', rel: 'noopener', text: 'GDELT' }), '.']));
   }
+  function mudarCor(m) { estado.cor = m; gravarRota(); renderLegenda(); renderPainel(); restyle(); }
   function renderLegenda() {
-    var g = document.getElementById('legenda'); g.textContent = '';
-    g.appendChild(el('div', { text: t('legTitulo') }));
-    g.appendChild(el('div', { class: 'escala' }, P.cores.map(function (c) { return el('span', { style: 'background:' + c }); })));
-    g.appendChild(el('div', { style: 'display:flex;justify-content:space-between' }, [el('span', { text: t('menos') }), el('span', { text: t('mais') })]));
-    g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.zero + ';border:1px solid ' + P.amostraBorda }), t('legSem')]));
+    var g = document.getElementById('legenda'); g.textContent = ''; g.removeAttribute('aria-hidden');
+    var porTom = estado.cor === 'tom';
+    var botao = function (m, txt) {
+      return el('button', { type: 'button', 'aria-pressed': estado.cor === m ? 'true' : 'false', text: txt, on: { click: function () { mudarCor(m); } } });
+    };
+    g.appendChild(el('div', { class: 'cor-por-linha' }, [el('span', { text: t('corPor') }),
+      el('div', { class: 'segmentado cor-por', role: 'group', 'aria-label': t('corPor') }, [botao('volume', t('corVolume')), botao('tom', t('corTom'))])]));
+    g.appendChild(el('div', { text: t(porTom ? 'legTituloTom' : 'legTitulo') }));
+    g.appendChild(el('div', { class: 'escala' }, (porTom ? P.tons : P.cores).map(function (c) { return el('span', { style: 'background:' + c }); })));
+    g.appendChild(el('div', { style: 'display:flex;justify-content:space-between' }, [el('span', { text: t(porTom ? 'tomMenos' : 'menos') }), el('span', { text: t(porTom ? 'tomMais' : 'mais') })]));
+    if (!porTom) g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.zero + ';border:1px solid ' + P.amostraBorda }), t('legSem')]));
     if (D.teste || !D.gerado) g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.semColeta }), t('legSemColeta')]));
     g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.legDisputa }), t('legDisputa')]));
     if (G.guerraMeta) {
@@ -895,6 +934,7 @@
     D.temas.forEach(function (tm) { D.temaPorId[tm.id] = tm; });
     var n = r[3] || {};
     D.itens = n.itens || []; D.volume = n.volume || {}; D.coletados = n.paises_coletados || null;
+    D.tom = n.tom_medio || {};
     D.gerado = n.gerado_em || null; D.teste = !!n.teste; D.fontesConhecidas = !!n.somente_fontes_conhecidas;
     D.itens.forEach(function (it) { (D.porPais[it.pais] = D.porPais[it.pais] || []).push(it); });
     Object.keys(D.porPais).forEach(function (k) { D.porPais[k].sort(function (a, b) { return b.visto_em < a.visto_em ? -1 : 1; }); });

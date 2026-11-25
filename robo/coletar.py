@@ -593,7 +593,7 @@ def main():
     t_agora = agora()
     desde = t_agora - dt.timedelta(hours=cfg["horas_por_execucao_max"])
     mesma_regra = (bool(anterior.get("somente_fontes_conhecidas", False)) == estrito
-                   and anterior.get("niveis_versao") == NIVEIS_VERSAO)
+                   and anterior.get("niveis_versao") == NIVEIS_VERSAO and "tons" in anterior)
     if not mesma_regra:
         anteriores = {}
     if anterior.get("ultimo_arquivo") and set(anterior.get("paises_coletados", [])) >= alvo and mesma_regra:
@@ -606,7 +606,7 @@ def main():
     log(f"{len(pedidos)} arquivos de 15 min para ler (desde {iso_utc(desde)})")
 
     # 2. lê os arquivos e separa as matérias geopolíticas da imprensa de cada país
-    candidatas, contagem, n_registros, n_arquivos = {}, {}, 0, 0
+    candidatas, contagem, soma_tom, n_registros, n_arquivos = {}, {}, {}, 0, 0
     with cf.ThreadPoolExecutor(max_workers=8) as ex:
         for carimbo, traduzido, texto in ex.map(baixar_gkg, pedidos):
             if texto is None:
@@ -614,6 +614,7 @@ def main():
             n_arquivos += 1
             quando = iso_utc(ler_carimbo(carimbo))
             cont_arq = contagem.setdefault(carimbo, {})
+            tom_arq = soma_tom.setdefault(carimbo, {})
             for linha in texto.splitlines():
                 c = linha.split("\t")
                 if len(c) < 27 or c[2] != "1":
@@ -649,8 +650,13 @@ def main():
                 if fonte:
                     f = da_lista.setdefault(iso, {})
                     f[fonte[1]] = f.get(fonte[1], 0) + 1
-                if nivel <= 2:  # o volume (cor do mapa) conta só os níveis 1 e 2
+                try:  # tom da matéria segundo o GDELT (de -100 a +100; na prática, entre -10 e +10)
+                    tom = float(c[15].split(",")[0])
+                except (ValueError, IndexError):
+                    tom = 0.0
+                if nivel <= 2:  # o volume e o tom (cor do mapa) contam só os níveis 1 e 2
                     cont_arq[iso] = cont_arq.get(iso, 0) + 1
+                    tom_arq[iso] = round(tom_arq.get(iso, 0) + tom, 3)
                 m = RE_TITULO.search(c[26])
                 titulo = limpar_titulo(re.sub(r"\s+", " ", html.unescape(m.group(1))).strip(), dominio) if m else ""
                 if len(titulo) < 12:
@@ -672,7 +678,7 @@ def main():
                     "midia_exilio": casa(exilio, dominio, host),
                     "temas": temas_do_registro(iso, texto_nomes, temas_reg, temas, pontos) if nivel <= 2 else [],
                     "areas": areas_do_texto(texto_nomes, areas) if pontos >= 2 and nivel <= 2 else [],
-                    "pontos": pontos, "nivel": nivel, "estado": estado, "ex": 1 if so_exterior else 0,
+                    "pontos": pontos, "nivel": nivel, "estado": estado, "ex": 1 if so_exterior else 0, "tom": round(tom, 2),
                 }
 
     # 3. junta com as matérias das execuções anteriores (até 48 h) e escolhe as de cada país
@@ -768,6 +774,15 @@ def main():
         for iso, n in v.items():
             if iso in volume:
                 volume[iso] += n
+    # tom médio das últimas 24 h por país (soma dos tons por arquivo / quantidade de matérias)
+    tons = {k: v for k, v in (anterior.get("tons", {}) if mesma_regra else {}).items()
+            if ler_carimbo(k) >= t_agora - dt.timedelta(hours=24)}
+    tons.update({k: v for k, v in soma_tom.items() if ler_carimbo(k) >= t_agora - dt.timedelta(hours=24)})
+    soma_por_pais = {}
+    for v in tons.values():
+        for iso, x in v.items():
+            soma_por_pais[iso] = soma_por_pais.get(iso, 0) + x
+    tom_medio = {iso: round(soma_por_pais[iso] / volume[iso], 2) for iso in soma_por_pais if volume.get(iso)}
 
     temas_rel = {}
     for it in itens:
@@ -805,6 +820,8 @@ def main():
         "volume": volume,
         "relatorio": relatorio,
         "contagens": contagens,
+        "tons": tons,
+        "tom_medio": tom_medio,
         "itens": itens,
     }
     extra = {"arquivos": n_arquivos, "registros": n_registros, "temas": temas_rel, "areas": areas_rel, "traducao": trad,

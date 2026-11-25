@@ -69,7 +69,7 @@
   function corDoPais(k) {
     var r = regiaoDoPais[k], tema = estado.sel && estado.sel.tipo === 't' ? D.temaPorId[estado.sel.id] : null;
     if (!r) return { cor: P.semRegiao, op: 1 };
-    var c = estado.modo === 'regioes' ? cor(volRegiao(r), LIMITES_REGIAO) : cor(coletado(k) ? (volPais(k) || 0) : null, LIMITES_PAIS);
+    var c = corDoValor(k, r);
     return { cor: c, op: tema && (tema.paises || []).indexOf(k) < 0 ? 0.35 : 1 };
   }
   function estiloDisputa() { return { color: P.disputa, weight: 1.1 }; }
@@ -293,9 +293,7 @@
   function rotuloHover(f) {
     var k = f.properties.k, r = f.properties.r;
     if (!r) return null;
-    if (estado.modo === 'regioes') { var vr = volRegiao(r); return nomeRegiao(r) + (vr === null ? '' : ' · ' + t('noticias')(vr)); }
-    var vp = coletado(k) ? (volPais(k) || 0) : null;
-    return nomePais(k) + (vp === null ? '' : ' · ' + t('noticias')(vp));
+    return textoHover(k, r);
   }
 
   /* câmera */
