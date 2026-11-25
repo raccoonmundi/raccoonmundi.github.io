@@ -5,7 +5,11 @@
   "fips": [
    "AN"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 1.54,
+  "ly": 42.55,
+  "mz": 5,
+  "rank": 6
  },
  "AE": {
   "nome_pt": "Emirados Árabes Unidos",
@@ -13,7 +17,11 @@
   "fips": [
    "AE"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 54.55,
+  "ly": 23.47,
+  "mz": 4,
+  "rank": 4
  },
  "AF": {
   "nome_pt": "Afeganistão",
@@ -21,7 +29,11 @@
   "fips": [
    "AF"
   ],
-  "r": "sul-da-asia"
+  "r": "sul-da-asia",
+  "lx": 66.5,
+  "ly": 34.16,
+  "mz": 3,
+  "rank": 3
  },
  "AG": {
   "nome_pt": "Antígua e Barbuda",
@@ -29,7 +41,11 @@
   "fips": [
    "AC"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -61.79,
+  "ly": 17.35,
+  "mz": 5,
+  "rank": 6
  },
  "AI": {
   "nome_pt": "Anguilla",
@@ -37,7 +53,11 @@
   "fips": [
    "AV"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -63.03,
+  "ly": 18.24,
+  "mz": 5,
+  "rank": 6
  },
  "AL": {
   "nome_pt": "Albânia",
@@ -45,7 +65,11 @@
   "fips": [
    "AL"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 20.11,
+  "ly": 40.65,
+  "mz": 5,
+  "rank": 6
  },
  "AM": {
   "nome_pt": "Armênia",
@@ -53,7 +77,11 @@
   "fips": [
    "AM"
   ],
-  "r": "caucaso-asia-central"
+  "r": "caucaso-asia-central",
+  "lx": 44.8,
+  "ly": 40.46,
+  "mz": 5,
+  "rank": 6
  },
  "AO": {
   "nome_pt": "Angola",
@@ -61,7 +89,11 @@
   "fips": [
    "AO"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 17.98,
+  "ly": -12.18,
+  "mz": 3,
+  "rank": 3
  },
  "AR": {
   "nome_pt": "Argentina",
@@ -69,7 +101,11 @@
   "fips": [
    "AR"
   ],
-  "r": "america-do-sul"
+  "r": "america-do-sul",
+  "lx": -64.17,
+  "ly": -33.5,
+  "mz": 2,
+  "rank": 2
  },
  "AS": {
   "nome_pt": "Samoa Americana",
@@ -77,7 +113,11 @@
   "fips": [
    "AQ"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": -170.75,
+  "ly": -14.33,
+  "mz": 4,
+  "rank": 4
  },
  "AT": {
   "nome_pt": "Áustria",
@@ -85,7 +125,11 @@
   "fips": [
    "AU"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 14.13,
+  "ly": 47.52,
+  "mz": 3,
+  "rank": 4
  },
  "AU": {
   "nome_pt": "Austrália",
@@ -93,7 +137,11 @@
   "fips": [
    "AS"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 134.05,
+  "ly": -24.13,
+  "mz": 1.7,
+  "rank": 2
  },
  "AW": {
   "nome_pt": "Aruba",
@@ -101,13 +149,21 @@
   "fips": [
    "AA"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -69.97,
+  "ly": 12.52,
+  "mz": 5,
+  "rank": 5
  },
  "AX": {
   "nome_pt": "Åland",
   "nome_en": "Åland",
   "fips": [],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 19.87,
+  "ly": 60.16,
+  "mz": 5,
+  "rank": 6
  },
  "AZ": {
   "nome_pt": "Azerbaijão",
@@ -115,7 +171,11 @@
   "fips": [
    "AJ"
   ],
-  "r": "caucaso-asia-central"
+  "r": "caucaso-asia-central",
+  "lx": 47.21,
+  "ly": 40.4,
+  "mz": 4,
+  "rank": 5
  },
  "BA": {
   "nome_pt": "Bósnia e Herzegovina",
@@ -123,7 +183,11 @@
   "fips": [
    "BK"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 18.07,
+  "ly": 44.09,
+  "mz": 4.5,
+  "rank": 5
  },
  "BB": {
   "nome_pt": "Barbados",
@@ -131,7 +195,11 @@
   "fips": [
    "BB"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -59.57,
+  "ly": 13.16,
+  "mz": 4.5,
+  "rank": 5
  },
  "BD": {
   "nome_pt": "Bangladesh",
@@ -139,7 +207,11 @@
   "fips": [
    "BG"
   ],
-  "r": "sul-da-asia"
+  "r": "sul-da-asia",
+  "lx": 89.68,
+  "ly": 24.21,
+  "mz": 3,
+  "rank": 3
  },
  "BE": {
   "nome_pt": "Bélgica",
@@ -147,7 +219,11 @@
   "fips": [
    "BE"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 4.8,
+  "ly": 50.79,
+  "mz": 4,
+  "rank": 2
  },
  "BF": {
   "nome_pt": "Burkina Faso",
@@ -155,7 +231,11 @@
   "fips": [
    "UV"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": -1.36,
+  "ly": 12.67,
+  "mz": 3,
+  "rank": 3
  },
  "BG": {
   "nome_pt": "Bulgária",
@@ -163,7 +243,11 @@
   "fips": [
    "BU"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 25.16,
+  "ly": 42.51,
+  "mz": 4,
+  "rank": 4
  },
  "BH": {
   "nome_pt": "Bahrein",
@@ -171,7 +255,11 @@
   "fips": [
    "BA"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 50.55,
+  "ly": 26.06,
+  "mz": 4,
+  "rank": 4
  },
  "BI": {
   "nome_pt": "Burundi",
@@ -179,7 +267,11 @@
   "fips": [
    "BY"
   ],
-  "r": "chifre-africa-oriental"
+  "r": "chifre-africa-oriental",
+  "lx": 29.92,
+  "ly": -3.33,
+  "mz": 4,
+  "rank": 6
  },
  "BJ": {
   "nome_pt": "Benin",
@@ -187,7 +279,11 @@
   "fips": [
    "BN"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": 2.35,
+  "ly": 10.32,
+  "mz": 4,
+  "rank": 5
  },
  "BL": {
   "nome_pt": "Coletividade de São Bartolomeu",
@@ -195,7 +291,11 @@
   "fips": [
    "TB"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -62.83,
+  "ly": 17.9,
+  "mz": 5.7,
+  "rank": 6
  },
  "BM": {
   "nome_pt": "Bermudas",
@@ -203,7 +303,11 @@
   "fips": [
    "BD"
   ],
-  "r": "america-do-norte"
+  "r": "america-do-norte",
+  "lx": -64.76,
+  "ly": 32.3,
+  "mz": 4,
+  "rank": 6
  },
  "BN": {
   "nome_pt": "Brunei",
@@ -211,7 +315,11 @@
   "fips": [
    "BX"
   ],
-  "r": "sudeste-asiatico"
+  "r": "sudeste-asiatico",
+  "lx": 114.55,
+  "ly": 4.45,
+  "mz": 4,
+  "rank": 6
  },
  "BO": {
   "nome_pt": "Bolívia",
@@ -219,7 +327,11 @@
   "fips": [
    "BL"
   ],
-  "r": "america-do-sul"
+  "r": "america-do-sul",
+  "lx": -64.59,
+  "ly": -16.67,
+  "mz": 3,
+  "rank": 3
  },
  "BR": {
   "nome_pt": "Brasil",
@@ -227,7 +339,11 @@
   "fips": [
    "BR"
   ],
-  "r": "america-do-sul"
+  "r": "america-do-sul",
+  "lx": -49.56,
+  "ly": -12.1,
+  "mz": 1.7,
+  "rank": 2
  },
  "BS": {
   "nome_pt": "Bahamas",
@@ -235,7 +351,11 @@
   "fips": [
    "BF"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -77.15,
+  "ly": 26.4,
+  "mz": 4,
+  "rank": 4
  },
  "BT": {
   "nome_pt": "Butão",
@@ -243,7 +363,11 @@
   "fips": [
    "BT"
   ],
-  "r": "sul-da-asia"
+  "r": "sul-da-asia",
+  "lx": 90.04,
+  "ly": 27.54,
+  "mz": 4,
+  "rank": 5
  },
  "BW": {
   "nome_pt": "Botsuana",
@@ -251,7 +375,11 @@
   "fips": [
    "BC"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 24.18,
+  "ly": -22.1,
+  "mz": 4,
+  "rank": 4
  },
  "BY": {
   "nome_pt": "Belarus",
@@ -259,7 +387,11 @@
   "fips": [
    "BO"
   ],
-  "r": "europa-oriental"
+  "r": "europa-oriental",
+  "lx": 28.42,
+  "ly": 53.82,
+  "mz": 3,
+  "rank": 4
  },
  "BZ": {
   "nome_pt": "Belize",
@@ -267,7 +399,11 @@
   "fips": [
    "BH"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -88.71,
+  "ly": 17.2,
+  "mz": 5,
+  "rank": 6
  },
  "CA": {
   "nome_pt": "Canadá",
@@ -275,7 +411,11 @@
   "fips": [
    "CA"
   ],
-  "r": "america-do-norte"
+  "r": "america-do-norte",
+  "lx": -101.91,
+  "ly": 60.32,
+  "mz": 1.7,
+  "rank": 2
  },
  "CD": {
   "nome_pt": "República Democrática do Congo",
@@ -283,7 +423,11 @@
   "fips": [
    "CG"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 23.46,
+  "ly": -1.86,
+  "mz": 2,
+  "rank": 2
  },
  "CF": {
   "nome_pt": "República Centro-Africana",
@@ -291,7 +435,11 @@
   "fips": [
    "CT"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 20.91,
+  "ly": 6.99,
+  "mz": 4,
+  "rank": 4
  },
  "CG": {
   "nome_pt": "República do Congo",
@@ -299,7 +447,11 @@
   "fips": [
    "CF"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 15.9,
+  "ly": 0.14,
+  "mz": 4,
+  "rank": 4
  },
  "CH": {
   "nome_pt": "Suíça",
@@ -307,7 +459,11 @@
   "fips": [
    "SZ"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 7.46,
+  "ly": 46.72,
+  "mz": 4,
+  "rank": 4
  },
  "CI": {
   "nome_pt": "Costa do Marfim",
@@ -315,7 +471,11 @@
   "fips": [
    "IV"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": -5.57,
+  "ly": 7.49,
+  "mz": 2.5,
+  "rank": 3
  },
  "CK": {
   "nome_pt": "Ilhas Cook",
@@ -323,7 +483,11 @@
   "fips": [
    "CW"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": -159.79,
+  "ly": -21.22,
+  "mz": 4,
+  "rank": 4
  },
  "CL": {
   "nome_pt": "Chile",
@@ -331,7 +495,11 @@
   "fips": [
    "CI"
   ],
-  "r": "america-do-sul"
+  "r": "america-do-sul",
+  "lx": -72.32,
+  "ly": -38.15,
+  "mz": 1.7,
+  "rank": 2
  },
  "CM": {
   "nome_pt": "Camarões",
@@ -339,7 +507,11 @@
   "fips": [
    "CM"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 12.47,
+  "ly": 4.59,
+  "mz": 3,
+  "rank": 3
  },
  "CN": {
   "nome_pt": "China",
@@ -347,7 +519,11 @@
   "fips": [
    "CH"
   ],
-  "r": "leste-asiatico"
+  "r": "leste-asiatico",
+  "lx": 106.34,
+  "ly": 32.5,
+  "mz": 1.7,
+  "rank": 2
  },
  "CO": {
   "nome_pt": "Colômbia",
@@ -355,7 +531,11 @@
   "fips": [
    "CO"
   ],
-  "r": "america-do-sul"
+  "r": "america-do-sul",
+  "lx": -73.17,
+  "ly": 3.37,
+  "mz": 3,
+  "rank": 2
  },
  "CR": {
   "nome_pt": "Costa Rica",
@@ -363,7 +543,11 @@
   "fips": [
    "CS"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -84.08,
+  "ly": 10.07,
+  "mz": 2.5,
+  "rank": 5
  },
  "CU": {
   "nome_pt": "Cuba",
@@ -371,7 +555,11 @@
   "fips": [
    "CU"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -77.98,
+  "ly": 21.33,
+  "mz": 2.7,
+  "rank": 3
  },
  "CV": {
   "nome_pt": "Cabo Verde",
@@ -379,7 +567,11 @@
   "fips": [
    "CV"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": -23.64,
+  "ly": 15.07,
+  "mz": 4,
+  "rank": 4
  },
  "CW": {
   "nome_pt": "Curaçao",
@@ -387,7 +579,11 @@
   "fips": [
    "NT"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -68.92,
+  "ly": 12.15,
+  "mz": 5,
+  "rank": 5
  },
  "CY": {
   "nome_pt": "Chipre",
@@ -395,13 +591,21 @@
   "fips": [
    "CY"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 33.08,
+  "ly": 34.91,
+  "mz": 4.5,
+  "rank": 5
  },
  "CYN": {
   "nome_pt": "República Turca do Chipre do Norte",
   "nome_en": "Turkish Republic of Northern Cyprus",
   "fips": [],
   "r": "europa-central-balcas",
+  "lx": 33.69,
+  "ly": 35.22,
+  "mz": 6,
+  "rank": 6,
   "ver": "CY"
  },
  "CZ": {
@@ -410,7 +614,11 @@
   "fips": [
    "EZ"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 15.38,
+  "ly": 49.88,
+  "mz": 4,
+  "rank": 5
  },
  "DE": {
   "nome_pt": "Alemanha",
@@ -418,7 +626,11 @@
   "fips": [
    "GM"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 9.68,
+  "ly": 50.96,
+  "mz": 1.7,
+  "rank": 2
  },
  "DJ": {
   "nome_pt": "Djibuti",
@@ -426,7 +638,11 @@
   "fips": [
    "DJ"
   ],
-  "r": "chifre-africa-oriental"
+  "r": "chifre-africa-oriental",
+  "lx": 42.5,
+  "ly": 11.98,
+  "mz": 4,
+  "rank": 5
  },
  "DK": {
   "nome_pt": "Dinamarca",
@@ -434,7 +650,11 @@
   "fips": [
    "DA"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 9.02,
+  "ly": 55.97,
+  "mz": 3,
+  "rank": 4
  },
  "DM": {
   "nome_pt": "Dominica",
@@ -442,7 +662,11 @@
   "fips": [
    "DO"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -61.34,
+  "ly": 15.46,
+  "mz": 4,
+  "rank": 6
  },
  "DO": {
   "nome_pt": "República Dominicana",
@@ -450,7 +674,11 @@
   "fips": [
    "DR"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -70.65,
+  "ly": 19.1,
+  "mz": 4.5,
+  "rank": 5
  },
  "DZ": {
   "nome_pt": "Argélia",
@@ -458,7 +686,11 @@
   "fips": [
    "AG"
   ],
-  "r": "norte-da-africa"
+  "r": "norte-da-africa",
+  "lx": 2.81,
+  "ly": 27.4,
+  "mz": 2.5,
+  "rank": 3
  },
  "EC": {
   "nome_pt": "Equador",
@@ -466,7 +698,11 @@
   "fips": [
    "EC"
   ],
-  "r": "america-do-sul"
+  "r": "america-do-sul",
+  "lx": -78.19,
+  "ly": -1.26,
+  "mz": 3,
+  "rank": 3
  },
  "EE": {
   "nome_pt": "Estônia",
@@ -474,7 +710,11 @@
   "fips": [
    "EN"
   ],
-  "r": "europa-oriental"
+  "r": "europa-oriental",
+  "lx": 25.87,
+  "ly": 58.72,
+  "mz": 3,
+  "rank": 6
  },
  "EG": {
   "nome_pt": "Egito",
@@ -482,7 +722,11 @@
   "fips": [
    "EG"
   ],
-  "r": "norte-da-africa"
+  "r": "norte-da-africa",
+  "lx": 29.45,
+  "ly": 26.19,
+  "mz": 1.7,
+  "rank": 2
  },
  "EH": {
   "nome_pt": "Saara Ocidental",
@@ -490,7 +734,11 @@
   "fips": [
    "WI"
   ],
-  "r": "norte-da-africa"
+  "r": "norte-da-africa",
+  "lx": -12.63,
+  "ly": 23.97,
+  "mz": 6,
+  "rank": 7
  },
  "ER": {
   "nome_pt": "Eritreia",
@@ -498,7 +746,11 @@
   "fips": [
    "ER"
   ],
-  "r": "chifre-africa-oriental"
+  "r": "chifre-africa-oriental",
+  "lx": 38.29,
+  "ly": 15.79,
+  "mz": 4,
+  "rank": 4
  },
  "ES": {
   "nome_pt": "Espanha",
@@ -506,7 +758,11 @@
   "fips": [
    "SP"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": -3.46,
+  "ly": 40.09,
+  "mz": 2,
+  "rank": 2
  },
  "ET": {
   "nome_pt": "Etiópia",
@@ -514,7 +770,11 @@
   "fips": [
    "ET"
   ],
-  "r": "chifre-africa-oriental"
+  "r": "chifre-africa-oriental",
+  "lx": 39.09,
+  "ly": 8.03,
+  "mz": 2,
+  "rank": 2
  },
  "FI": {
   "nome_pt": "Finlândia",
@@ -522,7 +782,11 @@
   "fips": [
    "FI"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 27.28,
+  "ly": 63.25,
+  "mz": 3,
+  "rank": 3
  },
  "FJ": {
   "nome_pt": "Fiji",
@@ -530,7 +794,11 @@
   "fips": [
    "FJ"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 177.98,
+  "ly": -17.83,
+  "mz": 3,
+  "rank": 6
  },
  "FK": {
   "nome_pt": "Ilhas Malvinas",
@@ -538,7 +806,11 @@
   "fips": [
    "FK"
   ],
-  "r": "america-do-sul"
+  "r": "america-do-sul",
+  "lx": -58.74,
+  "ly": -51.61,
+  "mz": 4.5,
+  "rank": 5
  },
  "FM": {
   "nome_pt": "Micronésia",
@@ -546,7 +818,11 @@
   "fips": [
    "FM"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 158.23,
+  "ly": 6.89,
+  "mz": 5,
+  "rank": 6
  },
  "FO": {
   "nome_pt": "Ilhas Feroe",
@@ -554,7 +830,11 @@
   "fips": [
    "FO"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": -7.06,
+  "ly": 62.19,
+  "mz": 4,
+  "rank": 6
  },
  "FR": {
   "nome_pt": "França",
@@ -562,7 +842,11 @@
   "fips": [
    "FR"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 2.55,
+  "ly": 46.7,
+  "mz": 1.7,
+  "rank": 2
  },
  "GA": {
   "nome_pt": "Gabão",
@@ -570,7 +854,11 @@
   "fips": [
    "GB"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 11.84,
+  "ly": -0.44,
+  "mz": 3,
+  "rank": 4
  },
  "GB": {
   "nome_pt": "Reino Unido",
@@ -578,7 +866,11 @@
   "fips": [
    "UK"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": -2.12,
+  "ly": 54.4,
+  "mz": 1.7,
+  "rank": 2
  },
  "GD": {
   "nome_pt": "Granada",
@@ -586,7 +878,11 @@
   "fips": [
    "GJ"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -61.68,
+  "ly": 12.11,
+  "mz": 4,
+  "rank": 6
  },
  "GE": {
   "nome_pt": "Geórgia",
@@ -594,7 +890,11 @@
   "fips": [
    "GG"
   ],
-  "r": "caucaso-asia-central"
+  "r": "caucaso-asia-central",
+  "lx": 43.74,
+  "ly": 41.87,
+  "mz": 4,
+  "rank": 5
  },
  "GG": {
   "nome_pt": "Guernsey",
@@ -602,7 +902,11 @@
   "fips": [
    "GK"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": -2.56,
+  "ly": 49.46,
+  "mz": 5,
+  "rank": 6
  },
  "GH": {
   "nome_pt": "Gana",
@@ -610,7 +914,11 @@
   "fips": [
    "GH"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": -1.04,
+  "ly": 7.72,
+  "mz": 2.7,
+  "rank": 3
  },
  "GL": {
   "nome_pt": "Groenlândia",
@@ -618,7 +926,11 @@
   "fips": [
    "GL"
   ],
-  "r": "america-do-norte"
+  "r": "america-do-norte",
+  "lx": -39.34,
+  "ly": 74.32,
+  "mz": 1.7,
+  "rank": 3
  },
  "GM": {
   "nome_pt": "Gâmbia",
@@ -626,7 +938,11 @@
   "fips": [
    "GA"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": -15.0,
+  "ly": 13.64,
+  "mz": 5,
+  "rank": 6
  },
  "GN": {
   "nome_pt": "Guiné",
@@ -634,7 +950,11 @@
   "fips": [
    "GV"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": -10.02,
+  "ly": 10.62,
+  "mz": 3,
+  "rank": 3
  },
  "GQ": {
   "nome_pt": "Guiné Equatorial",
@@ -642,7 +962,11 @@
   "fips": [
    "EK"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 8.99,
+  "ly": 2.33,
+  "mz": 4,
+  "rank": 4
  },
  "GR": {
   "nome_pt": "Grécia",
@@ -650,7 +974,11 @@
   "fips": [
    "GR"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 21.73,
+  "ly": 39.49,
+  "mz": 2.7,
+  "rank": 3
  },
  "GS": {
   "nome_pt": "Ilhas Geórgia do Sul e Sandwich do Sul",
@@ -658,7 +986,11 @@
   "fips": [
    "SX"
   ],
-  "r": "america-do-sul"
+  "r": "america-do-sul",
+  "lx": -31.06,
+  "ly": -55.68,
+  "mz": 5,
+  "rank": 4
  },
  "GT": {
   "nome_pt": "Guatemala",
@@ -666,7 +998,11 @@
   "fips": [
    "GT"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -90.5,
+  "ly": 14.98,
+  "mz": 3,
+  "rank": 3
  },
  "GU": {
   "nome_pt": "Guam",
@@ -674,7 +1010,11 @@
   "fips": [
    "GQ"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 144.7,
+  "ly": 13.35,
+  "mz": 3,
+  "rank": 6
  },
  "GW": {
   "nome_pt": "Guiné-Bissau",
@@ -682,7 +1022,11 @@
   "fips": [
    "PU"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": -14.52,
+  "ly": 12.16,
+  "mz": 5,
+  "rank": 6
  },
  "GY": {
   "nome_pt": "Guiana",
@@ -690,7 +1034,11 @@
   "fips": [
    "GY"
   ],
-  "r": "america-do-sul"
+  "r": "america-do-sul",
+  "lx": -58.94,
+  "ly": 5.12,
+  "mz": 4,
+  "rank": 4
  },
  "HK": {
   "nome_pt": "Hong Kong",
@@ -698,7 +1046,11 @@
   "fips": [
    "HK"
   ],
-  "r": "leste-asiatico"
+  "r": "leste-asiatico",
+  "lx": 114.1,
+  "ly": 22.45,
+  "mz": 4,
+  "rank": 4
  },
  "HM": {
   "nome_pt": "Ilha Heard e Ilhas McDonald",
@@ -706,7 +1058,11 @@
   "fips": [
    "HM"
   ],
-  "r": null
+  "r": null,
+  "lx": 73.51,
+  "ly": -53.1,
+  "mz": 4.5,
+  "rank": 5
  },
  "HN": {
   "nome_pt": "Honduras",
@@ -714,7 +1070,11 @@
   "fips": [
    "HO"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -86.89,
+  "ly": 14.79,
+  "mz": 4.5,
+  "rank": 5
  },
  "HR": {
   "nome_pt": "Croácia",
@@ -722,7 +1082,11 @@
   "fips": [
    "HR"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 16.37,
+  "ly": 45.81,
+  "mz": 4,
+  "rank": 6
  },
  "HT": {
   "nome_pt": "Haiti",
@@ -730,7 +1094,11 @@
   "fips": [
    "HA"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -72.22,
+  "ly": 19.26,
+  "mz": 4,
+  "rank": 5
  },
  "HU": {
   "nome_pt": "Hungria",
@@ -738,7 +1106,11 @@
   "fips": [
    "HU"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 19.45,
+  "ly": 47.09,
+  "mz": 4,
+  "rank": 5
  },
  "ID": {
   "nome_pt": "Indonésia",
@@ -746,7 +1118,11 @@
   "fips": [
    "ID"
   ],
-  "r": "sudeste-asiatico"
+  "r": "sudeste-asiatico",
+  "lx": 101.89,
+  "ly": -0.95,
+  "mz": 1.7,
+  "rank": 2
  },
  "IE": {
   "nome_pt": "Irlanda",
@@ -754,7 +1130,11 @@
   "fips": [
    "EI"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": -7.8,
+  "ly": 53.08,
+  "mz": 3,
+  "rank": 3
  },
  "IL": {
   "nome_pt": "Israel",
@@ -762,7 +1142,11 @@
   "fips": [
    "IS"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 34.85,
+  "ly": 30.91,
+  "mz": 3,
+  "rank": 4
  },
  "IM": {
   "nome_pt": "Ilha de Man",
@@ -770,7 +1154,11 @@
   "fips": [
    "IM"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": -4.53,
+  "ly": 54.22,
+  "mz": 5,
+  "rank": 6
  },
  "IN": {
   "nome_pt": "Índia",
@@ -778,7 +1166,11 @@
   "fips": [
    "IN"
   ],
-  "r": "sul-da-asia"
+  "r": "sul-da-asia",
+  "lx": 79.36,
+  "ly": 22.69,
+  "mz": 1.7,
+  "rank": 2
  },
  "IO": {
   "nome_pt": "Território Britânico do Oceano Índico",
@@ -786,7 +1178,11 @@
   "fips": [
    "IO"
   ],
-  "r": null
+  "r": null,
+  "lx": 71.35,
+  "ly": -6.19,
+  "mz": 5,
+  "rank": 5
  },
  "IQ": {
   "nome_pt": "Iraque",
@@ -794,7 +1190,11 @@
   "fips": [
    "IZ"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 43.26,
+  "ly": 33.09,
+  "mz": 3,
+  "rank": 3
  },
  "IR": {
   "nome_pt": "Irã",
@@ -802,7 +1202,11 @@
   "fips": [
    "IR"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 54.93,
+  "ly": 32.17,
+  "mz": 2.5,
+  "rank": 2
  },
  "IS": {
   "nome_pt": "Islândia",
@@ -810,7 +1214,11 @@
   "fips": [
    "IC"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": -18.67,
+  "ly": 64.78,
+  "mz": 2,
+  "rank": 3
  },
  "IT": {
   "nome_pt": "Itália",
@@ -818,7 +1226,11 @@
   "fips": [
    "IT"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 11.08,
+  "ly": 44.73,
+  "mz": 2,
+  "rank": 2
  },
  "JE": {
   "nome_pt": "Jersey",
@@ -826,7 +1238,11 @@
   "fips": [
    "JE"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": -2.09,
+  "ly": 49.22,
+  "mz": 5,
+  "rank": 6
  },
  "JM": {
   "nome_pt": "Jamaica",
@@ -834,7 +1250,11 @@
   "fips": [
    "JM"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -77.32,
+  "ly": 18.14,
+  "mz": 4,
+  "rank": 4
  },
  "JO": {
   "nome_pt": "Jordânia",
@@ -842,7 +1262,11 @@
   "fips": [
    "JO"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 36.38,
+  "ly": 30.81,
+  "mz": 4,
+  "rank": 4
  },
  "JP": {
   "nome_pt": "Japão",
@@ -850,13 +1274,21 @@
   "fips": [
    "JA"
   ],
-  "r": "leste-asiatico"
+  "r": "leste-asiatico",
+  "lx": 138.44,
+  "ly": 36.14,
+  "mz": 1.7,
+  "rank": 2
  },
  "KAS": {
   "nome_pt": "Glaciar de Siachen",
   "nome_en": "Siachen Glacier",
   "fips": [],
   "r": "sul-da-asia",
+  "lx": 77.13,
+  "ly": 35.34,
+  "mz": 6.5,
+  "rank": 5,
   "ver": null
  },
  "KE": {
@@ -865,7 +1297,11 @@
   "fips": [
    "KE"
   ],
-  "r": "chifre-africa-oriental"
+  "r": "chifre-africa-oriental",
+  "lx": 37.91,
+  "ly": 0.55,
+  "mz": 1.7,
+  "rank": 2
  },
  "KG": {
   "nome_pt": "Quirguistão",
@@ -873,7 +1309,11 @@
   "fips": [
    "KG"
   ],
-  "r": "caucaso-asia-central"
+  "r": "caucaso-asia-central",
+  "lx": 74.53,
+  "ly": 41.67,
+  "mz": 3,
+  "rank": 4
  },
  "KH": {
   "nome_pt": "Camboja",
@@ -881,7 +1321,11 @@
   "fips": [
    "CB"
   ],
-  "r": "sudeste-asiatico"
+  "r": "sudeste-asiatico",
+  "lx": 104.5,
+  "ly": 12.65,
+  "mz": 3,
+  "rank": 3
  },
  "KI": {
   "nome_pt": "Kiribati",
@@ -889,7 +1333,11 @@
   "fips": [
    "KR"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": -157.38,
+  "ly": 1.82,
+  "mz": 5,
+  "rank": 6
  },
  "KM": {
   "nome_pt": "Comores",
@@ -897,7 +1345,11 @@
   "fips": [
    "CN"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 43.32,
+  "ly": -11.73,
+  "mz": 4,
+  "rank": 6
  },
  "KN": {
   "nome_pt": "São Cristóvão e Nevis",
@@ -905,7 +1357,11 @@
   "fips": [
    "SC"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -62.76,
+  "ly": 17.34,
+  "mz": 5,
+  "rank": 6
  },
  "KP": {
   "nome_pt": "Coreia do Norte",
@@ -913,7 +1369,11 @@
   "fips": [
    "KN"
   ],
-  "r": "leste-asiatico"
+  "r": "leste-asiatico",
+  "lx": 126.44,
+  "ly": 39.89,
+  "mz": 3,
+  "rank": 3
  },
  "KR": {
   "nome_pt": "Coreia do Sul",
@@ -921,7 +1381,11 @@
   "fips": [
    "KS"
   ],
-  "r": "leste-asiatico"
+  "r": "leste-asiatico",
+  "lx": 128.13,
+  "ly": 36.38,
+  "mz": 2.5,
+  "rank": 2
  },
  "KW": {
   "nome_pt": "Kuwait",
@@ -929,7 +1393,11 @@
   "fips": [
    "KU"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 47.31,
+  "ly": 29.41,
+  "mz": 5,
+  "rank": 6
  },
  "KY": {
   "nome_pt": "Ilhas Cayman",
@@ -937,7 +1405,11 @@
   "fips": [
    "CJ"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -81.24,
+  "ly": 19.32,
+  "mz": 5,
+  "rank": 5
  },
  "KZ": {
   "nome_pt": "Cazaquistão",
@@ -945,7 +1417,11 @@
   "fips": [
    "KZ"
   ],
-  "r": "caucaso-asia-central"
+  "r": "caucaso-asia-central",
+  "lx": 68.69,
+  "ly": 49.05,
+  "mz": 2.7,
+  "rank": 3
  },
  "LA": {
   "nome_pt": "Laos",
@@ -953,7 +1429,11 @@
   "fips": [
    "LA"
   ],
-  "r": "sudeste-asiatico"
+  "r": "sudeste-asiatico",
+  "lx": 102.53,
+  "ly": 19.43,
+  "mz": 4,
+  "rank": 4
  },
  "LB": {
   "nome_pt": "Líbano",
@@ -961,7 +1441,11 @@
   "fips": [
    "LE"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 35.99,
+  "ly": 34.13,
+  "mz": 4,
+  "rank": 5
  },
  "LC": {
   "nome_pt": "Santa Lúcia",
@@ -969,7 +1453,11 @@
   "fips": [
    "ST"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -60.98,
+  "ly": 13.89,
+  "mz": 5,
+  "rank": 6
  },
  "LI": {
   "nome_pt": "Liechtenstein",
@@ -977,7 +1465,11 @@
   "fips": [
    "LS"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 9.56,
+  "ly": 47.11,
+  "mz": 5,
+  "rank": 6
  },
  "LK": {
   "nome_pt": "Sri Lanka",
@@ -985,7 +1477,11 @@
   "fips": [
    "CE"
   ],
-  "r": "sul-da-asia"
+  "r": "sul-da-asia",
+  "lx": 80.7,
+  "ly": 7.58,
+  "mz": 3,
+  "rank": 3
  },
  "LR": {
   "nome_pt": "Libéria",
@@ -993,7 +1489,11 @@
   "fips": [
    "LI"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": -9.46,
+  "ly": 6.45,
+  "mz": 4,
+  "rank": 4
  },
  "LS": {
   "nome_pt": "Lesoto",
@@ -1001,7 +1501,11 @@
   "fips": [
    "LT"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 28.25,
+  "ly": -29.48,
+  "mz": 4,
+  "rank": 6
  },
  "LT": {
   "nome_pt": "Lituânia",
@@ -1009,7 +1513,11 @@
   "fips": [
    "LH"
   ],
-  "r": "europa-oriental"
+  "r": "europa-oriental",
+  "lx": 24.09,
+  "ly": 55.1,
+  "mz": 4,
+  "rank": 5
  },
  "LU": {
   "nome_pt": "Luxemburgo",
@@ -1017,7 +1525,11 @@
   "fips": [
    "LU"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 6.08,
+  "ly": 49.73,
+  "mz": 5.7,
+  "rank": 6
  },
  "LV": {
   "nome_pt": "Letônia",
@@ -1025,7 +1537,11 @@
   "fips": [
    "LG"
   ],
-  "r": "europa-oriental"
+  "r": "europa-oriental",
+  "lx": 25.46,
+  "ly": 57.07,
+  "mz": 4,
+  "rank": 5
  },
  "LY": {
   "nome_pt": "Líbia",
@@ -1033,7 +1549,11 @@
   "fips": [
    "LY"
   ],
-  "r": "norte-da-africa"
+  "r": "norte-da-africa",
+  "lx": 18.01,
+  "ly": 26.64,
+  "mz": 3,
+  "rank": 3
  },
  "MA": {
   "nome_pt": "Marrocos",
@@ -1041,7 +1561,11 @@
   "fips": [
    "MO"
   ],
-  "r": "norte-da-africa"
+  "r": "norte-da-africa",
+  "lx": -7.19,
+  "ly": 31.65,
+  "mz": 2.7,
+  "rank": 3
  },
  "MC": {
   "nome_pt": "Mônaco",
@@ -1049,7 +1573,11 @@
   "fips": [
    "MN"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 7.4,
+  "ly": 43.74,
+  "mz": 5,
+  "rank": 6
  },
  "MD": {
   "nome_pt": "Moldávia",
@@ -1057,7 +1585,11 @@
   "fips": [
    "MD"
   ],
-  "r": "europa-oriental"
+  "r": "europa-oriental",
+  "lx": 28.49,
+  "ly": 47.43,
+  "mz": 5,
+  "rank": 6
  },
  "ME": {
   "nome_pt": "Montenegro",
@@ -1065,7 +1597,11 @@
   "fips": [
    "MJ"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 19.14,
+  "ly": 42.8,
+  "mz": 5,
+  "rank": 6
  },
  "MF": {
   "nome_pt": "São Martinho",
@@ -1073,7 +1609,11 @@
   "fips": [
    "RN"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -63.05,
+  "ly": 18.08,
+  "mz": 5,
+  "rank": 6
  },
  "MG": {
   "nome_pt": "Madagascar",
@@ -1081,7 +1621,11 @@
   "fips": [
    "MA"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 46.7,
+  "ly": -18.63,
+  "mz": 2.7,
+  "rank": 3
  },
  "MH": {
   "nome_pt": "Ilhas Marshall",
@@ -1089,7 +1633,11 @@
   "fips": [
    "RM"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 171.19,
+  "ly": 7.08,
+  "mz": 5,
+  "rank": 6
  },
  "MK": {
   "nome_pt": "Macedônia do Norte",
@@ -1097,7 +1645,11 @@
   "fips": [
    "MK"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 21.56,
+  "ly": 41.56,
+  "mz": 5,
+  "rank": 6
  },
  "ML": {
   "nome_pt": "Mali",
@@ -1105,7 +1657,11 @@
   "fips": [
    "ML"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": -2.04,
+  "ly": 18.69,
+  "mz": 3,
+  "rank": 3
  },
  "MM": {
   "nome_pt": "Myanmar",
@@ -1113,7 +1669,11 @@
   "fips": [
    "BM"
   ],
-  "r": "sudeste-asiatico"
+  "r": "sudeste-asiatico",
+  "lx": 95.8,
+  "ly": 21.57,
+  "mz": 3,
+  "rank": 3
  },
  "MN": {
   "nome_pt": "Mongólia",
@@ -1121,7 +1681,11 @@
   "fips": [
    "MG"
   ],
-  "r": "leste-asiatico"
+  "r": "leste-asiatico",
+  "lx": 104.15,
+  "ly": 46.0,
+  "mz": 3,
+  "rank": 3
  },
  "MO": {
   "nome_pt": "Macau",
@@ -1129,7 +1693,11 @@
   "fips": [
    "MC"
   ],
-  "r": "leste-asiatico"
+  "r": "leste-asiatico",
+  "lx": 113.56,
+  "ly": 22.13,
+  "mz": 4,
+  "rank": 4
  },
  "MP": {
   "nome_pt": "Ilhas Marianas do Norte",
@@ -1137,7 +1705,11 @@
   "fips": [
    "CQ"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 145.73,
+  "ly": 15.19,
+  "mz": 5,
+  "rank": 6
  },
  "MR": {
   "nome_pt": "Mauritânia",
@@ -1145,7 +1717,11 @@
   "fips": [
    "MR"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": -9.74,
+  "ly": 19.59,
+  "mz": 3,
+  "rank": 3
  },
  "MS": {
   "nome_pt": "Montserrat",
@@ -1153,7 +1729,11 @@
   "fips": [
    "MH"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -62.19,
+  "ly": 16.74,
+  "mz": 5,
+  "rank": 6
  },
  "MT": {
   "nome_pt": "Malta",
@@ -1161,7 +1741,11 @@
   "fips": [
    "MT"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 14.43,
+  "ly": 35.89,
+  "mz": 4,
+  "rank": 5
  },
  "MU": {
   "nome_pt": "Maurício",
@@ -1169,7 +1753,11 @@
   "fips": [
    "MP"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 57.57,
+  "ly": -20.3,
+  "mz": 4,
+  "rank": 5
  },
  "MV": {
   "nome_pt": "Maldivas",
@@ -1177,7 +1765,11 @@
   "fips": [
    "MV"
   ],
-  "r": "sul-da-asia"
+  "r": "sul-da-asia",
+  "lx": 73.51,
+  "ly": 4.17,
+  "mz": 4,
+  "rank": 5
  },
  "MW": {
   "nome_pt": "Malaui",
@@ -1185,7 +1777,11 @@
   "fips": [
    "MI"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 33.61,
+  "ly": -13.39,
+  "mz": 4,
+  "rank": 6
  },
  "MX": {
   "nome_pt": "México",
@@ -1193,7 +1789,11 @@
   "fips": [
    "MX"
   ],
-  "r": "america-do-norte"
+  "r": "america-do-norte",
+  "lx": -102.29,
+  "ly": 23.92,
+  "mz": 2,
+  "rank": 2
  },
  "MY": {
   "nome_pt": "Malásia",
@@ -1201,7 +1801,11 @@
   "fips": [
    "MY"
   ],
-  "r": "sudeste-asiatico"
+  "r": "sudeste-asiatico",
+  "lx": 113.84,
+  "ly": 2.53,
+  "mz": 3,
+  "rank": 3
  },
  "MZ": {
   "nome_pt": "Moçambique",
@@ -1209,7 +1813,11 @@
   "fips": [
    "MZ"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 37.84,
+  "ly": -13.94,
+  "mz": 3,
+  "rank": 3
  },
  "NA": {
   "nome_pt": "Namíbia",
@@ -1217,7 +1825,11 @@
   "fips": [
    "WA"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 17.11,
+  "ly": -20.58,
+  "mz": 3,
+  "rank": 3
  },
  "NC": {
   "nome_pt": "Nova Caledônia",
@@ -1225,7 +1837,11 @@
   "fips": [
    "NC"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 165.08,
+  "ly": -21.06,
+  "mz": 4.6,
+  "rank": 3
  },
  "NE": {
   "nome_pt": "Níger",
@@ -1233,7 +1849,11 @@
   "fips": [
    "NG"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": 9.5,
+  "ly": 17.45,
+  "mz": 3,
+  "rank": 3
  },
  "NF": {
   "nome_pt": "Ilha Norfolk",
@@ -1241,7 +1861,11 @@
   "fips": [
    "NF"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 167.95,
+  "ly": -29.03,
+  "mz": 4.5,
+  "rank": 5
  },
  "NG": {
   "nome_pt": "Nigéria",
@@ -1249,7 +1873,11 @@
   "fips": [
    "NI"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": 7.5,
+  "ly": 9.44,
+  "mz": 1.7,
+  "rank": 2
  },
  "NI": {
   "nome_pt": "Nicarágua",
@@ -1257,7 +1885,11 @@
   "fips": [
    "NU"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -85.07,
+  "ly": 12.67,
+  "mz": 4,
+  "rank": 5
  },
  "NL": {
   "nome_pt": "Países Baixos",
@@ -1265,7 +1897,11 @@
   "fips": [
    "NL"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 5.61,
+  "ly": 52.42,
+  "mz": 4,
+  "rank": 5
  },
  "NO": {
   "nome_pt": "Noruega",
@@ -1273,7 +1909,11 @@
   "fips": [
    "NO"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 9.68,
+  "ly": 61.36,
+  "mz": 3,
+  "rank": 3
  },
  "NP": {
   "nome_pt": "Nepal",
@@ -1281,7 +1921,11 @@
   "fips": [
    "NP"
   ],
-  "r": "sul-da-asia"
+  "r": "sul-da-asia",
+  "lx": 83.64,
+  "ly": 28.3,
+  "mz": 3,
+  "rank": 3
  },
  "NR": {
   "nome_pt": "Nauru",
@@ -1289,7 +1933,11 @@
   "fips": [
    "NR"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 166.93,
+  "ly": -0.52,
+  "mz": 5,
+  "rank": 6
  },
  "NU": {
   "nome_pt": "Niue",
@@ -1297,7 +1945,11 @@
   "fips": [
    "NE"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": -169.86,
+  "ly": -19.05,
+  "mz": 4,
+  "rank": 4
  },
  "NZ": {
   "nome_pt": "Nova Zelândia",
@@ -1305,7 +1957,11 @@
   "fips": [
    "NZ"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 172.79,
+  "ly": -39.76,
+  "mz": 2,
+  "rank": 2
  },
  "OM": {
   "nome_pt": "Omã",
@@ -1313,7 +1969,11 @@
   "fips": [
    "MU"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 57.34,
+  "ly": 22.12,
+  "mz": 4,
+  "rank": 4
  },
  "PA": {
   "nome_pt": "Panamá",
@@ -1321,7 +1981,11 @@
   "fips": [
    "PM"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -80.35,
+  "ly": 8.72,
+  "mz": 4,
+  "rank": 4
  },
  "PE": {
   "nome_pt": "Peru",
@@ -1329,7 +1993,11 @@
   "fips": [
    "PE"
   ],
-  "r": "america-do-sul"
+  "r": "america-do-sul",
+  "lx": -72.9,
+  "ly": -12.98,
+  "mz": 2,
+  "rank": 2
  },
  "PF": {
   "nome_pt": "Polinésia Francesa",
@@ -1337,7 +2005,11 @@
   "fips": [
    "FP"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": -149.46,
+  "ly": -17.63,
+  "mz": 3.5,
+  "rank": 4
  },
  "PG": {
   "nome_pt": "Papua-Nova Guiné",
@@ -1345,7 +2017,11 @@
   "fips": [
    "PP"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 143.91,
+  "ly": -5.7,
+  "mz": 2.5,
+  "rank": 2
  },
  "PH": {
   "nome_pt": "Filipinas",
@@ -1353,7 +2029,11 @@
   "fips": [
    "RP"
   ],
-  "r": "sudeste-asiatico"
+  "r": "sudeste-asiatico",
+  "lx": 122.47,
+  "ly": 11.2,
+  "mz": 2.5,
+  "rank": 2
  },
  "PK": {
   "nome_pt": "Paquistão",
@@ -1361,7 +2041,11 @@
   "fips": [
    "PK"
   ],
-  "r": "sul-da-asia"
+  "r": "sul-da-asia",
+  "lx": 68.55,
+  "ly": 29.33,
+  "mz": 2.7,
+  "rank": 2
  },
  "PL": {
   "nome_pt": "Polônia",
@@ -1369,7 +2053,11 @@
   "fips": [
    "PL"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 19.49,
+  "ly": 51.99,
+  "mz": 2.5,
+  "rank": 3
  },
  "PM": {
   "nome_pt": "Saint-Pierre e Miquelon",
@@ -1377,7 +2065,11 @@
   "fips": [
    "SB"
   ],
-  "r": "america-do-norte"
+  "r": "america-do-norte",
+  "lx": -56.33,
+  "ly": 47.04,
+  "mz": 5,
+  "rank": 4
  },
  "PN": {
   "nome_pt": "Ilhas Pitcairn",
@@ -1385,7 +2077,11 @@
   "fips": [
    "PC"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": -128.32,
+  "ly": -24.36,
+  "mz": 5,
+  "rank": 4
  },
  "PR": {
   "nome_pt": "Porto Rico",
@@ -1393,7 +2089,11 @@
   "fips": [
    "RQ"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -66.48,
+  "ly": 18.23,
+  "mz": 3,
+  "rank": 5
  },
  "PS": {
   "nome_pt": "Palestina",
@@ -1402,7 +2102,11 @@
    "WE",
    "GZ"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 35.29,
+  "ly": 32.05,
+  "mz": 4.5,
+  "rank": 5
  },
  "PT": {
   "nome_pt": "Portugal",
@@ -1410,7 +2114,11 @@
   "fips": [
    "PO"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": -8.27,
+  "ly": 39.61,
+  "mz": 3,
+  "rank": 2
  },
  "PW": {
   "nome_pt": "Palau",
@@ -1418,7 +2126,11 @@
   "fips": [
    "PS"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 134.58,
+  "ly": 7.52,
+  "mz": 5,
+  "rank": 6
  },
  "PY": {
   "nome_pt": "Paraguai",
@@ -1426,7 +2138,11 @@
   "fips": [
    "PA"
   ],
-  "r": "america-do-sul"
+  "r": "america-do-sul",
+  "lx": -60.15,
+  "ly": -21.67,
+  "mz": 3,
+  "rank": 4
  },
  "QA": {
   "nome_pt": "Catar",
@@ -1434,7 +2150,11 @@
   "fips": [
    "QA"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 51.14,
+  "ly": 25.24,
+  "mz": 4,
+  "rank": 5
  },
  "RO": {
   "nome_pt": "Romênia",
@@ -1442,7 +2162,11 @@
   "fips": [
    "RO"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 24.97,
+  "ly": 45.73,
+  "mz": 3,
+  "rank": 3
  },
  "RS": {
   "nome_pt": "Sérvia",
@@ -1450,7 +2174,11 @@
   "fips": [
    "RI"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 20.79,
+  "ly": 44.19,
+  "mz": 4,
+  "rank": 5
  },
  "RU": {
   "nome_pt": "Rússia",
@@ -1458,7 +2186,11 @@
   "fips": [
    "RS"
   ],
-  "r": "russia"
+  "r": "russia",
+  "lx": 44.69,
+  "ly": 58.25,
+  "mz": 1.7,
+  "rank": 2
  },
  "RW": {
   "nome_pt": "Ruanda",
@@ -1466,7 +2198,11 @@
   "fips": [
    "RW"
   ],
-  "r": "chifre-africa-oriental"
+  "r": "chifre-africa-oriental",
+  "lx": 30.1,
+  "ly": -1.9,
+  "mz": 3,
+  "rank": 3
  },
  "SA": {
   "nome_pt": "Arábia Saudita",
@@ -1474,7 +2210,11 @@
   "fips": [
    "SA"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 44.7,
+  "ly": 23.81,
+  "mz": 1.7,
+  "rank": 2
  },
  "SB": {
   "nome_pt": "Ilhas Salomão",
@@ -1482,7 +2222,11 @@
   "fips": [
    "BP"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 159.17,
+  "ly": -8.03,
+  "mz": 3,
+  "rank": 3
  },
  "SC": {
   "nome_pt": "Seychelles",
@@ -1490,7 +2234,11 @@
   "fips": [
    "SE"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 55.48,
+  "ly": -4.68,
+  "mz": 5,
+  "rank": 6
  },
  "SD": {
   "nome_pt": "Sudão",
@@ -1498,7 +2246,11 @@
   "fips": [
    "SU"
   ],
-  "r": "chifre-africa-oriental"
+  "r": "chifre-africa-oriental",
+  "lx": 29.26,
+  "ly": 16.33,
+  "mz": 2.5,
+  "rank": 3
  },
  "SE": {
   "nome_pt": "Suécia",
@@ -1506,7 +2258,11 @@
   "fips": [
    "SW"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 19.02,
+  "ly": 65.86,
+  "mz": 2,
+  "rank": 3
  },
  "SG": {
   "nome_pt": "Singapura",
@@ -1514,7 +2270,11 @@
   "fips": [
    "SN"
   ],
-  "r": "sudeste-asiatico"
+  "r": "sudeste-asiatico",
+  "lx": 103.82,
+  "ly": 1.37,
+  "mz": 4,
+  "rank": 6
  },
  "SH": {
   "nome_pt": "Santa Helena",
@@ -1522,7 +2282,11 @@
   "fips": [
    "SH"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": -5.71,
+  "ly": -15.95,
+  "mz": 5,
+  "rank": 6
  },
  "SI": {
   "nome_pt": "Eslovênia",
@@ -1530,7 +2294,11 @@
   "fips": [
    "SI"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 14.92,
+  "ly": 46.06,
+  "mz": 5,
+  "rank": 6
  },
  "SK": {
   "nome_pt": "Eslováquia",
@@ -1538,7 +2306,11 @@
   "fips": [
    "LO"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 19.05,
+  "ly": 48.73,
+  "mz": 4,
+  "rank": 6
  },
  "SL": {
   "nome_pt": "Serra Leoa",
@@ -1546,7 +2318,11 @@
   "fips": [
    "SL"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": -11.76,
+  "ly": 8.62,
+  "mz": 4,
+  "rank": 4
  },
  "SM": {
   "nome_pt": "San Marino",
@@ -1554,7 +2330,11 @@
   "fips": [
    "SM"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 12.44,
+  "ly": 43.93,
+  "mz": 5,
+  "rank": 6
  },
  "SN": {
   "nome_pt": "Senegal",
@@ -1562,7 +2342,11 @@
   "fips": [
    "SG"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": -14.78,
+  "ly": 15.14,
+  "mz": 2.7,
+  "rank": 3
  },
  "SO": {
   "nome_pt": "Somália",
@@ -1570,13 +2354,21 @@
   "fips": [
    "SO"
   ],
-  "r": "chifre-africa-oriental"
+  "r": "chifre-africa-oriental",
+  "lx": 45.19,
+  "ly": 3.57,
+  "mz": 4,
+  "rank": 6
  },
  "SOL": {
   "nome_pt": "Somalilândia",
   "nome_en": "Somaliland",
   "fips": [],
   "r": "chifre-africa-oriental",
+  "lx": 46.73,
+  "ly": 9.44,
+  "mz": 4.5,
+  "rank": 5,
   "ver": "SO"
  },
  "SR": {
@@ -1585,7 +2377,11 @@
   "fips": [
    "NS"
   ],
-  "r": "america-do-sul"
+  "r": "america-do-sul",
+  "lx": -55.91,
+  "ly": 4.14,
+  "mz": 4,
+  "rank": 4
  },
  "SS": {
   "nome_pt": "Sudão do Sul",
@@ -1593,7 +2389,11 @@
   "fips": [
    "OD"
   ],
-  "r": "chifre-africa-oriental"
+  "r": "chifre-africa-oriental",
+  "lx": 30.39,
+  "ly": 7.23,
+  "mz": 3,
+  "rank": 3
  },
  "ST": {
   "nome_pt": "São Tomé e Príncipe",
@@ -1601,7 +2401,11 @@
   "fips": [
    "TP"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 7.02,
+  "ly": 0.97,
+  "mz": 5,
+  "rank": 6
  },
  "SV": {
   "nome_pt": "El Salvador",
@@ -1609,7 +2413,11 @@
   "fips": [
    "ES"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -88.89,
+  "ly": 13.69,
+  "mz": 5,
+  "rank": 6
  },
  "SX": {
   "nome_pt": "Sint Maarten",
@@ -1617,7 +2425,11 @@
   "fips": [
    "NT"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -63.07,
+  "ly": 18.04,
+  "mz": 5,
+  "rank": 6
  },
  "SY": {
   "nome_pt": "Síria",
@@ -1625,7 +2437,11 @@
   "fips": [
    "SY"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 38.28,
+  "ly": 35.01,
+  "mz": 3,
+  "rank": 3
  },
  "SZ": {
   "nome_pt": "Essuatíni",
@@ -1633,7 +2449,11 @@
   "fips": [
    "WZ"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 31.47,
+  "ly": -26.53,
+  "mz": 4,
+  "rank": 4
  },
  "TC": {
   "nome_pt": "Turks e Caicos",
@@ -1641,7 +2461,11 @@
   "fips": [
    "TK"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -71.75,
+  "ly": 21.82,
+  "mz": 5,
+  "rank": 6
  },
  "TD": {
   "nome_pt": "Chade",
@@ -1649,7 +2473,11 @@
   "fips": [
    "CD"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": 18.65,
+  "ly": 15.14,
+  "mz": 3,
+  "rank": 3
  },
  "TF": {
   "nome_pt": "Terras Austrais e Antárticas Francesas",
@@ -1657,7 +2485,11 @@
   "fips": [
    "FS"
   ],
-  "r": null
+  "r": null,
+  "lx": 69.12,
+  "ly": -49.3,
+  "mz": 4,
+  "rank": 6
  },
  "TG": {
   "nome_pt": "Togo",
@@ -1665,7 +2497,11 @@
   "fips": [
    "TO"
   ],
-  "r": "sahel-africa-ocidental"
+  "r": "sahel-africa-ocidental",
+  "lx": 1.06,
+  "ly": 8.81,
+  "mz": 5,
+  "rank": 6
  },
  "TH": {
   "nome_pt": "Tailândia",
@@ -1673,7 +2509,11 @@
   "fips": [
    "TH"
   ],
-  "r": "sudeste-asiatico"
+  "r": "sudeste-asiatico",
+  "lx": 101.07,
+  "ly": 15.46,
+  "mz": 2.7,
+  "rank": 3
  },
  "TJ": {
   "nome_pt": "Tajiquistão",
@@ -1681,7 +2521,11 @@
   "fips": [
    "TI"
   ],
-  "r": "caucaso-asia-central"
+  "r": "caucaso-asia-central",
+  "lx": 72.59,
+  "ly": 38.2,
+  "mz": 4,
+  "rank": 4
  },
  "TL": {
   "nome_pt": "Timor-Leste",
@@ -1689,7 +2533,11 @@
   "fips": [
    "TT"
   ],
-  "r": "sudeste-asiatico"
+  "r": "sudeste-asiatico",
+  "lx": 125.85,
+  "ly": -8.8,
+  "mz": 4,
+  "rank": 5
  },
  "TM": {
   "nome_pt": "Turcomenistão",
@@ -1697,7 +2545,11 @@
   "fips": [
    "TX"
   ],
-  "r": "caucaso-asia-central"
+  "r": "caucaso-asia-central",
+  "lx": 58.68,
+  "ly": 39.86,
+  "mz": 3,
+  "rank": 4
  },
  "TN": {
   "nome_pt": "Tunísia",
@@ -1705,7 +2557,11 @@
   "fips": [
    "TS"
   ],
-  "r": "norte-da-africa"
+  "r": "norte-da-africa",
+  "lx": 9.01,
+  "ly": 33.69,
+  "mz": 3,
+  "rank": 3
  },
  "TO": {
   "nome_pt": "Tonga",
@@ -1713,7 +2569,11 @@
   "fips": [
    "TN"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": -175.16,
+  "ly": -21.21,
+  "mz": 4,
+  "rank": 4
  },
  "TR": {
   "nome_pt": "Turquia",
@@ -1721,7 +2581,11 @@
   "fips": [
    "TU"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 34.51,
+  "ly": 39.35,
+  "mz": 2,
+  "rank": 2
  },
  "TT": {
   "nome_pt": "Trinidad e Tobago",
@@ -1729,7 +2593,11 @@
   "fips": [
    "TD"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -60.92,
+  "ly": 11.0,
+  "mz": 4.5,
+  "rank": 5
  },
  "TV": {
   "nome_pt": "Tuvalu",
@@ -1737,7 +2605,11 @@
   "fips": [
    "TV"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 179.21,
+  "ly": -8.51,
+  "mz": 5,
+  "rank": 6
  },
  "TW": {
   "nome_pt": "Taiwan",
@@ -1745,7 +2617,11 @@
   "fips": [
    "TW"
   ],
-  "r": "leste-asiatico"
+  "r": "leste-asiatico",
+  "lx": 120.87,
+  "ly": 23.65,
+  "mz": 4.5,
+  "rank": 3
  },
  "TZ": {
   "nome_pt": "Tanzânia",
@@ -1753,7 +2629,11 @@
   "fips": [
    "TZ"
   ],
-  "r": "chifre-africa-oriental"
+  "r": "chifre-africa-oriental",
+  "lx": 34.96,
+  "ly": -6.05,
+  "mz": 3,
+  "rank": 3
  },
  "UA": {
   "nome_pt": "Ucrânia",
@@ -1761,7 +2641,11 @@
   "fips": [
    "UP"
   ],
-  "r": "europa-oriental"
+  "r": "europa-oriental",
+  "lx": 32.14,
+  "ly": 49.72,
+  "mz": 2.7,
+  "rank": 3
  },
  "UG": {
   "nome_pt": "Uganda",
@@ -1769,7 +2653,11 @@
   "fips": [
    "UG"
   ],
-  "r": "chifre-africa-oriental"
+  "r": "chifre-africa-oriental",
+  "lx": 32.95,
+  "ly": 1.97,
+  "mz": 3,
+  "rank": 3
  },
  "US": {
   "nome_pt": "Estados Unidos",
@@ -1777,7 +2665,11 @@
   "fips": [
    "US"
   ],
-  "r": "america-do-norte"
+  "r": "america-do-norte",
+  "lx": -97.48,
+  "ly": 39.54,
+  "mz": 1.7,
+  "rank": 2
  },
  "UY": {
   "nome_pt": "Uruguai",
@@ -1785,7 +2677,11 @@
   "fips": [
    "UY"
   ],
-  "r": "america-do-sul"
+  "r": "america-do-sul",
+  "lx": -55.97,
+  "ly": -32.96,
+  "mz": 3,
+  "rank": 4
  },
  "UZ": {
   "nome_pt": "Uzbequistão",
@@ -1793,7 +2689,11 @@
   "fips": [
    "UZ"
   ],
-  "r": "caucaso-asia-central"
+  "r": "caucaso-asia-central",
+  "lx": 64.01,
+  "ly": 41.69,
+  "mz": 3,
+  "rank": 3
  },
  "VA": {
   "nome_pt": "Vaticano",
@@ -1801,7 +2701,11 @@
   "fips": [
    "VT"
   ],
-  "r": "europa-ocidental"
+  "r": "europa-ocidental",
+  "lx": 12.45,
+  "ly": 41.9,
+  "mz": 5,
+  "rank": 6
  },
  "VC": {
   "nome_pt": "São Vicente e Granadinas",
@@ -1809,7 +2713,11 @@
   "fips": [
    "VC"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -61.34,
+  "ly": 13.09,
+  "mz": 5,
+  "rank": 6
  },
  "VE": {
   "nome_pt": "Venezuela",
@@ -1817,7 +2725,11 @@
   "fips": [
    "VE"
   ],
-  "r": "america-do-sul"
+  "r": "america-do-sul",
+  "lx": -64.6,
+  "ly": 7.18,
+  "mz": 2.5,
+  "rank": 3
  },
  "VG": {
   "nome_pt": "Ilhas Virgens Britânicas",
@@ -1825,7 +2737,11 @@
   "fips": [
    "VI"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -64.64,
+  "ly": 18.43,
+  "mz": 5,
+  "rank": 6
  },
  "VI": {
   "nome_pt": "Ilhas Virgens Americanas",
@@ -1833,7 +2749,11 @@
   "fips": [
    "VQ"
   ],
-  "r": "america-central-caribe"
+  "r": "america-central-caribe",
+  "lx": -64.78,
+  "ly": 17.75,
+  "mz": 5,
+  "rank": 6
  },
  "VN": {
   "nome_pt": "Vietnã",
@@ -1841,7 +2761,11 @@
   "fips": [
    "VM"
   ],
-  "r": "sudeste-asiatico"
+  "r": "sudeste-asiatico",
+  "lx": 105.39,
+  "ly": 21.72,
+  "mz": 2,
+  "rank": 2
  },
  "VU": {
   "nome_pt": "Vanuatu",
@@ -1849,7 +2773,11 @@
   "fips": [
    "NH"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": 166.91,
+  "ly": -15.37,
+  "mz": 4,
+  "rank": 4
  },
  "WF": {
   "nome_pt": "Wallis e Futuna",
@@ -1857,7 +2785,11 @@
   "fips": [
    "WF"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": -178.14,
+  "ly": -14.29,
+  "mz": 4.7,
+  "rank": 4
  },
  "WS": {
   "nome_pt": "Samoa",
@@ -1865,7 +2797,11 @@
   "fips": [
    "WS"
   ],
-  "r": "oceania"
+  "r": "oceania",
+  "lx": -172.44,
+  "ly": -13.64,
+  "mz": 3,
+  "rank": 4
  },
  "XK": {
   "nome_pt": "Kosovo",
@@ -1873,7 +2809,11 @@
   "fips": [
    "KV"
   ],
-  "r": "europa-central-balcas"
+  "r": "europa-central-balcas",
+  "lx": 20.86,
+  "ly": 42.59,
+  "mz": 5,
+  "rank": 6
  },
  "YE": {
   "nome_pt": "Iêmen",
@@ -1881,7 +2821,11 @@
   "fips": [
    "YM"
   ],
-  "r": "oriente-medio"
+  "r": "oriente-medio",
+  "lx": 45.87,
+  "ly": 15.33,
+  "mz": 3,
+  "rank": 3
  },
  "ZA": {
   "nome_pt": "África do Sul",
@@ -1889,7 +2833,11 @@
   "fips": [
    "SF"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 23.67,
+  "ly": -29.71,
+  "mz": 1.7,
+  "rank": 2
  },
  "ZM": {
   "nome_pt": "Zâmbia",
@@ -1897,7 +2845,11 @@
   "fips": [
    "ZA"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 26.4,
+  "ly": -14.66,
+  "mz": 3,
+  "rank": 3
  },
  "ZW": {
   "nome_pt": "Zimbábue",
@@ -1905,6 +2857,10 @@
   "fips": [
    "ZI"
   ],
-  "r": "africa-central-austral"
+  "r": "africa-central-austral",
+  "lx": 29.93,
+  "ly": -18.91,
+  "mz": 2.5,
+  "rank": 3
  }
 }

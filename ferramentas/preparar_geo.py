@@ -137,6 +137,9 @@ def main():
             "fips": fips,
             "r": regiao,
             "_pop": p["POP_EST"],
+            # posição e prioridade do nome no mapa (Natural Earth: LABEL_X/Y, MIN_LABEL = zoom em que aparece)
+            "lx": round(p["LABEL_X"], 2), "ly": round(p["LABEL_Y"], 2),
+            "mz": p["MIN_LABEL"], "rank": p["LABELRANK"],
         }
         if a3 in VER:
             paises[chave]["ver"] = VER[a3]

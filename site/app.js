@@ -80,6 +80,15 @@
             volume: {}, coletados: null, gerado: null, teste: false };
   var mapa, svg, camadaPaises, camadaMacros, camadaDisputa, camadaDestaque = null, macroLayer = {}, modoAuto = 'regioes';
   var G = {}; // contornos carregados (países e macrorregiões)
+  var camadaRotulos = null;
+  // posição dos nomes das macrorregiões [lat, lng], em ordem de prioridade quando não cabem todos
+  var ROTULOS_REGIAO = {
+    'russia': [62, 95], 'america-do-norte': [50, -102], 'america-do-sul': [-14, -60], 'africa-central-austral': [-14, 24],
+    'oriente-medio': [28, 46], 'leste-asiatico': [36, 106], 'sul-da-asia': [21, 78], 'oceania': [-26, 134],
+    'norte-da-africa': [26, 10], 'sahel-africa-ocidental': [14, -4], 'chifre-africa-oriental': [5, 39],
+    'europa-ocidental': [49, -1], 'europa-oriental': [53, 31], 'europa-central-balcas': [45, 19],
+    'caucaso-asia-central': [44, 63], 'sudeste-asiatico': [8, 110], 'america-central-caribe': [15, -80]
+  };
 
   function t(k) { return T[estado.l][k]; }
   function el(tag, attrs, filhos) {
@@ -188,6 +197,7 @@
     camadaPaises.setStyle(estiloPais);
     camadaMacros.setStyle(estiloMacro);
     atualizarDestaque();
+    atualizarRotulos();
   }
   /* Destaque da seleção: a área "sai" do mapa. Três camadas: sombra desfocada um pouco abaixo,
      preenchimento erguido com a cor atual e contorno escuro. Sem retângulo de foco. */
@@ -256,6 +266,53 @@
     });
     return { type: 'FeatureCollection', features: out };
   }
+  /* Nomes no mapa: regiões no zoom de longe, países no zoom de perto (a partir do MIN_LABEL do Natural Earth).
+     Recalculados a cada movimento: só entram os visíveis e os que não encostam num nome já colocado. */
+  function quebrar(txt, max) {
+    if (txt.length <= max) return [txt];
+    var p = txt.split(' '), l1 = '', l2 = '';
+    p.forEach(function (w) { if ((l1 + ' ' + w).trim().length <= Math.ceil(txt.length / 2) + 2 && !l2) l1 = (l1 + ' ' + w).trim(); else l2 = (l2 + ' ' + w).trim(); });
+    return l2 ? [l1, l2] : [l1];
+  }
+  function atualizarRotulos() {
+    if (!camadaRotulos) return;
+    camadaRotulos.clearLayers();
+    var z = mapa.getZoom(), pequeno = window.innerWidth < 820, area = mapa.getBounds();
+    var cand = [];
+    if (estado.modo === 'regioes') {
+      Object.keys(ROTULOS_REGIAO).forEach(function (id, i) {
+        if (!D.macroPorId[id]) return;
+        cand.push({ ll: ROTULOS_REGIAO[id], linhas: quebrar(nomeRegiao(id).toUpperCase(), pequeno ? 12 : 16), cls: 'rotulo rotulo-regiao', fs: pequeno ? 10.5 : 12, prio: i });
+      });
+    } else {
+      Object.keys(D.paises).forEach(function (k) {
+        var p = D.paises[k];
+        if (!p.r || p.lx === undefined || z < p.mz + (pequeno ? 1 : 0.3)) return;
+        cand.push({ ll: [p.ly, p.lx], linhas: quebrar(nomePais(k).toUpperCase(), 14), cls: 'rotulo rotulo-pais', fs: pequeno ? 9.5 : 10.5,
+          prio: 100 + p.rank * 10 + p.mz });
+      });
+    }
+    cand.sort(function (a, b) { return a.prio - b.prio; });
+    var postos = [];
+    cand.forEach(function (c) {
+      var larg = Math.max.apply(null, c.linhas.map(function (l) { return l.length; })) * c.fs * 0.74 + 6;
+      var alt = c.linhas.length * c.fs * 1.2 + 4;
+      [-360, 0, 360].forEach(function (dx) {
+        var ll = L.latLng(c.ll[0], c.ll[1] + dx);
+        if (!area.contains(ll)) return;
+        var pt = mapa.latLngToContainerPoint(ll);
+        var cx = { x1: pt.x - larg / 2, x2: pt.x + larg / 2, y1: pt.y - alt / 2, y2: pt.y + alt / 2 };
+        var tam = mapa.getSize();
+        if (cx.x1 < 2 || cx.y1 < 2 || cx.x2 > tam.x - 2 || cx.y2 > tam.y - 2) return; // nome cortado na borda: não mostra
+        if (postos.some(function (o) { return cx.x1 < o.x2 + 4 && cx.x2 > o.x1 - 4 && cx.y1 < o.y2 + 2 && cx.y2 > o.y1 - 2; })) return;
+        postos.push(cx);
+        var div = el('div', { class: c.cls, style: 'font-size:' + c.fs + 'px' });
+        c.linhas.forEach(function (l, i) { if (i) div.appendChild(document.createElement('br')); div.appendChild(document.createTextNode(l)); });
+        camadaRotulos.addLayer(L.marker(ll, { pane: 'rotulos', interactive: false, keyboard: false,
+          icon: L.divIcon({ className: 'rotulo-ancora', html: div, iconSize: [larg, alt], iconAnchor: [larg / 2, alt / 2] }) }));
+      });
+    });
+  }
   function criarHachura() {
     var c = svg._container; if (!c || c.querySelector('#hachura')) return;
     var ns = 'http://www.w3.org/2000/svg', defs = document.createElementNS(ns, 'defs'), p = document.createElementNS(ns, 'pattern');
@@ -296,6 +353,9 @@
     camadaDisputa = L.geoJSON(geoDisputa, { renderer: svg, smoothFactor: 0.4, interactive: false,
       style: { fillColor: 'url(#hachura)', fillOpacity: 1, color: '#4a5660', weight: 0.6, dashArray: '2 2' } }).addTo(mapa);
     criarHachura();
+    mapa.createPane('rotulos').style.zIndex = 450;
+    camadaRotulos = L.layerGroup().addTo(mapa);
+    mapa.on('moveend', atualizarRotulos);
     mapa.on('movestart zoomstart', function () { camadaPaises.eachLayer(function (l) { l.unbindTooltip(); }); });
     mapa.on('zoomend', function () {
       var m = mapa.getZoom() >= LIMIAR_PAISES ? 'paises' : 'regioes';
