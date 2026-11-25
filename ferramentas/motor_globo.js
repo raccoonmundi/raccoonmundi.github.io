@@ -5,6 +5,20 @@
   var VAZIO = { type: 'FeatureCollection', features: [] };
   var regiaoDoPais = {}; // k -> r, para pintar cada país pelo estado da feição
   var hover = { pais: null, area: null, estado: null };
+  /* Teste do 3D: a seleção sobe do globo (extrusão) e a câmera inclina para mostrar o relevo.
+     globo.html?3d=0 volta ao destaque plano (sombra, área erguida e contorno). */
+  var TRES_D = !/[?&]3d=0(&|$)/.test(location.search), INCLINACAO = 40;
+  // altura da extrusão em metros, caindo pela metade a cada nível de zoom: fica com ~9 px em qualquer zoom
+  // (um degrau por nível; o "exponential" do MapLibre não divide o valor, só acelera a transição)
+  var ALTURA = ['interpolate', ['linear'], ['zoom']].concat([0, 1, 2, 3, 4, 5, 6, 7, 8].reduce(function (a, z) { return a.concat([z, 700000 / Math.pow(2, z)]); }, []));
+  function tom(hex, i) { // varia um pouco o tom de áreas vizinhas da mesma cor, para a divisa aparecer no 3D
+    var f = [0, 0.08, -0.07, 0.04][i % 4], m = /^#?([0-9a-f]{6})$/i.exec(hex || '');
+    if (!m || !f) return hex;
+    var n = parseInt(m[1], 16), c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(function (v) {
+      return Math.max(0, Math.min(255, Math.round(f > 0 ? v + (255 - v) * f : v * (1 + f))));
+    });
+    return '#' + c.map(function (v) { return ('0' + v.toString(16)).slice(-2); }).join('');
+  }
 
   function tresMundos(fc) { return fc; } // o globo já é contínuo: não precisa repetir o mundo
   function base() { return location.href.replace(/[#?].*$/, '').replace(/[^/]*$/, ''); }
@@ -52,6 +66,7 @@
     return {
       version: 8,
       projection: { type: 'globe' },
+      light: { anchor: 'viewport', color: '#ffffff', intensity: 0.45, position: [1.3, 200, 35] },
       sky: { 'sky-color': '#7db4e8', 'horizon-color': '#cfe6f7', 'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 4, 0.7, 6, 0] },
       glyphs: base() + 'fonts/{fontstack}/{range}.pbf',
       sources: {
@@ -91,6 +106,11 @@
           paint: { 'line-color': ['get', 'linha'], 'line-width': ['get', 'larg'], 'line-translate': [0, -2] } },
         { id: 'estados-linha', type: 'line', source: 'estados', layout: { visibility: 'none', 'line-join': 'round' },
           paint: { 'line-color': P.bordaEstado, 'line-width': 0.9 } },
+        { id: 'sel-3d', type: 'fill-extrusion', source: 'selPreench', filter: ['!', ['has', 'padrao']], layout: { visibility: TRES_D ? 'visible' : 'none' },
+          paint: { 'fill-extrusion-color': ['get', 'cor'], 'fill-extrusion-height': ALTURA, 'fill-extrusion-base': 0,
+            'fill-extrusion-opacity': 1, 'fill-extrusion-vertical-gradient': true } },
+        { id: 'sel-3d-padrao', type: 'fill-extrusion', source: 'selPreench', filter: ['has', 'padrao'], layout: { visibility: TRES_D ? 'visible' : 'none' },
+          paint: { 'fill-extrusion-pattern': ['get', 'padrao'], 'fill-extrusion-height': ALTURA, 'fill-extrusion-base': 0, 'fill-extrusion-opacity': 1 } },
         { id: 'sel-borda', type: 'line', source: 'selContorno', layout: { 'line-join': 'round' },
           paint: { 'line-color': P.destaque, 'line-width': 2, 'line-translate': [0, -2] } },
         { id: 'hover-pais', type: 'line', source: 'paises', filter: ['==', ['get', 'k'], ''], paint: { 'line-color': P.destaque, 'line-width': 2 } },
@@ -112,6 +132,9 @@
   }
 
   /* cores que dependem do tema (claro/escuro) */
+  function aplicarModo3D() {
+    ['sel-cor', 'sel-padrao', 'sel-interna', 'sel-borda'].forEach(function (id) { mapa.setLayoutProperty(id, 'visibility', TRES_D ? 'none' : 'visible'); });
+  }
   function atualizarCoresMapa() {
     if (!MAPA_PRONTO) return;
     criarHachura();
@@ -163,17 +186,31 @@
       }
     }
     var reg = estado.modo === 'regioes';
-    var fill = preench.map(function (f) {
+    // no 3D, país com estados (piloto: Brasil) sobe estado por estado, para as divisas continuarem visíveis
+    if (TRES_D && s && s.tipo === 'p' && D.estados[s.id] && G.estados) {
+      var corBR = corDoPais(s.id).cor;
+      preench = G.estados.features.filter(function (f) { return (D.estadoPorId[f.properties.id] || {}).pais === s.id; })
+        .map(function (f, i) { return { type: 'Feature', properties: { cor: tom(corBR, i) }, geometry: f.geometry }; });
+    }
+    var fill = preench.map(function (f, i) {
       var pr = {};
+      if (f.properties.cor && !f.properties.k) return f; // já preparado (estados do país)
       if (s.tipo === 'a') pr.padrao = f.properties.tipo ? (f.properties.tipo === 'ocupado' ? 'hachura-guerra' : 'hachura-contestada') : 'hachura';
       else if (s.tipo === 'e') pr.cor = corDoPais(D.estadoPorId[s.id].pais).cor;
-      else { pr.cor = corDoPais(f.properties.k).cor; pr.linha = reg ? P.bordaRegiao : P.bordaPais; pr.larg = reg ? 0.4 : 0.8; }
+      else {
+        pr.cor = corDoPais(f.properties.k).cor; pr.linha = reg ? P.bordaRegiao : P.bordaPais; pr.larg = reg ? 0.4 : 0.8;
+        if (TRES_D && s.tipo === 'r') pr.cor = tom(pr.cor, i); // países da região: tons alternados para ver as divisas
+      }
       return { type: 'Feature', properties: pr, geometry: f.geometry };
     });
     mapa.getSource('selPreench').setData({ type: 'FeatureCollection', features: fill });
     mapa.getSource('selContorno').setData({ type: 'FeatureCollection', features: contorno.map(function (f) { return { type: 'Feature', properties: {}, geometry: f.geometry }; }) });
-    // com o país erguido, as linhas dos estados sobem junto
-    mapa.setPaintProperty('estados-linha', 'line-translate', s && s.tipo === 'p' ? [0, -2] : [0, 0]);
+    // com o país erguido, as linhas dos estados sobem junto (no destaque plano)
+    mapa.setPaintProperty('estados-linha', 'line-translate', !TRES_D && s && s.tipo === 'p' ? [0, -2] : [0, 0]);
+    if (TRES_D) { // câmera inclinada enquanto há seleção, reta no mundo inteiro
+      if (s && mapa.getPitch() < 5) mapa.easeTo({ pitch: INCLINACAO, duration: 700 });
+      if (!s && mapa.getPitch() > 0) mapa.easeTo({ pitch: 0, duration: 700 });
+    }
   }
 
   function atualizarEstados() {
@@ -219,9 +256,10 @@
     return p.classList.contains('aberto') ? 0 : p.offsetHeight;
   }
   function folga(extra) { var m = margemGaveta(); return { top: extra, left: extra, right: extra, bottom: extra + m }; }
-  function voarPara(centro, zoom) { mapa.flyTo({ center: [centro[1], centro[0]], zoom: zoom - DZ, padding: folga(0), duration: 900 }); }
+  function inclinacao() { return TRES_D && estado.sel ? INCLINACAO : 0; }
+  function voarPara(centro, zoom) { mapa.flyTo({ center: [centro[1], centro[0]], zoom: zoom - DZ - (inclinacao() ? 0.25 : 0), pitch: inclinacao(), padding: folga(0), duration: 900 }); }
   function zoomInicial() { return pequeno() ? 0.95 : 2; } // o globo inteiro ocupa a área do mapa
-  function voarInicio() { mapa.flyTo({ center: [15, 22], zoom: zoomInicial(), padding: folga(0), duration: 900 }); }
+  function voarInicio() { mapa.flyTo({ center: [15, 22], zoom: zoomInicial(), pitch: 0, padding: folga(0), duration: 900 }); }
   function caixa(features) {
     var c = [180, 90, -180, -90];
     var anda = function (co) {
@@ -238,7 +276,10 @@
   function voarParaArea(b, zmax) {
     if (!b) return;
     mapa.setPadding({ top: 0, bottom: 0, left: 0, right: 0 }); // a folga do fitBounds soma com a do mapa: zera antes
-    mapa.fitBounds(b, { padding: folga(24), maxZoom: zmax - DZ, duration: 900 });
+    var cam = mapa.cameraForBounds(b, { padding: folga(24), maxZoom: zmax - DZ, pitch: 0, bearing: 0 });
+    if (!cam) return;
+    var inc = inclinacao(); // inclinado, a área ocupa mais altura na tela: afasta um pouco
+    mapa.flyTo({ center: cam.center, zoom: cam.zoom - (inc ? 0.35 : 0), pitch: inc, bearing: 0, duration: 900 });
   }
   function enquadrar(tipo, id) {
     if (!MAPA_PRONTO) return;
@@ -303,7 +344,7 @@
     G.paises.features.forEach(function (f) { if (f.properties.k) regiaoDoPais[f.properties.k] = f.properties.r || null; });
     mapa = new maplibregl.Map({
       container: 'mapa', style: estiloDoMapa(), center: [15, 22], zoom: zoomInicial(),
-      minZoom: 0, maxZoom: 7, attributionControl: false, dragRotate: false, pitchWithRotate: false, maxPitch: 0,
+      minZoom: 0, maxZoom: 7, attributionControl: false, dragRotate: false, pitchWithRotate: false, maxPitch: 60,
       renderWorldCopies: true, fadeDuration: 150
     });
     mapa.touchZoomRotate.disableRotation();
@@ -314,6 +355,7 @@
     mapa.on('load', function () {
       MAPA_PRONTO = true;
       criarHachura();
+      aplicarModo3D();
       ultimaChaveRotulos = '';
       restyle();
       if (estado.sel) enquadrar(estado.sel.tipo, estado.sel.id);
