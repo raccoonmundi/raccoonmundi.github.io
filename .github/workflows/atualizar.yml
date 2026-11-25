@@ -31,7 +31,7 @@ concurrency:
 jobs:
   coletar:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
@@ -48,6 +48,7 @@ jobs:
             ~/.local/share/argos-translate
             ~/.local/cache/argos-translate
             ~/stanza_resources
+            ~/.cache/mapa-raccoon-mundi
           key: argos-${{ runner.os }}-inicio
           restore-keys: argos-${{ runner.os }}-
 
@@ -72,6 +73,7 @@ jobs:
             ~/.local/share/argos-translate
             ~/.local/cache/argos-translate
             ~/stanza_resources
+            ~/.cache/mapa-raccoon-mundi
           key: argos-${{ runner.os }}-${{ hashFiles('.argos-list') }}
 
       - name: Gravar dados no repositório

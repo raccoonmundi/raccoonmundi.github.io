@@ -13,7 +13,8 @@ Links diretos para usar nos posts:
 
 ## Como funciona
 
-1. **Robô de coleta** (`robo/coletar.py`), rodando no GitHub Actions: para cada país, consulta a API DOC 2.0 do [GDELT](https://www.gdeltproject.org) filtrando pela imprensa sediada ali (`sourcecountry`) e por temas geopolíticos. Remove duplicatas, marca mídia estatal, consulta os temas em foco e traduz os títulos para inglês e português com o [Argos Translate](https://pypi.org/project/argostranslate/).
+1. **Robô de coleta** (`robo/coletar.py`), rodando no GitHub Actions: lê os arquivos que o [GDELT](https://www.gdeltproject.org) publica a cada 15 minutos (Global Knowledge Graph, em inglês e traduzido de 65 idiomas). Descobre o país de cada veículo pelo domínio (.ir, .br…) ou pela tabela de veículos por país do GDELT, e fica só com matérias de temas geopolíticos. Depois marca a mídia estatal e os temas em foco e traduz os títulos para inglês e português com o [Argos Translate](https://pypi.org/project/argostranslate/).
+   - O robô não usa a API de busca do GDELT: ela limita pedidos por endereço de rede, e os servidores do GitHub são compartilhados. No teste de 25/11/2026, quase todos os pedidos foram recusados.
 2. **Dados** (`site/data/`):
    - `noticias.json`: gravado pelo robô a cada coleta.
    - `temas.json`: temas em foco, atualizados pela rodada do Raccoon Mundi.
@@ -33,8 +34,8 @@ O workflow também roda sozinho quando algo muda em `site/` ou `robo/`. A coleta
 | --- | --- |
 | Passar da fase de teste (10 países) para todos | `robo/config.json`: `"modo": "completo"` |
 | Lista de mídia estatal ou sites bloqueados | `robo/config.json`: `midia_estatal`, `bloqueio` |
-| Filtro de temas geopolíticos do GDELT | `robo/config.json`: `filtro_geopolitica` |
-| Temas em foco | `site/data/temas.json` (a rodada do Raccoon Mundi mantém) |
+| Temas geopolíticos do GDELT que contam | `robo/config.json`: `temas_fortes` (valem 2 pontos) e `temas_gerais` (1 ponto) |
+| Temas em foco | `site/data/temas.json` (a rodada do Raccoon Mundi mantém). Cada tema lista países e grupos de nomes: a matéria precisa citar ao menos um nome de cada grupo |
 | Macrorregiões | `ferramentas/preparar_geo.py`; depois, rodar o script de novo e o mapshaper (abaixo) |
 
 ## Regerar os dados geográficos

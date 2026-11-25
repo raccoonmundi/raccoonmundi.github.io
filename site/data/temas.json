@@ -3,8 +3,31 @@
   "id": "eua-china-russia",
   "nome_pt": "EUA × China × Rússia",
   "nome_en": "US × China × Russia",
-  "paises": ["US", "CN", "RU"],
-  "consulta": "(Putin OR \"Xi Jinping\" OR Trump OR Kremlin OR Beijing OR Washington) (summit OR meeting OR talks OR tariffs OR sanctions)",
+  "paises": [
+   "US",
+   "CN",
+   "RU"
+  ],
+  "nomes": [
+   [
+    "united states",
+    "washington",
+    "trump",
+    "white house"
+   ],
+   [
+    "china",
+    "beijing",
+    "xi jinping"
+   ],
+   [
+    "russia",
+    "moscow",
+    "putin",
+    "kremlin"
+   ]
+  ],
+  "temas_gdelt": [],
   "contexto_pt": "Como a imprensa de cada uma das três potências cobre os encontros e as disputas entre elas.",
   "contexto_en": "How the press of each of the three powers covers their meetings and disputes.",
   "ativo": true,
@@ -14,8 +37,25 @@
   "id": "eua-ira",
   "nome_pt": "EUA × Irã",
   "nome_en": "US × Iran",
-  "paises": ["US", "IR", "IL"],
-  "consulta": "(Iran OR Tehran) (strike OR war OR attack OR ceasefire OR talks OR Washington)",
+  "paises": [
+   "US",
+   "IR",
+   "IL"
+  ],
+  "nomes": [
+   [
+    "iran",
+    "tehran"
+   ],
+   [
+    "united states",
+    "washington",
+    "trump",
+    "pentagon",
+    "white house"
+   ]
+  ],
+  "temas_gdelt": [],
   "contexto_pt": "A guerra entre EUA e Irã vista pela imprensa dos dois países e de Israel.",
   "contexto_en": "The US–Iran war as covered by the press of both countries and Israel.",
   "ativo": true,
@@ -25,8 +65,31 @@
   "id": "ucrania-russia",
   "nome_pt": "Ucrânia × Rússia",
   "nome_en": "Ukraine × Russia",
-  "paises": ["UA", "RU"],
-  "consulta": "(Ukraine OR Kyiv OR Russia OR Moscow) (war OR front OR ceasefire OR attack OR drone OR negotiations)",
+  "paises": [
+   "UA",
+   "RU"
+  ],
+  "nomes": [
+   [
+    "ukraine",
+    "kyiv",
+    "kiev",
+    "zelensky"
+   ],
+   [
+    "russia",
+    "moscow",
+    "putin",
+    "kremlin"
+   ]
+  ],
+  "temas_gdelt": [
+   "ARMEDCONFLICT",
+   "MILITARY",
+   "CEASEFIRE",
+   "NEGOTIATIONS",
+   "KILL"
+  ],
   "contexto_pt": "A guerra na Ucrânia pela imprensa ucraniana e russa.",
   "contexto_en": "The war in Ukraine through Ukrainian and Russian press.",
   "ativo": true,
