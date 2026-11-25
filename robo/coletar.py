@@ -258,6 +258,9 @@ def temas_do_registro(iso, texto, temas_reg, prontos):
 
 # ---------------------------------------------------------------- tradução
 def traduzir(itens, anteriores, log):
+    for it in itens:
+        if it.get("tv") != TRAD_VERSAO:  # tradução de uma versão antiga: refaz
+            it["titulo_en"] = it["titulo_pt"] = None
     for it in itens:  # reaproveita as traduções já feitas
         p = anteriores.get(it["id"])
         if p and p.get("tv") == TRAD_VERSAO:

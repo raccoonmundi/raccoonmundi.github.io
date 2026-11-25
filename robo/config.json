@@ -82,7 +82,8 @@
   "wam.ae",
   "mena.org.eg",
   "vnanet.vn",
-  "vietnamplus.vn"
+  "vietnamplus.vn",
+  "spnfa.ir"
  ],
  "midia_exilio": [
   "radiofarda.com",
@@ -131,6 +132,9 @@
   "rferl.org": "US",
   "iranhumanrights.org": null,
   "iranherald.com": null,
-  "al-monitor.com": "US"
+  "al-monitor.com": "US",
+  "ncr-iran.org": null,
+  "irannewsupdate.com": null,
+  "spnfa.ir": "RU"
  }
 }
