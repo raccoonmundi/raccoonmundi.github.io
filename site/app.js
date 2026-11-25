@@ -23,7 +23,8 @@
       atualizado: function (t) { return 'Updated ' + t + ' (Brasília time).'; },
       aindaNao: 'The first collection has not run yet.',
       teste: function (n) { return 'Test phase: ' + n + ' countries collected.'; },
-      aviso: 'Automatic collection from local outlets (GDELT), not checked item by item. Headlines are machine-translated.',
+      aviso: 'Automatic collection (GDELT), not checked item by item. Headlines are machine-translated.',
+      avisoFontes: 'Only well-known outlets from each country, from a reviewed list. Automatic collection (GDELT), not checked item by item. Headlines are machine-translated.',
       fronteiras: 'Borders: Natural Earth (de facto status); disputed areas are hatched.',
       creditos: 'Map: Raccoon Mundi, with data from ',
       legTitulo: 'Geopolitical stories, last 24 h', menos: 'fewer', mais: 'more',
@@ -60,6 +61,7 @@
       aindaNao: 'A primeira coleta ainda não rodou.',
       teste: function (n) { return 'Fase de teste: ' + n + ' países coletados.'; },
       aviso: 'Coleta automática da imprensa local (GDELT), sem checagem item a item. Títulos com tradução automática.',
+      avisoFontes: 'Só veículos conhecidos de cada país, de uma lista revisada. Coleta automática (GDELT), sem checagem item a item. Títulos com tradução automática.',
       fronteiras: 'Fronteiras: Natural Earth (situação de fato); áreas disputadas hachuradas.',
       creditos: 'Mapa: Raccoon Mundi, com dados do ',
       legTitulo: 'Notícias geopolíticas, últimas 24 h', menos: 'menos', mais: 'mais',
@@ -514,7 +516,7 @@
     if (exib !== it.titulo_original) filhos.push(el('p', { class: 'original', lang: it.lc || '', text: it.titulo_original }));
     var idioma = estado.l === 'pt' ? (IDIOMAS_PT[it.idioma] || it.idioma) : it.idioma;
     var meta = el('div', { class: 'meta' }, [
-      el('span', { class: 'veiculo', text: it.veiculo }),
+      el('span', { class: 'veiculo', text: it.veiculo_nome || it.veiculo, title: it.veiculo }),
       idioma ? el('span', { class: 'ponto', text: idioma }) : null,
       el('time', { class: 'ponto', datetime: it.visto_em, title: fmtData[estado.l].format(new Date(it.visto_em)), text: relativo(it.visto_em) }),
       it.midia_estatal ? el('span', { class: 'selo', text: t('estatal') }) : null,
@@ -641,7 +643,7 @@
     var r = document.getElementById('rodape'); r.textContent = '';
     if (D.gerado) r.appendChild(el('p', { text: t('atualizado')(fmtData[estado.l].format(new Date(D.gerado))) }));
     if (D.teste && D.coletados) r.appendChild(el('p', { text: t('teste')(D.coletados.length) }));
-    r.appendChild(el('p', { text: t('aviso') }));
+    r.appendChild(el('p', { text: t(D.fontesConhecidas ? 'avisoFontes' : 'aviso') }));
     r.appendChild(el('p', { text: t('fronteiras') }));
     if (G.guerraMeta) r.appendChild(el('p', {}, [t('creditoGuerra'), el('a', { href: 'https://deepstatemap.live', target: '_blank', rel: 'noopener', text: 'DeepStateMap' }), ', ' + dataCurta(G.guerraMeta.data) + '.']));
     r.appendChild(el('p', {}, [t('creditos'), el('a', { href: 'https://www.naturalearthdata.com', target: '_blank', rel: 'noopener', text: 'Natural Earth' }),
@@ -779,7 +781,7 @@
     D.temas.forEach(function (tm) { D.temaPorId[tm.id] = tm; });
     var n = r[3] || {};
     D.itens = n.itens || []; D.volume = n.volume || {}; D.coletados = n.paises_coletados || null;
-    D.gerado = n.gerado_em || null; D.teste = !!n.teste;
+    D.gerado = n.gerado_em || null; D.teste = !!n.teste; D.fontesConhecidas = !!n.somente_fontes_conhecidas;
     D.itens.forEach(function (it) { (D.porPais[it.pais] = D.porPais[it.pais] || []).push(it); });
     Object.keys(D.porPais).forEach(function (k) { D.porPais[k].sort(function (a, b) { return b.visto_em < a.visto_em ? -1 : 1; }); });
     calcularEscalas();

@@ -35,6 +35,7 @@ import io
 import json
 import os
 import re
+import urllib.parse
 import sys
 import time
 import zipfile
@@ -188,6 +189,33 @@ class PaisDoVeiculo:
 
 
 # ---------------------------------------------------------------- arquivos do GDELT
+class FontesConhecidas:
+    """Lista de veículos conhecidos por país (robo/fontes.json). Casa pelo endereço da matéria; o domínio
+    mais específico vence (piaui.folha.uol.com.br antes de folha.uol.com.br antes de uol.com.br)."""
+    def __init__(self, dados):
+        self.lista = sorted(((dom, iso, nome) for iso, d in dados.items() if not iso.startswith("_") for dom, nome in d.items()),
+                            key=lambda x: -len(x[0]))
+        self.paises = {iso for _, iso, _ in self.lista}
+        self.memo = {}
+
+    def __call__(self, host):
+        if host not in self.memo:
+            self.memo[host] = next(((iso, nome) for dom, iso, nome in self.lista if host == dom or host.endswith("." + dom)), None)
+        return self.memo[host]
+
+
+def host_da_url(url):
+    try:
+        h = (urllib.parse.urlsplit(url).hostname or "").lower()
+    except ValueError:
+        h = ""
+    return h.removeprefix("www.")
+
+
+def casa(lista, *dominios):
+    return any(d and (d == e or d.endswith("." + e)) for d in dominios for e in lista)
+
+
 def ultimo_carimbo(traduzido):
     r = baixar(BASE + ("lastupdate-translation.txt" if traduzido else "lastupdate.txt"), timeout=60)
     r.raise_for_status()
@@ -387,11 +415,11 @@ def resumo_markdown(saida, extra, segundos):
     linhas = [f"## Coleta de {saida['gerado_em']} ({'teste' if saida['teste'] else 'completa'})", "",
               f"{extra['arquivos']} arquivos de 15 min lidos ({extra['registros']} matérias no GDELT), "
               f"{len(saida['itens'])} matérias no mapa, {segundos:.0f} s.", "",
-              "| País | Geopolíticas (48 h) | Volume 24 h | No mapa | Idiomas | Veículos mais frequentes |",
-              "| --- | --- | --- | --- | --- | --- |"]
+              "| País | Geopolíticas (48 h) | Volume 24 h | No mapa | Idiomas | Veículos mais frequentes | Veículos da lista vistos | Mais frequentes fora da lista (nesta execução) |",
+              "| --- | --- | --- | --- | --- | --- | --- | --- |"]
     for iso, r in sorted(saida["relatorio"].items()):
         linhas.append(f"| {iso} | {r['candidatas']} | {saida['volume'].get(iso, 0)} | {r['no_mapa']} | "
-                      f"{', '.join(r['idiomas'])} | {', '.join(r['veiculos'])} |")
+                      f"{', '.join(r['idiomas'])} | {', '.join(r['veiculos'])} | {r.get('fontes_vistas', '')} | {', '.join(r.get('fora_da_lista', []))} |")
     linhas += ["", "**Temas em foco:** " + (", ".join(f"{k}: {v}" for k, v in extra["temas"].items()) or "nenhuma matéria")]
     linhas += ["", "**Áreas em guerra ou disputadas:** " + (", ".join(f"{k}: {v}" for k, v in extra.get("areas", {}).items()) or "nenhuma matéria")]
     if extra.get("traducao"):
@@ -429,11 +457,17 @@ def main():
     bloqueio = cfg["bloqueio"] + cfg.get("agregadores", [])
     estatal, exilio = cfg["midia_estatal"], cfg.get("midia_exilio", [])
     pais_de = PaisDoVeiculo(paises, log, cfg.get("veiculo_pais"))
+    fontes = FontesConhecidas(json.load(open(os.path.join(RAIZ, "robo", "fontes.json"), encoding="utf-8")))
+    estrito = bool(cfg.get("somente_fontes_conhecidas"))
+    if estrito and alvo - fontes.paises:
+        log(f"Sem lista de veículos conhecidos (nada entra no mapa): {', '.join(sorted(alvo - fontes.paises))}")
+    fora_da_lista, da_lista = {}, {}  # para o relatório: o que o GDELT viu de cada país
 
     # 1. quais arquivos de 15 minutos ler
     t_agora = agora()
     desde = t_agora - dt.timedelta(hours=cfg["horas_por_execucao_max"])
-    if anterior.get("ultimo_arquivo") and set(anterior.get("paises_coletados", [])) >= alvo:
+    mesma_regra = bool(anterior.get("somente_fontes_conhecidas", False)) == estrito
+    if anterior.get("ultimo_arquivo") and set(anterior.get("paises_coletados", [])) >= alvo and mesma_regra:
         desde = max(desde, ler_carimbo(anterior["ultimo_arquivo"]))
     pedidos, ultimo = [], None
     for traduzido in (False, True):
@@ -460,15 +494,24 @@ def main():
                 url = c[4].strip()
                 if not url.startswith(("http://", "https://")):
                     continue
-                if any(dominio == b or dominio.endswith("." + b) for b in bloqueio):
+                host = host_da_url(url) or dominio
+                if casa(bloqueio, dominio, host):
                     continue
-                iso = pais_de(dominio)
+                fonte = fontes(host)
+                iso = fonte[0] if (estrito and fonte) else pais_de(dominio)
                 if iso not in alvo:
                     continue
                 temas_reg = {t.split(",")[0] for t in c[7].split(";") if t}
                 pontos = 2 * len(temas_reg & fortes) + len(temas_reg & gerais)
                 if pontos == 0:
                     continue
+                if estrito and not fonte:  # veículo fora da lista: só entra no relatório
+                    f = fora_da_lista.setdefault(iso, {})
+                    f[dominio] = f.get(dominio, 0) + 1
+                    continue
+                if fonte:
+                    f = da_lista.setdefault(iso, {})
+                    f[fonte[1]] = f.get(fonte[1], 0) + 1
                 cont_arq[iso] = cont_arq.get(iso, 0) + 1
                 m = RE_TITULO.search(c[26])
                 titulo = limpar_titulo(re.sub(r"\s+", " ", html.unescape(m.group(1))).strip(), dominio) if m else ""
@@ -485,9 +528,10 @@ def main():
                 texto_nomes = titulo.lower() + " | " + nomes_do_registro(c)
                 candidatas[id_] = {
                     "id": id_, "pais": iso, "titulo_original": titulo, "titulo_en": None, "titulo_pt": None,
-                    "veiculo": dominio, "idioma": nome_idioma, "lc": lc, "visto_em": quando, "url": url,
-                    "midia_estatal": any(dominio == e or dominio.endswith("." + e) for e in estatal),
-                    "midia_exilio": any(dominio == e or dominio.endswith("." + e) for e in exilio),
+                    "veiculo": dominio, "veiculo_nome": fonte[1] if fonte else None,
+                    "idioma": nome_idioma, "lc": lc, "visto_em": quando, "url": url,
+                    "midia_estatal": casa(estatal, dominio, host),
+                    "midia_exilio": casa(exilio, dominio, host),
                     "temas": temas_do_registro(iso, texto_nomes, temas_reg, temas, pontos),
                     "areas": areas_do_texto(texto_nomes, areas) if pontos >= 2 else [],
                     "pontos": pontos,
@@ -499,10 +543,18 @@ def main():
         if it["pais"] not in alvo or id_ in candidatas or ler_iso(it["visto_em"]) < limite:
             continue
         dom = it["veiculo"]
-        if pais_de(dom) != it["pais"] or any(dom == b or dom.endswith("." + b) for b in bloqueio):
-            continue  # correções de país ou bloqueios novos valem também para o histórico
-        candidatas[id_] = dict(it, titulo_original=limpar_titulo(it["titulo_original"], dom), midia_estatal=any(dom == e or dom.endswith("." + e) for e in estatal),
-                               midia_exilio=any(dom == e or dom.endswith("." + e) for e in exilio), areas=it.get("areas", []))
+        host = host_da_url(it["url"]) or dom
+        fonte = fontes(host)
+        if estrito:
+            if not fonte or fonte[0] != it["pais"]:
+                continue  # a lista de veículos vale também para o histórico
+        elif pais_de(dom) != it["pais"]:
+            continue  # correções de país valem também para o histórico
+        if casa(bloqueio, dom, host):
+            continue
+        candidatas[id_] = dict(it, titulo_original=limpar_titulo(it["titulo_original"], dom), midia_estatal=casa(estatal, dom, host),
+                               midia_exilio=casa(exilio, dom, host), areas=it.get("areas", []),
+                               veiculo_nome=fonte[1] if fonte else None)
         candidatas[id_].pop("extra_area", None)
     por_pais = {}
     for it in candidatas.values():
@@ -525,10 +577,13 @@ def main():
         itens += escolhidos
         veic = {}
         for it in lst:
-            veic[it["veiculo"]] = veic.get(it["veiculo"], 0) + 1
+            v = it.get("veiculo_nome") or it["veiculo"]
+            veic[v] = veic.get(v, 0) + 1
         relatorio[iso] = {"candidatas": len(lst), "no_mapa": len(escolhidos),
                           "idiomas": sorted({i["idioma"] for i in escolhidos}),
-                          "veiculos": [v for v, _ in sorted(veic.items(), key=lambda x: -x[1])[:4]]}
+                          "veiculos": [v for v, _ in sorted(veic.items(), key=lambda x: -x[1])[:4]],
+                          "fontes_vistas": len(da_lista.get(iso, {})),
+                          "fora_da_lista": [f"{d} ({n})" for d, n in sorted(fora_da_lista.get(iso, {}).items(), key=lambda x: -x[1])[:6]]}
 
     # 3b. notícias sobre as áreas em guerra ou disputadas, de qualquer país coletado (além do limite por país)
     no_mapa = {i["id"] for i in itens}
@@ -549,8 +604,8 @@ def main():
                 no_mapa.add(it["id"])
 
     # 4. volume das últimas 24 h: soma das contagens por arquivo de 15 min, guardadas entre execuções
-    contagens = {k: v for k, v in anterior.get("contagens", {}).items()
-                 if ler_carimbo(k) >= t_agora - dt.timedelta(hours=24)}
+    contagens = {k: v for k, v in (anterior.get("contagens", {}) if mesma_regra else {}).items()
+                 if ler_carimbo(k) >= t_agora - dt.timedelta(hours=24)}  # regra de fontes nova: o volume recomeça
     contagens.update({k: v for k, v in contagem.items() if ler_carimbo(k) >= t_agora - dt.timedelta(hours=24)})
     volume = {iso: 0 for iso in alvo}
     for v in contagens.values():
@@ -585,6 +640,7 @@ def main():
     saida = {
         "gerado_em": iso_utc(agora()),
         "teste": teste,
+        "somente_fontes_conhecidas": estrito,
         "janela_h": cfg["janela_horas"],
         "ultimo_arquivo": ultimo,
         "paises_coletados": sorted(alvo),

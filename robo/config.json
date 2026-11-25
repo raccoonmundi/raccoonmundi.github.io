@@ -83,7 +83,23 @@
   "mena.org.eg",
   "vnanet.vn",
   "vietnamplus.vn",
-  "spnfa.ir"
+  "spnfa.ir",
+  "people.cn",
+  "chinanews.com.cn",
+  "ecns.cn",
+  "huanqiu.com",
+  "gmw.cn",
+  "thepaper.cn",
+  "sixthtone.com",
+  "china.org.cn",
+  "yicai.com",
+  "tehrantimes.com",
+  "kayhan.ir",
+  "hispantv.com",
+  "ukrinform.ua",
+  "ukrinform.net",
+  "nannews.ng",
+  "agenciabrasil.ebc.com.br"
  ],
  "midia_exilio": [
   "radiofarda.com",
@@ -140,5 +156,7 @@
   "ncr-iran.org": null,
   "irannewsupdate.com": null,
   "spnfa.ir": "RU"
- }
+ },
+ "somente_fontes_conhecidas": true,
+ "max_por_area": 10
 }
