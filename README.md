@@ -42,9 +42,9 @@ O workflow também roda sozinho quando algo muda em `site/` ou `robo/`. A coleta
 
 ```bash
 python ferramentas/preparar_geo.py
-npx mapshaper -i /tmp/geo_paises_full.geojson -simplify 8% keep-shapes -clean -o site/geo/paises.geojson precision=0.01 format=geojson
-npx mapshaper -i /tmp/geo_paises_full.geojson -filter 'r != null' -simplify 8% keep-shapes -clean -dissolve r -o site/geo/macrorregioes.geojson precision=0.01 format=geojson
-npx mapshaper -i /tmp/geo_disputadas_full.geojson -simplify 20% keep-shapes -o site/geo/disputadas.geojson precision=0.01 format=geojson
+npx mapshaper -i /tmp/geo_paises_full.geojson -simplify 40% keep-shapes -clean -o site/geo/paises.geojson precision=0.001 format=geojson
+npx mapshaper -i /tmp/geo_paises_full.geojson -filter 'r != null' -simplify 40% keep-shapes -clean -dissolve r -o site/geo/macrorregioes.geojson precision=0.001 format=geojson
+npx mapshaper -i /tmp/geo_disputadas_full.geojson -simplify 60% keep-shapes -o site/geo/disputadas.geojson precision=0.001 format=geojson
 ```
 
 ## Regras editoriais

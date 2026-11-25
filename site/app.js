@@ -175,7 +175,9 @@
     var k = f.properties.k, r = f.properties.r, tema = estado.sel && estado.sel.tipo === 't' ? D.temaPorId[estado.sel.id] : null;
     if (!r) return { fillColor: COR_SEM_REGIAO, fillOpacity: 1, color: '#ffffff', weight: 0.4 };
     var fill = estado.modo === 'regioes' ? cor(volRegiao(r), LIMITES_REGIAO) : cor(coletado(k) ? (volPais(k) || 0) : null, LIMITES_PAIS);
-    var s = { fillColor: fill, fillOpacity: 1, color: '#ffffff', weight: estado.modo === 'regioes' ? 0.3 : 0.7 };
+    var s = estado.modo === 'regioes'
+      ? { fillColor: fill, fillOpacity: 1, color: '#ffffff', weight: 0.4, opacity: 0.9, lineJoin: 'round' }
+      : { fillColor: fill, fillOpacity: 1, color: '#7d776c', weight: 0.8, opacity: 0.85, lineJoin: 'round' };
     if (tema && (tema.paises || []).indexOf(k) < 0) s.fillOpacity = 0.35;
     return s;
   }
@@ -202,11 +204,11 @@
     }
     if (!contorno.length) return;
     var fc = function (fs) { return { type: 'FeatureCollection', features: fs }; };
-    var sombra = L.geoJSON(fc(contorno), { renderer: svg, interactive: false,
+    var sombra = L.geoJSON(fc(contorno), { renderer: svg, smoothFactor: 0.4, interactive: false,
       style: { stroke: false, fillColor: '#1f2a33', fillOpacity: 0.45 } });
-    var cima = L.geoJSON(fc(preench), { renderer: svg, interactive: false,
-      style: function (f) { var e = estiloPais(f); return { fillColor: e.fillColor, fillOpacity: 1, color: '#ffffff', weight: e.weight }; } });
-    var borda = L.geoJSON(fc(contorno), { renderer: svg, interactive: false,
+    var cima = L.geoJSON(fc(preench), { renderer: svg, smoothFactor: 0.4, interactive: false,
+      style: function (f) { var e = estiloPais(f); return { fillColor: e.fillColor, fillOpacity: 1, color: e.color, opacity: e.opacity, weight: e.weight }; } });
+    var borda = L.geoJSON(fc(contorno), { renderer: svg, smoothFactor: 0.4, interactive: false,
       style: { fill: false, color: '#1f2a33', weight: 2, lineJoin: 'round' } });
     camadaDestaque = L.layerGroup([sombra, cima, borda]).addTo(mapa);
     sombra.eachLayer(function (l) { l._path.setAttribute('filter', 'url(#sombra)'); l._path.setAttribute('transform', 'translate(0 6)'); });
@@ -258,7 +260,7 @@
       maxBounds: [[-75, -200], [88, 200]], maxBoundsViscosity: 0.8, attributionControl: false });
     svg = L.svg({ padding: 0.5 });
     mapa.setView([28, 15], pequeno ? 1 : 2);
-    camadaPaises = L.geoJSON(geoPaises, { renderer: svg, style: estiloPais, onEachFeature: function (f, layer) {
+    camadaPaises = L.geoJSON(geoPaises, { renderer: svg, smoothFactor: 0.4, style: estiloPais, onEachFeature: function (f, layer) {
       if (!f.properties.r) return;
       layer.on('mouseover', function () {
         var txt = rotuloHover(f); if (!txt) return;
@@ -272,9 +274,9 @@
         else selecionar({ tipo: 'p', id: f.properties.k }, false);
       });
     } }).addTo(mapa);
-    camadaMacros = L.geoJSON(geoMacros, { renderer: svg, interactive: false, style: estiloMacro,
+    camadaMacros = L.geoJSON(geoMacros, { renderer: svg, smoothFactor: 0.4, interactive: false, style: estiloMacro,
       onEachFeature: function (f, layer) { macroLayer[f.properties.r] = layer; } }).addTo(mapa);
-    camadaDisputa = L.geoJSON(geoDisputa, { renderer: svg, interactive: false,
+    camadaDisputa = L.geoJSON(geoDisputa, { renderer: svg, smoothFactor: 0.4, interactive: false,
       style: { fillColor: 'url(#hachura)', fillOpacity: 1, color: '#4a5660', weight: 0.6, dashArray: '2 2' } }).addTo(mapa);
     criarHachura();
     mapa.on('movestart zoomstart', function () { camadaPaises.eachLayer(function (l) { l.unbindTooltip(); }); });
