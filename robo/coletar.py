@@ -266,9 +266,9 @@ def nomes_do_registro(c):
 # 2 = País: o que acontece no país e pode afetá-lo (política, economia, segurança nacionais).
 # 3 = Estado: notícia local, com estado identificado. Só nos países do piloto (config "nivel3_paises"),
 #     no idioma original e sem exigir tema geopolítico.
-NIVEIS_VERSAO = 1
-TEMAS_NACIONAIS = {"TAX_FNCACT_PRESIDENT", "TAX_FNCACT_MINISTER", "LEGISLATION", "ELECTION", "LEADER",
-                   "TAX_FNCACT_SENATOR", "TAX_FNCACT_LAWMAKER", "TAX_FNCACT_CONGRESSMAN", "TAX_FNCACT_PRIME_MINISTER"}
+NIVEIS_VERSAO = 2
+TEMAS_NACIONAIS = {"TAX_FNCACT_PRESIDENT", "TAX_FNCACT_MINISTER", "LEADER", "TAX_FNCACT_SENATOR", "TAX_FNCACT_LAWMAKER",
+                   "TAX_FNCACT_CONGRESSMAN", "TAX_FNCACT_PRIME_MINISTER"}
 RE_UF_URL = re.compile(r"^/([a-z]{2})/")
 
 
@@ -306,14 +306,17 @@ class Estados:
 
 def classificar(iso, temas_reg, pontos, locs, proprios, estados, piloto, estado_url, uf_veiculo):
     """Devolve (nível, estado) ou (None, None) para descartar."""
-    estrangeiros = {cc for cc, _ in locs if cc not in proprios}
-    if estrangeiros and pontos >= 2:
+    # o GDELT às vezes acha um lugar estrangeiro por engano: o outro país precisa pesar na matéria
+    # (3 menções ou ao menos tantas quanto as do próprio país)
+    fora = sum(1 for cc, _ in locs if cc not in proprios)
+    dentro = len(locs) - fora
+    if pontos >= 2 and (fora >= 3 or (fora >= 1 and fora >= dentro)):
         return 1, None
     if iso in piloto:
         ufs = {estados.por_fips.get(a) for cc, a in locs if cc in proprios and a and a != cc} - {None}
         estado = estado_url or (next(iter(ufs)) if len(ufs) == 1 else None) or (uf_veiculo if not ufs else None)
         nacional = bool(temas_reg & TEMAS_NACIONAIS) or (estado and estado.endswith("-DF") and pontos >= 2)
-        if estado and not estrangeiros and not nacional:
+        if estado and not nacional:  # menção estrangeira de passagem não tira a notícia do estado
             return 3, estado
     if pontos >= 1:
         return 2, None
