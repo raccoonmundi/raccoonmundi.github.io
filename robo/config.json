@@ -84,5 +84,51 @@
   "vnanet.vn",
   "vietnamplus.vn"
  ],
- "bloqueio": []
+ "midia_exilio": [
+  "radiofarda.com",
+  "iranintl.com",
+  "iranwire.com",
+  "themoscowtimes.com",
+  "meduza.io",
+  "novayagazeta.eu",
+  "tvrain.tv",
+  "zona.media",
+  "currenttime.tv",
+  "kloop.kg",
+  "irrawaddy.com",
+  "nknews.org",
+  "dailynk.com"
+ ],
+ "agregadores": [
+  "aol.com",
+  "msn.com",
+  "yahoo.com",
+  "bignewsnetwork.com",
+  "allafrica.com",
+  "newsnow.co.uk",
+  "menafn.com",
+  "news.google.com",
+  "flipboard.com",
+  "newsbreak.com",
+  "dailyhunt.in",
+  "inkl.com",
+  "headtopics.com",
+  "newsr.in",
+  "ground.news"
+ ],
+ "bloqueio": [],
+ "veiculo_pais": {
+  "_comentario": "Correções da tabela do GDELT: domínio -> país (ISO). null = não é imprensa de nenhum país (ONG, agregador).",
+  "aljazeera.net": "QA",
+  "aljazeera.com": "QA",
+  "euronews.com": "FR",
+  "alquds.com": "PS",
+  "france24.com": "FR",
+  "dw.com": "DE",
+  "bbc.com": "GB",
+  "voanews.com": "US",
+  "rferl.org": "US",
+  "iranhumanrights.org": null,
+  "iranherald.com": null
+ }
 }

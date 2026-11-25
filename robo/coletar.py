@@ -110,8 +110,9 @@ def baixar(url, timeout=120):
 class PaisDoVeiculo:
     """Domínio do veículo -> país (código ISO do mapa)."""
 
-    def __init__(self, paises, log):
+    def __init__(self, paises, log, correcoes=None):
         self.iso_validos = set(paises)
+        self.correcoes = {k: v for k, v in (correcoes or {}).items() if not k.startswith("_")}
         self.fips_para_iso = {}
         for iso, p in paises.items():
             for f in p.get("fips", []):
@@ -145,6 +146,12 @@ class PaisDoVeiculo:
     def __call__(self, dominio):
         if dominio in self.memo:
             return self.memo[dominio]
+        partes = dominio.split(".")
+        for i in range(len(partes) - 1):  # correções manuais valem primeiro (null = ignorar o veículo)
+            sufixo = ".".join(partes[i:])
+            if sufixo in self.correcoes:
+                self.memo[dominio] = self.correcoes[sufixo]
+                return self.memo[dominio]
         iso = None
         tld = dominio.rsplit(".", 1)[-1]
         if len(tld) == 2 and tld not in CCTLD_GENERICOS:
@@ -152,7 +159,6 @@ class PaisDoVeiculo:
             if cand in self.iso_validos:
                 iso = cand
         if not iso:
-            partes = dominio.split(".")
             for i in range(len(partes) - 1):
                 iso = self.tabela.get(".".join(partes[i:]))
                 if iso:
@@ -344,8 +350,9 @@ def main():
     teste = bool(args.paises) or not (args.todos or cfg.get("modo") == "completo")
 
     fortes, gerais = set(cfg["temas_fortes"]), set(cfg["temas_gerais"])
-    bloqueio, estatal = cfg["bloqueio"], cfg["midia_estatal"]
-    pais_de = PaisDoVeiculo(paises, log)
+    bloqueio = cfg["bloqueio"] + cfg.get("agregadores", [])
+    estatal, exilio = cfg["midia_estatal"], cfg.get("midia_exilio", [])
+    pais_de = PaisDoVeiculo(paises, log, cfg.get("veiculo_pais"))
 
     # 1. quais arquivos de 15 minutos ler
     t_agora = agora()
@@ -403,6 +410,7 @@ def main():
                     "id": id_, "pais": iso, "titulo_original": titulo, "titulo_en": None, "titulo_pt": None,
                     "veiculo": dominio, "idioma": nome_idioma, "lc": lc, "visto_em": quando, "url": url,
                     "midia_estatal": any(dominio == e or dominio.endswith("." + e) for e in estatal),
+                    "midia_exilio": any(dominio == e or dominio.endswith("." + e) for e in exilio),
                     "temas": temas_do_registro(iso, titulo.lower() + " | " + nomes_do_registro(c), temas_reg, temas),
                     "pontos": pontos,
                 }
@@ -410,8 +418,13 @@ def main():
     # 3. junta com as matérias das execuções anteriores (até 48 h) e escolhe as de cada país
     limite = t_agora - dt.timedelta(hours=cfg["janela_horas"])
     for id_, it in anteriores.items():
-        if it["pais"] in alvo and id_ not in candidatas and ler_iso(it["visto_em"]) >= limite:
-            candidatas[id_] = dict(it)
+        if it["pais"] not in alvo or id_ in candidatas or ler_iso(it["visto_em"]) < limite:
+            continue
+        dom = it["veiculo"]
+        if pais_de(dom) != it["pais"] or any(dom == b or dom.endswith("." + b) for b in bloqueio):
+            continue  # correções de país ou bloqueios novos valem também para o histórico
+        candidatas[id_] = dict(it, midia_estatal=any(dom == e or dom.endswith("." + e) for e in estatal),
+                               midia_exilio=any(dom == e or dom.endswith("." + e) for e in exilio))
     por_pais = {}
     for it in candidatas.values():
         if ler_iso(it["visto_em"]) >= limite:

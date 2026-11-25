@@ -19,14 +19,14 @@
       semColeta: 'This country is not collected yet in the test phase.',
       semFonte: 'GDELT has no source code for this territory.',
       ver: 'No separate collection for this territory. See ',
-      abrir: 'Open story ↗', lerTraduzido: 'Read translated', estatal: 'State media', original: 'Original',
+      abrir: 'Open story ↗', lerTraduzido: 'Read translated', estatal: 'State media', exilio: 'Media in exile', original: 'Original',
       atualizado: function (t) { return 'Updated ' + t + ' (Brasília time).'; },
       aindaNao: 'The first collection has not run yet.',
       teste: function (n) { return 'Test phase: ' + n + ' countries collected.'; },
       aviso: 'Automatic collection from local outlets (GDELT), not checked item by item. Headlines are machine-translated.',
       fronteiras: 'Borders: Natural Earth (de facto status); disputed areas are hatched.',
       creditos: 'Map: Raccoon Mundi, with data from ',
-      legTitulo: 'Stories in the last 24 h', menos: 'fewer', mais: 'more',
+      legTitulo: 'Geopolitical stories, last 24 h', menos: 'fewer', mais: 'more',
       legSem: 'No stories', legSemColeta: 'Not collected yet', legDisputa: 'Disputed area',
       agora: 'just now', ha: function (n, u) { return n + ' ' + u + ' ago'; }, u: { m: 'min', h: 'h', d: 'd' },
       erro: 'Could not load the map data. Try reloading the page.', expandir: 'Expand panel'
@@ -44,14 +44,14 @@
       semColeta: 'Este país ainda não é coletado na fase de teste.',
       semFonte: 'O GDELT não tem código de fonte para este território.',
       ver: 'Território sem coleta própria. Veja ',
-      abrir: 'Abrir matéria ↗', lerTraduzido: 'Ler traduzido', estatal: 'Mídia estatal', original: 'Original',
+      abrir: 'Abrir matéria ↗', lerTraduzido: 'Ler traduzido', estatal: 'Mídia estatal', exilio: 'Mídia no exílio', original: 'Original',
       atualizado: function (t) { return 'Atualizado em ' + t + ' (horário de Brasília).'; },
       aindaNao: 'A primeira coleta ainda não rodou.',
       teste: function (n) { return 'Fase de teste: ' + n + ' países coletados.'; },
       aviso: 'Coleta automática da imprensa local (GDELT), sem checagem item a item. Títulos com tradução automática.',
       fronteiras: 'Fronteiras: Natural Earth (situação de fato); áreas disputadas hachuradas.',
       creditos: 'Mapa: Raccoon Mundi, com dados do ',
-      legTitulo: 'Notícias nas últimas 24 h', menos: 'menos', mais: 'mais',
+      legTitulo: 'Notícias geopolíticas, últimas 24 h', menos: 'menos', mais: 'mais',
       legSem: 'Sem notícias', legSemColeta: 'Ainda sem coleta', legDisputa: 'Área disputada',
       agora: 'agora', ha: function (n, u) { return 'há ' + n + ' ' + u; }, u: { m: 'min', h: 'h', d: 'd' },
       erro: 'Não foi possível carregar os dados do mapa. Tente recarregar a página.', expandir: 'Expandir painel'
@@ -67,8 +67,7 @@
   };
 
   var CORES = ['#f6e3d6', '#eebfa2', '#e0916a', '#c9643a', '#a8400f'];
-  var LIMITES_PAIS = [3, 6, 13, 31];       // 1–2, 3–5, 6–12, 13–30, 31+
-  var LIMITES_REGIAO = [6, 16, 41, 101];   // 1–5, 6–15, 16–40, 41–100, 101+
+  var LIMITES_PAIS = [1, 2, 3, 4], LIMITES_REGIAO = [1, 2, 3, 4]; // recalculados pelos dados (quintis)
   var COR_ZERO = '#e9e3d7', COR_SEM_COLETA = '#dcd7ce', COR_SEM_REGIAO = '#e4dfd6';
   var VISTAS = { // regiões que cruzam a linha de data: enquadramento manual
     'russia': [[62, 95], 2.5], 'oceania': [[-22, 155], 3], 'america-do-norte': [[46, -100], 2.5]
@@ -123,8 +122,17 @@
   function cor(v, limites) {
     if (v === null || v === undefined) return COR_SEM_COLETA;
     if (v === 0) return COR_ZERO;
-    for (var i = 0; i < limites.length; i++) if (v < limites[i]) return CORES[i];
+    for (var i = 0; i < limites.length; i++) if (v <= limites[i]) return CORES[i];
     return CORES[CORES.length - 1];
+  }
+  function quintis(valores) { // cinco faixas com quantidades parecidas de países (ou regiões)
+    var v = valores.filter(function (x) { return x > 0; }).sort(function (a, b) { return a - b; });
+    if (!v.length) return [1, 2, 3, 4];
+    return [0.2, 0.4, 0.6, 0.8].map(function (q) { return v[Math.floor(q * (v.length - 1))]; });
+  }
+  function calcularEscalas() {
+    LIMITES_PAIS = quintis((D.coletados || []).map(function (iso) { return volPais(iso) || 0; }));
+    LIMITES_REGIAO = quintis(D.macros.map(function (r) { return volRegiao(r.id) || 0; }));
   }
 
   /* ---------- tempo ---------- */
@@ -256,7 +264,8 @@
       el('span', { text: it.veiculo }),
       idioma ? el('span', { text: '· ' + idioma }) : null,
       el('span', { title: fmtData[estado.l].format(new Date(it.visto_em)), text: '· ' + relativo(it.visto_em) }),
-      it.midia_estatal ? el('span', { class: 'selo', text: t('estatal') }) : null
+      it.midia_estatal ? el('span', { class: 'selo', text: t('estatal') }) : null,
+      it.midia_exilio ? el('span', { class: 'selo exilio', text: t('exilio') }) : null
     ]);
     if (link) {
       meta.appendChild(el('a', { href: link, target: '_blank', rel: 'noopener', text: t('abrir') }));
@@ -440,6 +449,7 @@
     D.gerado = n.gerado_em || null; D.teste = !!n.teste;
     D.itens.forEach(function (it) { (D.porPais[it.pais] = D.porPais[it.pais] || []).push(it); });
     Object.keys(D.porPais).forEach(function (k) { D.porPais[k].sort(function (a, b) { return b.visto_em < a.visto_em ? -1 : 1; }); });
+    calcularEscalas();
     lerRota();
     montarMapa(r[4], r[5], r[6]);
     ligarControles();
