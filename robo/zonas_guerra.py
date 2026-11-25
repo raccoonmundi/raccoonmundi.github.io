@@ -56,11 +56,7 @@ def main():
     if not grupos["ocupado"]:
         print("::warning::DeepStateMap sem áreas ocupadas na resposta; áreas em guerra mantidas.")
         return 0
-    quando = dados.get("datetime") or dados.get("id")
-    try:
-        data = dt.datetime.fromtimestamp(int(quando) / (1000 if int(quando) > 1e11 else 1), dt.timezone.utc).strftime("%Y-%m-%d")
-    except (TypeError, ValueError):
-        data = str(quando)[:10] if quando else dt.date.today().isoformat()
+    data = data_do_mapa(dados)
     ocupado = unary_union(grupos["ocupado"])
     feats = [{"type": "Feature", "properties": {"tipo": "ocupado", "conflito": "russia-ucrania"},
               "geometry": arredonda_geo(ocupado.simplify(0.01, preserve_topology=True))}]
@@ -77,6 +73,27 @@ def main():
     print(f"áreas em guerra: {len(grupos['ocupado'])} polígonos ocupados, {len(grupos['contestado'])} contestados, "
           f"data {data}, {os.path.getsize(SAIDA) // 1024} KB (área bruta {area:.1f} graus²)")
     return 0
+
+
+def data_do_mapa(dados):
+    """Data do mapa: o "id" costuma ser o carimbo Unix; o campo "datetime" vem como texto ("24.11 о 22:00")."""
+    import re
+    hoje = dt.datetime.now(dt.timezone.utc)
+    for v in (dados.get("id"), dados.get("datetime")):
+        try:
+            n = int(v)
+            if n > 1e9:
+                return dt.datetime.fromtimestamp(n / (1000 if n > 1e11 else 1), dt.timezone.utc).strftime("%Y-%m-%d")
+        except (TypeError, ValueError):
+            pass
+    m = re.search(r"(\d{1,2})\.(\d{1,2})(?:\.(\d{4}))?", str(dados.get("datetime") or ""))
+    if m:
+        ano = int(m.group(3) or hoje.year)
+        d = dt.date(ano, int(m.group(2)), int(m.group(1)))
+        if d > hoje.date():  # "31.12" lido em janeiro é do ano anterior
+            d = d.replace(year=ano - 1)
+        return d.isoformat()
+    return hoje.strftime("%Y-%m-%d")
 
 
 def arredonda_geo(g):
