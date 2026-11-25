@@ -15,6 +15,8 @@
       periodo: function (h) { return 'last ' + h + ' h'; },
       voltar: function (nome) { return '← ' + nome; },
       paisesDaRegiao: 'Countries', regioesMaisAtivas: 'Most active regions', destaques: 'Latest stories',
+      destaquesMundo: 'Global geopolitics', nivel1: 'The country and the world', nivel2: 'At home',
+      nivelMundoDica: 'Stories that involve more than one country.',
       semNoticias: 'No stories from the local press in this period.',
       semColeta: 'This country is not collected yet in the test phase.',
       semFonte: 'GDELT has no source code for this territory.',
@@ -53,6 +55,8 @@
       periodo: function (h) { return 'últimas ' + h + ' h'; },
       voltar: function (nome) { return '← ' + nome; },
       paisesDaRegiao: 'Países', regioesMaisAtivas: 'Regiões mais ativas', destaques: 'Notícias recentes',
+      destaquesMundo: 'Geopolítica global', nivel1: 'O país e o mundo', nivel2: 'Dentro do país',
+      nivelMundoDica: 'Notícias que envolvem mais de um país.',
       semNoticias: 'Nenhuma notícia da imprensa local neste período.',
       semColeta: 'Este país ainda não é coletado na fase de teste.',
       semFonte: 'O GDELT não tem código de fonte para este território.',
@@ -162,7 +166,7 @@
   function campoArea(a, k) { return estado.l === 'pt' ? a[k + '_pt'] : (a[k + '_en'] || a[k + '_pt']); }
   function itensDaArea(id) { // notícias que citam o lugar e, numa guerra, as do tema em foco ligado a ela
     var tema = (D.areaPorId[id] || {}).tema;
-    return D.itens.filter(function (i) { return ((i.areas || []).indexOf(id) >= 0 || (tema && (i.temas || []).indexOf(tema) >= 0)) && noPeriodo(i); })
+    return D.itens.filter(function (i) { return i.nivel !== 3 && ((i.areas || []).indexOf(id) >= 0 || (tema && (i.temas || []).indexOf(tema) >= 0)) && noPeriodo(i); })
       .sort(function (a, b) { return b.visto_em < a.visto_em ? -1 : 1; });
   }
   function nomeTema(tm) { return estado.l === 'pt' ? (tm.nome_pt || tm.nome_en) : (tm.nome_en || tm.nome_pt); }
@@ -172,7 +176,7 @@
   function noPeriodo(it) { return Date.parse(it.visto_em) >= referencia() - estado.h * 3600e3; }
   function itensDe(isos) {
     var out = [];
-    isos.forEach(function (iso) { (D.porPais[iso] || []).forEach(function (it) { if (noPeriodo(it)) out.push(it); }); });
+    isos.forEach(function (iso) { (D.porPais[iso] || []).forEach(function (it) { if (noPeriodo(it) && it.nivel !== 3) out.push(it); }); });
     return out.sort(function (a, b) { return b.visto_em < a.visto_em ? -1 : 1; });
   }
   function variar(itens, limite, maxPorPais) { // evita repetição e que um país domine a lista
@@ -567,9 +571,11 @@
             [nomeRegiao(x.r.id), el('span', { class: 'n', text: num(x.v) })]);
         })));
       }
-      add(el('div', { class: 'secao', text: t('destaques') }));
-      var fortes = todos.filter(function (i) { return (i.pontos || 0) >= 3; }); // no "Mundo", primeiro as mais geopolíticas
-      lista(variar(fortes.length >= 12 ? fortes : todos, 12, 2)).forEach(add);
+      // Mundo = nível 1: notícias que envolvem mais de um país (dados antigos sem nível: as mais geopolíticas)
+      var n1 = todos.filter(function (i) { return i.nivel === 1 || (i.nivel === undefined && (i.pontos || 0) >= 3); });
+      add(el('div', { class: 'secao', text: t('destaquesMundo') }));
+      add(el('p', { class: 'dica-secao', text: t('nivelMundoDica') }));
+      lista(variar(n1.length ? n1 : todos, 12, 2)).forEach(add);
     } else if (s.tipo === 'r') {
       var r = D.macroPorId[s.id], it = itensDe(r.paises);
       add(el('button', { type: 'button', class: 'voltar', text: t('voltar')(t('mundo')), on: { click: function () { selecionar(null, false); mapa.flyTo([28, 15], 2, { duration: 0.6 }); } } }));
@@ -601,7 +607,9 @@
         add(el('p', { class: 'aviso', text: t('semColeta') }));
       } else {
         add(el('p', { class: 'resumo', text: resumo(itp) }));
-        lista(variar(itp, 10, 10)).forEach(add);
+        var p1 = itp.filter(function (i) { return i.nivel === 1; }), p2 = itp.filter(function (i) { return i.nivel !== 1; });
+        if (p1.length) { add(el('div', { class: 'secao', text: t('nivel1') })); lista(variar(p1, 10, 10)).forEach(add); }
+        if (p2.length || !p1.length) { add(el('div', { class: 'secao', text: t('nivel2') })); lista(variar(p2, 12, 12)).forEach(add); }
       }
     } else if (s.tipo === 'a') {
       var ar = D.areaPorId[s.id], ita = itensDaArea(s.id);
@@ -622,7 +630,7 @@
       else add(el('p', { class: 'vazio', text: t('semNoticiasArea')(estado.h) }));
     } else if (s.tipo === 't') {
       var tm = D.temaPorId[s.id];
-      var itt = D.itens.filter(function (i) { return (i.temas || []).indexOf(s.id) >= 0 && noPeriodo(i); })
+      var itt = D.itens.filter(function (i) { return i.nivel !== 3 && (i.temas || []).indexOf(s.id) >= 0 && noPeriodo(i); })
         .sort(function (a, b) { return b.visto_em < a.visto_em ? -1 : 1; });
       add(el('button', { type: 'button', class: 'voltar', text: t('voltar')(t('mundo')), on: { click: function () { selecionar(null, false); } } }));
       add(el('div', { class: 'tipo', text: t('tema') }));

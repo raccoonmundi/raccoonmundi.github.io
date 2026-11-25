@@ -1,5 +1,5 @@
 {
- "_comentario": "Veículos conhecidos de cada país (domínio -> nome exibido). Com \"somente_fontes_conhecidas\" no config.json, só eles entram no mapa. O domínio casa com o endereço da matéria e os subdomínios (folha.uol.com.br pega www1.folha.uol.com.br). O mais específico vence.",
+ "_comentario": "Veículos conhecidos de cada país (domínio -> nome exibido, ou {nome, uf} para jornal regional com o estado de origem). Com \"somente_fontes_conhecidas\" no config.json, só eles entram no mapa. O domínio casa com o endereço da matéria e os subdomínios (folha.uol.com.br pega www1.folha.uol.com.br). O mais específico vence.",
  "BR": {
   "g1.globo.com": "G1",
   "oglobo.globo.com": "O Globo",
@@ -22,13 +22,158 @@
   "r7.com": "R7",
   "sbtnews.sbt.com.br": "SBT News",
   "infomoney.com.br": "InfoMoney",
-  "gauchazh.clicrbs.com.br": "GZH",
-  "em.com.br": "Estado de Minas",
-  "opovo.com.br": "O Povo",
+  "gauchazh.clicrbs.com.br": {
+   "nome": "GZH",
+   "uf": "RS"
+  },
+  "em.com.br": {
+   "nome": "Estado de Minas",
+   "uf": "MG"
+  },
+  "opovo.com.br": {
+   "nome": "O Povo",
+   "uf": "CE"
+  },
   "nexojornal.com.br": "Nexo",
   "istoe.com.br": "IstoÉ",
   "terra.com.br": "Terra",
-  "jota.info": "JOTA"
+  "jota.info": "JOTA",
+  "odia.ig.com.br": {
+   "nome": "O Dia",
+   "uf": "RJ"
+  },
+  "extra.globo.com": {
+   "nome": "Extra",
+   "uf": "RJ"
+  },
+  "otempo.com.br": {
+   "nome": "O Tempo",
+   "uf": "MG"
+  },
+  "correiodopovo.com.br": {
+   "nome": "Correio do Povo",
+   "uf": "RS"
+  },
+  "nsctotal.com.br": {
+   "nome": "NSC Total",
+   "uf": "SC"
+  },
+  "ndmais.com.br": {
+   "nome": "ND+",
+   "uf": "SC"
+  },
+  "atarde.com.br": {
+   "nome": "A Tarde",
+   "uf": "BA"
+  },
+  "correio24horas.com.br": {
+   "nome": "Correio",
+   "uf": "BA"
+  },
+  "diariodepernambuco.com.br": {
+   "nome": "Diario de Pernambuco",
+   "uf": "PE"
+  },
+  "folhape.com.br": {
+   "nome": "Folha de Pernambuco",
+   "uf": "PE"
+  },
+  "jc.uol.com.br": {
+   "nome": "Jornal do Commercio",
+   "uf": "PE"
+  },
+  "diariodonordeste.verdesmares.com.br": {
+   "nome": "Diário do Nordeste",
+   "uf": "CE"
+  },
+  "jornaldebrasilia.com.br": {
+   "nome": "Jornal de Brasília",
+   "uf": "DF"
+  },
+  "opopular.com.br": {
+   "nome": "O Popular",
+   "uf": "GO"
+  },
+  "oliberal.com": {
+   "nome": "O Liberal",
+   "uf": "PA"
+  },
+  "dol.com.br": {
+   "nome": "Diário do Pará",
+   "uf": "PA"
+  },
+  "acritica.com": {
+   "nome": "A Crítica",
+   "uf": "AM"
+  },
+  "oimparcial.com.br": {
+   "nome": "O Imparcial",
+   "uf": "MA"
+  },
+  "imirante.com": {
+   "nome": "Imirante",
+   "uf": "MA"
+  },
+  "agazeta.com.br": {
+   "nome": "A Gazeta",
+   "uf": "ES"
+  },
+  "folhavitoria.com.br": {
+   "nome": "Folha Vitória",
+   "uf": "ES"
+  },
+  "jornaldaparaiba.com.br": {
+   "nome": "Jornal da Paraíba",
+   "uf": "PB"
+  },
+  "tribunadonorte.com.br": {
+   "nome": "Tribuna do Norte",
+   "uf": "RN"
+  },
+  "gazetaweb.com": {
+   "nome": "Gazeta de Alagoas",
+   "uf": "AL"
+  },
+  "cidadeverde.com": {
+   "nome": "Cidade Verde",
+   "uf": "PI"
+  },
+  "gazetadigital.com.br": {
+   "nome": "Gazeta Digital",
+   "uf": "MT"
+  },
+  "olhardireto.com.br": {
+   "nome": "Olhar Direto",
+   "uf": "MT"
+  },
+  "correiodoestado.com.br": {
+   "nome": "Correio do Estado",
+   "uf": "MS"
+  },
+  "campograndenews.com.br": {
+   "nome": "Campo Grande News",
+   "uf": "MS"
+  },
+  "jornaldotocantins.com.br": {
+   "nome": "Jornal do Tocantins",
+   "uf": "TO"
+  },
+  "ac24horas.com": {
+   "nome": "ac24horas",
+   "uf": "AC"
+  },
+  "folhabv.com.br": {
+   "nome": "Folha de Boa Vista",
+   "uf": "RR"
+  },
+  "bemparana.com.br": {
+   "nome": "Bem Paraná",
+   "uf": "PR"
+  },
+  "dgabc.com.br": {
+   "nome": "Diário do Grande ABC",
+   "uf": "SP"
+  }
  },
  "US": {
   "nytimes.com": "The New York Times",

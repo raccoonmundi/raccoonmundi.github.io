@@ -193,14 +193,16 @@ class FontesConhecidas:
     """Lista de veículos conhecidos por país (robo/fontes.json). Casa pelo endereço da matéria; o domínio
     mais específico vence (piaui.folha.uol.com.br antes de folha.uol.com.br antes de uol.com.br)."""
     def __init__(self, dados):
-        self.lista = sorted(((dom, iso, nome) for iso, d in dados.items() if not iso.startswith("_") for dom, nome in d.items()),
+        self.lista = sorted(((dom, iso, v if isinstance(v, str) else v["nome"], None if isinstance(v, str) else v.get("uf"))
+                             for iso, d in dados.items() if not iso.startswith("_") for dom, v in d.items()),
                             key=lambda x: -len(x[0]))
-        self.paises = {iso for _, iso, _ in self.lista}
+        self.paises = {x[1] for x in self.lista}
         self.memo = {}
 
     def __call__(self, host):
+        """(país, nome do veículo, sigla do estado se for jornal regional) ou None."""
         if host not in self.memo:
-            self.memo[host] = next(((iso, nome) for dom, iso, nome in self.lista if host == dom or host.endswith("." + dom)), None)
+            self.memo[host] = next(((iso, nome, uf) for dom, iso, nome, uf in self.lista if host == dom or host.endswith("." + dom)), None)
         return self.memo[host]
 
 
@@ -257,6 +259,65 @@ def nomes_do_registro(c):
     partes += [loc.split("#")[1] for loc in c[9].split(";") if loc.count("#") > 1]
     partes += [n.rsplit(",", 1)[0] for n in c[23].split(";") if n]
     return " | ".join(partes).lower()
+
+
+# ---------------------------------------------------------------- níveis
+# 1 = Mundo: a matéria envolve outro país e tem tema geopolítico.
+# 2 = País: o que acontece no país e pode afetá-lo (política, economia, segurança nacionais).
+# 3 = Estado: notícia local, com estado identificado. Só nos países do piloto (config "nivel3_paises"),
+#     no idioma original e sem exigir tema geopolítico.
+NIVEIS_VERSAO = 1
+TEMAS_NACIONAIS = {"TAX_FNCACT_PRESIDENT", "TAX_FNCACT_MINISTER", "LEGISLATION", "ELECTION", "LEADER",
+                   "TAX_FNCACT_SENATOR", "TAX_FNCACT_LAWMAKER", "TAX_FNCACT_CONGRESSMAN", "TAX_FNCACT_PRIME_MINISTER"}
+RE_UF_URL = re.compile(r"^/([a-z]{2})/")
+
+
+def locais_do_registro(c):
+    """Lugares citados na matéria: (código do país FIPS, código ADM1 do estado)."""
+    out = []
+    for loc in c[9].split(";"):
+        p = loc.split("#")
+        if len(p) > 4 and p[2]:
+            out.append((p[2], p[3]))
+    return out
+
+
+class Estados:
+    """Estados dos países do piloto (site/data/estados.json): código ADM1 do GDELT e sigla -> id (BR-MA)."""
+    def __init__(self, dados):
+        self.por_fips, self.por_uf = {}, {}
+        for iso, lst in dados.items():
+            if iso.startswith("_"):
+                continue
+            for e in lst:
+                self.por_fips[e["fips"]] = e["id"]
+                self.por_uf[(iso, e["uf"].lower())] = e["id"]
+
+    def da_url(self, iso, host, url):
+        """g1.globo.com/ma/maranhao/... -> BR-MA (as seções regionais do G1 trazem a sigla do estado)."""
+        if host != "g1.globo.com":
+            return None
+        try:
+            m = RE_UF_URL.match(urllib.parse.urlsplit(url).path)
+        except ValueError:
+            return None
+        return self.por_uf.get((iso, m.group(1))) if m else None
+
+
+def classificar(iso, temas_reg, pontos, locs, proprios, estados, piloto, estado_url, uf_veiculo):
+    """Devolve (nível, estado) ou (None, None) para descartar."""
+    estrangeiros = {cc for cc, _ in locs if cc not in proprios}
+    if estrangeiros and pontos >= 2:
+        return 1, None
+    if iso in piloto:
+        ufs = {estados.por_fips.get(a) for cc, a in locs if cc in proprios and a and a != cc} - {None}
+        estado = estado_url or (next(iter(ufs)) if len(ufs) == 1 else None) or (uf_veiculo if not ufs else None)
+        nacional = bool(temas_reg & TEMAS_NACIONAIS) or (estado and estado.endswith("-DF") and pontos >= 2)
+        if estado and not estrangeiros and not nacional:
+            return 3, estado
+    if pontos >= 1:
+        return 2, None
+    return None, None
 
 
 # ---------------------------------------------------------------- temas em foco
@@ -415,11 +476,12 @@ def resumo_markdown(saida, extra, segundos):
     linhas = [f"## Coleta de {saida['gerado_em']} ({'teste' if saida['teste'] else 'completa'})", "",
               f"{extra['arquivos']} arquivos de 15 min lidos ({extra['registros']} matérias no GDELT), "
               f"{len(saida['itens'])} matérias no mapa, {segundos:.0f} s.", "",
-              "| País | Geopolíticas (48 h) | Volume 24 h | No mapa | Idiomas | Veículos mais frequentes | Veículos da lista vistos | Mais frequentes fora da lista (nesta execução) |",
-              "| --- | --- | --- | --- | --- | --- | --- | --- |"]
+              "| País | Candidatas (48 h) | Volume 24 h | No mapa | Nível 1 / 2 / 3 (estados) | Idiomas | Veículos mais frequentes | Veículos da lista vistos | Mais frequentes fora da lista (nesta execução) |",
+              "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"]
     for iso, r in sorted(saida["relatorio"].items()):
+        nv = r.get("niveis", {})
         linhas.append(f"| {iso} | {r['candidatas']} | {saida['volume'].get(iso, 0)} | {r['no_mapa']} | "
-                      f"{', '.join(r['idiomas'])} | {', '.join(r['veiculos'])} | {r.get('fontes_vistas', '')} | {', '.join(r.get('fora_da_lista', []))} |")
+                      f"{nv.get('1', 0)} / {nv.get('2', 0)} / {nv.get('3', 0)} ({r.get('estados', 0)}) | {', '.join(r['idiomas'])} | {', '.join(r['veiculos'])} | {r.get('fontes_vistas', '')} | {', '.join(r.get('fora_da_lista', []))} |")
     linhas += ["", "**Temas em foco:** " + (", ".join(f"{k}: {v}" for k, v in extra["temas"].items()) or "nenhuma matéria")]
     linhas += ["", "**Áreas em guerra ou disputadas:** " + (", ".join(f"{k}: {v}" for k, v in extra.get("areas", {}).items()) or "nenhuma matéria")]
     if extra.get("traducao"):
@@ -462,11 +524,17 @@ def main():
     if estrito and alvo - fontes.paises:
         log(f"Sem lista de veículos conhecidos (nada entra no mapa): {', '.join(sorted(alvo - fontes.paises))}")
     fora_da_lista, da_lista = {}, {}  # para o relatório: o que o GDELT viu de cada país
+    estados = Estados(carregar("estados.json", {}))
+    piloto = set(cfg.get("nivel3_paises", []))
+    proprios_de = {iso: set(v.get("fips") or [iso]) for iso, v in paises.items()}  # códigos FIPS, como nos lugares do GDELT
 
     # 1. quais arquivos de 15 minutos ler
     t_agora = agora()
     desde = t_agora - dt.timedelta(hours=cfg["horas_por_execucao_max"])
-    mesma_regra = bool(anterior.get("somente_fontes_conhecidas", False)) == estrito
+    mesma_regra = (bool(anterior.get("somente_fontes_conhecidas", False)) == estrito
+                   and anterior.get("niveis_versao") == NIVEIS_VERSAO)
+    if not mesma_regra:
+        anteriores = {}
     if anterior.get("ultimo_arquivo") and set(anterior.get("paises_coletados", [])) >= alvo and mesma_regra:
         desde = max(desde, ler_carimbo(anterior["ultimo_arquivo"]))
     pedidos, ultimo = [], None
@@ -503,16 +571,23 @@ def main():
                     continue
                 temas_reg = {t.split(",")[0] for t in c[7].split(";") if t}
                 pontos = 2 * len(temas_reg & fortes) + len(temas_reg & gerais)
-                if pontos == 0:
+                if pontos == 0 and iso not in piloto:  # nos países do piloto, notícia local entra sem tema geopolítico
                     continue
                 if estrito and not fonte:  # veículo fora da lista: só entra no relatório
-                    f = fora_da_lista.setdefault(iso, {})
-                    f[dominio] = f.get(dominio, 0) + 1
+                    if pontos:
+                        f = fora_da_lista.setdefault(iso, {})
+                        f[dominio] = f.get(dominio, 0) + 1
+                    continue
+                nivel, estado = classificar(iso, temas_reg, pontos, locais_do_registro(c), proprios_de.get(iso, {iso}),
+                                            estados, piloto, estados.da_url(iso, host, url),
+                                            estados.por_uf.get((iso, (fonte[2] or "").lower())) if fonte and fonte[2] else None)
+                if nivel is None:
                     continue
                 if fonte:
                     f = da_lista.setdefault(iso, {})
                     f[fonte[1]] = f.get(fonte[1], 0) + 1
-                cont_arq[iso] = cont_arq.get(iso, 0) + 1
+                if nivel <= 2:  # o volume (cor do mapa) conta só os níveis 1 e 2
+                    cont_arq[iso] = cont_arq.get(iso, 0) + 1
                 m = RE_TITULO.search(c[26])
                 titulo = limpar_titulo(re.sub(r"\s+", " ", html.unescape(m.group(1))).strip(), dominio) if m else ""
                 if len(titulo) < 12:
@@ -532,9 +607,9 @@ def main():
                     "idioma": nome_idioma, "lc": lc, "visto_em": quando, "url": url,
                     "midia_estatal": casa(estatal, dominio, host),
                     "midia_exilio": casa(exilio, dominio, host),
-                    "temas": temas_do_registro(iso, texto_nomes, temas_reg, temas, pontos),
-                    "areas": areas_do_texto(texto_nomes, areas) if pontos >= 2 else [],
-                    "pontos": pontos,
+                    "temas": temas_do_registro(iso, texto_nomes, temas_reg, temas, pontos) if nivel <= 2 else [],
+                    "areas": areas_do_texto(texto_nomes, areas) if pontos >= 2 and nivel <= 2 else [],
+                    "pontos": pontos, "nivel": nivel, "estado": estado,
                 }
 
     # 3. junta com as matérias das execuções anteriores (até 48 h) e escolhe as de cada país
@@ -564,14 +639,30 @@ def main():
     for iso in sorted(alvo):
         lst = sorted(por_pais.get(iso, []), key=lambda x: x["visto_em"], reverse=True)
         vistos, escolhidos = set(), []
-        for minimo in (3, 2, 1):  # primeiro as mais geopolíticas; completa com as demais
+        for nivel, limite_n in ((1, cfg.get("max_nivel1_por_pais", 8)), (2, cfg.get("max_nivel2_por_pais", 10))):
+            n = 0
+            for minimo in (3, 2, 1):  # primeiro as mais geopolíticas; completa com as demais
+                for it in lst:
+                    k = chave_titulo(it["titulo_original"])
+                    if it.get("nivel", 2) == nivel and it.get("pontos", 1) >= minimo and k not in vistos and n < limite_n:
+                        vistos.add(k)
+                        escolhidos.append(it)
+                        n += 1
+        if iso in piloto:  # nível 3: as mais recentes de cada estado
+            por_estado = {}
             for it in lst:
-                k = chave_titulo(it["titulo_original"])
-                if it.get("pontos", 1) >= minimo and k not in vistos and len(escolhidos) < cfg["max_por_pais"]:
-                    vistos.add(k)
-                    escolhidos.append(it)
+                if it.get("nivel") == 3 and it.get("estado"):
+                    por_estado.setdefault(it["estado"], []).append(it)
+            for est, its in por_estado.items():
+                n = 0
+                for it in its:
+                    k = chave_titulo(it["titulo_original"])
+                    if k not in vistos and n < cfg.get("max_por_estado", 8):
+                        vistos.add(k)
+                        escolhidos.append(it)
+                        n += 1
         ids = {i["id"] for i in escolhidos}
-        extras_tema = [it for it in lst if it["temas"] and it["id"] not in ids
+        extras_tema = [it for it in lst if it["temas"] and it.get("nivel", 2) <= 2 and it["id"] not in ids
                        and chave_titulo(it["titulo_original"]) not in vistos][: cfg["max_tema_por_pais"]]
         escolhidos += extras_tema
         itens += escolhidos
@@ -583,6 +674,8 @@ def main():
                           "idiomas": sorted({i["idioma"] for i in escolhidos}),
                           "veiculos": [v for v, _ in sorted(veic.items(), key=lambda x: -x[1])[:4]],
                           "fontes_vistas": len(da_lista.get(iso, {})),
+                          "niveis": {str(n): sum(1 for i in escolhidos if i.get("nivel", 2) == n) for n in (1, 2, 3)},
+                          "estados": len({i.get("estado") for i in escolhidos if i.get("nivel") == 3}),
                           "fora_da_lista": [f"{d} ({n})" for d, n in sorted(fora_da_lista.get(iso, {}).items(), key=lambda x: -x[1])[:6]]}
 
     # 3b. notícias sobre as áreas em guerra ou disputadas, de qualquer país coletado (além do limite por país)
@@ -621,7 +714,7 @@ def main():
     trad = {}
     if not args.sem_traducao:
         log("Traduzindo títulos")
-        trad = traduzir(itens, anteriores, log)
+        trad = traduzir([i for i in itens if i.get("nivel") != 3], anteriores, log)
 
     conferir_temas_pelo_titulo(itens, temas)
     conferir_areas_pelo_titulo(itens, areas)
@@ -641,6 +734,7 @@ def main():
         "gerado_em": iso_utc(agora()),
         "teste": teste,
         "somente_fontes_conhecidas": estrito,
+        "niveis_versao": NIVEIS_VERSAO,
         "janela_h": cfg["janela_horas"],
         "ultimo_arquivo": ultimo,
         "paises_coletados": sorted(alvo),

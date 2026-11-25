@@ -1,0 +1,221 @@
+{
+ "_comentario": "Estados por país para o nível 3 (notícias locais). fips = código ADM1 que o GDELT usa nos lugares das matérias. Piloto: Brasil.",
+ "BR": [
+  {
+   "id": "BR-AC",
+   "uf": "AC",
+   "nome": "Acre",
+   "fips": "BR01",
+   "lx": -70.298,
+   "ly": -8.928
+  },
+  {
+   "id": "BR-AL",
+   "uf": "AL",
+   "nome": "Alagoas",
+   "fips": "BR02",
+   "lx": -36.692,
+   "ly": -9.774
+  },
+  {
+   "id": "BR-AP",
+   "uf": "AP",
+   "nome": "Amapá",
+   "fips": "BR03",
+   "lx": -51.684,
+   "ly": 1.412
+  },
+  {
+   "id": "BR-AM",
+   "uf": "AM",
+   "nome": "Amazonas",
+   "fips": "BR04",
+   "lx": -63.785,
+   "ly": -4.218
+  },
+  {
+   "id": "BR-BA",
+   "uf": "BA",
+   "nome": "Bahia",
+   "fips": "BR05",
+   "lx": -41.803,
+   "ly": -12.365
+  },
+  {
+   "id": "BR-CE",
+   "uf": "CE",
+   "nome": "Ceará",
+   "fips": "BR06",
+   "lx": -39.343,
+   "ly": -5.376
+  },
+  {
+   "id": "BR-DF",
+   "uf": "DF",
+   "nome": "Distrito Federal",
+   "fips": "BR07",
+   "lx": -47.79,
+   "ly": -15.767
+  },
+  {
+   "id": "BR-ES",
+   "uf": "ES",
+   "nome": "Espírito Santo",
+   "fips": "BR08",
+   "lx": -40.544,
+   "ly": -19.692
+  },
+  {
+   "id": "BR-GO",
+   "uf": "GO",
+   "nome": "Goiás",
+   "fips": "BR29",
+   "lx": -49.579,
+   "ly": -15.863
+  },
+  {
+   "id": "BR-MA",
+   "uf": "MA",
+   "nome": "Maranhão",
+   "fips": "BR13",
+   "lx": -45.389,
+   "ly": -5.019
+  },
+  {
+   "id": "BR-MT",
+   "uf": "MT",
+   "nome": "Mato Grosso",
+   "fips": "BR14",
+   "lx": -55.923,
+   "ly": -13.393
+  },
+  {
+   "id": "BR-MS",
+   "uf": "MS",
+   "nome": "Mato Grosso do Sul",
+   "fips": "BR11",
+   "lx": -54.55,
+   "ly": -20.676
+  },
+  {
+   "id": "BR-MG",
+   "uf": "MG",
+   "nome": "Minas Gerais",
+   "fips": "BR15",
+   "lx": -44.481,
+   "ly": -18.59
+  },
+  {
+   "id": "BR-PR",
+   "uf": "PR",
+   "nome": "Paraná",
+   "fips": "BR18",
+   "lx": -51.323,
+   "ly": -24.662
+  },
+  {
+   "id": "BR-PB",
+   "uf": "PB",
+   "nome": "Paraíba",
+   "fips": "BR17",
+   "lx": -36.273,
+   "ly": -7.342
+  },
+  {
+   "id": "BR-PA",
+   "uf": "PA",
+   "nome": "Pará",
+   "fips": "BR16",
+   "lx": -52.649,
+   "ly": -4.443
+  },
+  {
+   "id": "BR-PE",
+   "uf": "PE",
+   "nome": "Pernambuco",
+   "fips": "BR30",
+   "lx": -37.296,
+   "ly": -8.473
+  },
+  {
+   "id": "BR-PI",
+   "uf": "PI",
+   "nome": "Piauí",
+   "fips": "BR20",
+   "lx": -43.197,
+   "ly": -8.087
+  },
+  {
+   "id": "BR-RN",
+   "uf": "RN",
+   "nome": "Rio Grande do Norte",
+   "fips": "BR22",
+   "lx": -36.547,
+   "ly": -5.662
+  },
+  {
+   "id": "BR-RS",
+   "uf": "RS",
+   "nome": "Rio Grande do Sul",
+   "fips": "BR23",
+   "lx": -53.656,
+   "ly": -29.728
+  },
+  {
+   "id": "BR-RJ",
+   "uf": "RJ",
+   "nome": "Rio de Janeiro",
+   "fips": "BR21",
+   "lx": -43.115,
+   "ly": -22.405
+  },
+  {
+   "id": "BR-RO",
+   "uf": "RO",
+   "nome": "Rondônia",
+   "fips": "BR24",
+   "lx": -63.144,
+   "ly": -10.971
+  },
+  {
+   "id": "BR-RR",
+   "uf": "RR",
+   "nome": "Roraima",
+   "fips": "BR25",
+   "lx": -61.333,
+   "ly": 1.938
+  },
+  {
+   "id": "BR-SC",
+   "uf": "SC",
+   "nome": "Santa Catarina",
+   "fips": "BR26",
+   "lx": -51.159,
+   "ly": -27.039
+  },
+  {
+   "id": "BR-SE",
+   "uf": "SE",
+   "nome": "Sergipe",
+   "fips": "BR28",
+   "lx": -37.384,
+   "ly": -10.592
+  },
+  {
+   "id": "BR-SP",
+   "uf": "SP",
+   "nome": "São Paulo",
+   "fips": "BR27",
+   "lx": -48.521,
+   "ly": -22.227
+  },
+  {
+   "id": "BR-TO",
+   "uf": "TO",
+   "nome": "Tocantins",
+   "fips": "BR31",
+   "lx": -48.25,
+   "ly": -10.223
+  }
+ ]
+}

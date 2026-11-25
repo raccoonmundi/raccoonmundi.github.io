@@ -158,5 +158,11 @@
   "spnfa.ir": "RU"
  },
  "somente_fontes_conhecidas": true,
- "max_por_area": 10
+ "max_por_area": 10,
+ "nivel3_paises": [
+  "BR"
+ ],
+ "max_nivel1_por_pais": 8,
+ "max_nivel2_por_pais": 10,
+ "max_por_estado": 8
 }
