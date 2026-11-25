@@ -235,9 +235,26 @@
     } else if (tipo === 'p') {
       if (VISTAS_PAIS[id]) { mapa.flyTo(VISTAS_PAIS[id][0], VISTAS_PAIS[id][1], { duration: 0.6 }); return; }
       var b = null;
-      camadaPaises.eachLayer(function (l) { if (l.feature.properties.k === id) b = b ? b.extend(l.getBounds()) : L.latLngBounds(l.getBounds().getSouthWest(), l.getBounds().getNorthEast()); });
+      camadaPaises.eachLayer(function (l) {
+        if (l.feature.properties.k === id && l.feature.properties.copia === 0) b = b ? b.extend(l.getBounds()) : L.latLngBounds(l.getBounds().getSouthWest(), l.getBounds().getNorthEast());
+      });
       if (b && b.getEast() - b.getWest() < 180) mapa.flyToBounds(b, { padding: [30, 30], maxZoom: 6, duration: 0.6 });
     }
+  }
+  /* Mapa contínuo: cada camada é desenhada três vezes (mundo à esquerda, central e à direita).
+     Com worldCopyJump, ao cruzar a linha de data o mapa volta para o mundo central sem o usuário perceber. */
+  function desloca(coords, dx) {
+    return typeof coords[0] === 'number' ? [coords[0] + dx, coords[1]] : coords.map(function (c) { return desloca(c, dx); });
+  }
+  function tresMundos(fc) {
+    var out = [];
+    [-360, 0, 360].forEach(function (dx) {
+      fc.features.forEach(function (f) {
+        out.push({ type: 'Feature', properties: Object.assign({ copia: dx }, f.properties),
+          geometry: { type: f.geometry.type, coordinates: desloca(f.geometry.coordinates, dx) } });
+      });
+    });
+    return { type: 'FeatureCollection', features: out };
   }
   function criarHachura() {
     var c = svg._container; if (!c || c.querySelector('#hachura')) return;
@@ -256,8 +273,8 @@
   }
   function montarMapa(geoPaises, geoMacros, geoDisputa) {
     var pequeno = window.innerWidth < 820;
-    mapa = L.map('mapa', { zoomSnap: 0.5, minZoom: pequeno ? 1 : 1.5, maxZoom: 7, worldCopyJump: false,
-      maxBounds: [[-75, -200], [88, 200]], maxBoundsViscosity: 0.8, attributionControl: false });
+    mapa = L.map('mapa', { zoomSnap: 0.5, minZoom: pequeno ? 1 : 1.5, maxZoom: 7, worldCopyJump: true,
+      maxBounds: [[-75, -1e5], [88, 1e5]], maxBoundsViscosity: 1, attributionControl: false });
     svg = L.svg({ padding: 0.5 });
     mapa.setView([28, 15], pequeno ? 1 : 2);
     camadaPaises = L.geoJSON(geoPaises, { renderer: svg, smoothFactor: 0.4, style: estiloPais, onEachFeature: function (f, layer) {
@@ -275,7 +292,7 @@
       });
     } }).addTo(mapa);
     camadaMacros = L.geoJSON(geoMacros, { renderer: svg, smoothFactor: 0.4, interactive: false, style: estiloMacro,
-      onEachFeature: function (f, layer) { macroLayer[f.properties.r] = layer; } }).addTo(mapa);
+      onEachFeature: function (f, layer) { if (f.properties.copia === 0) macroLayer[f.properties.r] = layer; } }).addTo(mapa);
     camadaDisputa = L.geoJSON(geoDisputa, { renderer: svg, smoothFactor: 0.4, interactive: false,
       style: { fillColor: 'url(#hachura)', fillOpacity: 1, color: '#4a5660', weight: 0.6, dashArray: '2 2' } }).addTo(mapa);
     criarHachura();
@@ -485,8 +502,8 @@
     Object.keys(D.porPais).forEach(function (k) { D.porPais[k].sort(function (a, b) { return b.visto_em < a.visto_em ? -1 : 1; }); });
     calcularEscalas();
     lerRota();
-    G.paises = r[4]; G.macros = r[5];
-    montarMapa(r[4], r[5], r[6]);
+    G.paises = tresMundos(r[4]); G.macros = tresMundos(r[5]); G.disputa = tresMundos(r[6]);
+    montarMapa(G.paises, G.macros, G.disputa);
     ligarControles();
     renderTudo();
     if (estado.sel) enquadrar(estado.sel.tipo, estado.sel.id);
