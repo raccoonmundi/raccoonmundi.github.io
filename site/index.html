@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Raccoon Mundi · Mapa geopolítico</title>
+<meta name="description" content="Mapa-múndi com as notícias recentes da imprensa local de cada região, atualizado duas vezes por dia.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22%23b23a0b%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topo">
+  <div class="marca">
+    <div class="sobretitulo">RACCOON MUNDI · <span data-i18n="mapa">MAP</span></div>
+    <h1 data-i18n="titulo">The world through its local press</h1>
+  </div>
+  <div class="controles">
+    <label class="ir-para">
+      <span class="sr" data-i18n="irPara">Go to</span>
+      <select id="ir-para" aria-label="Go to"></select>
+    </label>
+    <div class="segmentado" role="group" aria-label="Period" id="periodo">
+      <button type="button" data-h="12">12 h</button>
+      <button type="button" data-h="24">24 h</button>
+      <button type="button" data-h="48">48 h</button>
+    </div>
+    <div class="segmentado" role="group" aria-label="Language" id="idioma">
+      <button type="button" data-l="en">EN</button>
+      <button type="button" data-l="pt">PT</button>
+    </div>
+  </div>
+</header>
+
+<nav class="temas" id="temas" aria-label="Themes in focus"></nav>
+
+<main class="principal">
+  <div class="mapa-area">
+    <div id="mapa" role="region" aria-label="Map"></div>
+    <div class="legenda" id="legenda" aria-hidden="true"></div>
+    <div class="modo segmentado" role="group" id="modo">
+      <button type="button" data-m="regioes" data-i18n="regioes">Regions</button>
+      <button type="button" data-m="paises" data-i18n="paises">Countries</button>
+    </div>
+  </div>
+  <aside class="painel" id="painel" aria-live="polite">
+    <button type="button" class="alca" id="alca" aria-label="Expand panel"></button>
+    <div id="painel-conteudo"></div>
+    <footer class="rodape" id="rodape"></footer>
+  </aside>
+</main>
+
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

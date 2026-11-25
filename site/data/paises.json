@@ -1,0 +1,1910 @@
+{
+ "AD": {
+  "nome_pt": "Andorra",
+  "nome_en": "Andorra",
+  "fips": [
+   "AN"
+  ],
+  "r": "europa-ocidental"
+ },
+ "AE": {
+  "nome_pt": "Emirados Árabes Unidos",
+  "nome_en": "United Arab Emirates",
+  "fips": [
+   "AE"
+  ],
+  "r": "oriente-medio"
+ },
+ "AF": {
+  "nome_pt": "Afeganistão",
+  "nome_en": "Afghanistan",
+  "fips": [
+   "AF"
+  ],
+  "r": "sul-da-asia"
+ },
+ "AG": {
+  "nome_pt": "Antígua e Barbuda",
+  "nome_en": "Antigua and Barbuda",
+  "fips": [
+   "AC"
+  ],
+  "r": "america-central-caribe"
+ },
+ "AI": {
+  "nome_pt": "Anguilla",
+  "nome_en": "Anguilla",
+  "fips": [
+   "AV"
+  ],
+  "r": "america-central-caribe"
+ },
+ "AL": {
+  "nome_pt": "Albânia",
+  "nome_en": "Albania",
+  "fips": [
+   "AL"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "AM": {
+  "nome_pt": "Armênia",
+  "nome_en": "Armenia",
+  "fips": [
+   "AM"
+  ],
+  "r": "caucaso-asia-central"
+ },
+ "AO": {
+  "nome_pt": "Angola",
+  "nome_en": "Angola",
+  "fips": [
+   "AO"
+  ],
+  "r": "africa-central-austral"
+ },
+ "AR": {
+  "nome_pt": "Argentina",
+  "nome_en": "Argentina",
+  "fips": [
+   "AR"
+  ],
+  "r": "america-do-sul"
+ },
+ "AS": {
+  "nome_pt": "Samoa Americana",
+  "nome_en": "American Samoa",
+  "fips": [
+   "AQ"
+  ],
+  "r": "oceania"
+ },
+ "AT": {
+  "nome_pt": "Áustria",
+  "nome_en": "Austria",
+  "fips": [
+   "AU"
+  ],
+  "r": "europa-ocidental"
+ },
+ "AU": {
+  "nome_pt": "Austrália",
+  "nome_en": "Australia",
+  "fips": [
+   "AS"
+  ],
+  "r": "oceania"
+ },
+ "AW": {
+  "nome_pt": "Aruba",
+  "nome_en": "Aruba",
+  "fips": [
+   "AA"
+  ],
+  "r": "america-central-caribe"
+ },
+ "AX": {
+  "nome_pt": "Åland",
+  "nome_en": "Åland",
+  "fips": [],
+  "r": "europa-ocidental"
+ },
+ "AZ": {
+  "nome_pt": "Azerbaijão",
+  "nome_en": "Azerbaijan",
+  "fips": [
+   "AJ"
+  ],
+  "r": "caucaso-asia-central"
+ },
+ "BA": {
+  "nome_pt": "Bósnia e Herzegovina",
+  "nome_en": "Bosnia and Herzegovina",
+  "fips": [
+   "BK"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "BB": {
+  "nome_pt": "Barbados",
+  "nome_en": "Barbados",
+  "fips": [
+   "BB"
+  ],
+  "r": "america-central-caribe"
+ },
+ "BD": {
+  "nome_pt": "Bangladesh",
+  "nome_en": "Bangladesh",
+  "fips": [
+   "BG"
+  ],
+  "r": "sul-da-asia"
+ },
+ "BE": {
+  "nome_pt": "Bélgica",
+  "nome_en": "Belgium",
+  "fips": [
+   "BE"
+  ],
+  "r": "europa-ocidental"
+ },
+ "BF": {
+  "nome_pt": "Burkina Faso",
+  "nome_en": "Burkina Faso",
+  "fips": [
+   "UV"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "BG": {
+  "nome_pt": "Bulgária",
+  "nome_en": "Bulgaria",
+  "fips": [
+   "BU"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "BH": {
+  "nome_pt": "Bahrein",
+  "nome_en": "Bahrain",
+  "fips": [
+   "BA"
+  ],
+  "r": "oriente-medio"
+ },
+ "BI": {
+  "nome_pt": "Burundi",
+  "nome_en": "Burundi",
+  "fips": [
+   "BY"
+  ],
+  "r": "chifre-africa-oriental"
+ },
+ "BJ": {
+  "nome_pt": "Benin",
+  "nome_en": "Benin",
+  "fips": [
+   "BN"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "BL": {
+  "nome_pt": "Coletividade de São Bartolomeu",
+  "nome_en": "Saint Barthélemy",
+  "fips": [
+   "TB"
+  ],
+  "r": "america-central-caribe"
+ },
+ "BM": {
+  "nome_pt": "Bermudas",
+  "nome_en": "Bermuda",
+  "fips": [
+   "BD"
+  ],
+  "r": "america-do-norte"
+ },
+ "BN": {
+  "nome_pt": "Brunei",
+  "nome_en": "Brunei",
+  "fips": [
+   "BX"
+  ],
+  "r": "sudeste-asiatico"
+ },
+ "BO": {
+  "nome_pt": "Bolívia",
+  "nome_en": "Bolivia",
+  "fips": [
+   "BL"
+  ],
+  "r": "america-do-sul"
+ },
+ "BR": {
+  "nome_pt": "Brasil",
+  "nome_en": "Brazil",
+  "fips": [
+   "BR"
+  ],
+  "r": "america-do-sul"
+ },
+ "BS": {
+  "nome_pt": "Bahamas",
+  "nome_en": "Bahamas",
+  "fips": [
+   "BF"
+  ],
+  "r": "america-central-caribe"
+ },
+ "BT": {
+  "nome_pt": "Butão",
+  "nome_en": "Bhutan",
+  "fips": [
+   "BT"
+  ],
+  "r": "sul-da-asia"
+ },
+ "BW": {
+  "nome_pt": "Botsuana",
+  "nome_en": "Botswana",
+  "fips": [
+   "BC"
+  ],
+  "r": "africa-central-austral"
+ },
+ "BY": {
+  "nome_pt": "Belarus",
+  "nome_en": "Belarus",
+  "fips": [
+   "BO"
+  ],
+  "r": "europa-oriental"
+ },
+ "BZ": {
+  "nome_pt": "Belize",
+  "nome_en": "Belize",
+  "fips": [
+   "BH"
+  ],
+  "r": "america-central-caribe"
+ },
+ "CA": {
+  "nome_pt": "Canadá",
+  "nome_en": "Canada",
+  "fips": [
+   "CA"
+  ],
+  "r": "america-do-norte"
+ },
+ "CD": {
+  "nome_pt": "República Democrática do Congo",
+  "nome_en": "Democratic Republic of the Congo",
+  "fips": [
+   "CG"
+  ],
+  "r": "africa-central-austral"
+ },
+ "CF": {
+  "nome_pt": "República Centro-Africana",
+  "nome_en": "Central African Republic",
+  "fips": [
+   "CT"
+  ],
+  "r": "africa-central-austral"
+ },
+ "CG": {
+  "nome_pt": "República do Congo",
+  "nome_en": "Republic of the Congo",
+  "fips": [
+   "CF"
+  ],
+  "r": "africa-central-austral"
+ },
+ "CH": {
+  "nome_pt": "Suíça",
+  "nome_en": "Switzerland",
+  "fips": [
+   "SZ"
+  ],
+  "r": "europa-ocidental"
+ },
+ "CI": {
+  "nome_pt": "Costa do Marfim",
+  "nome_en": "Côte d'Ivoire",
+  "fips": [
+   "IV"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "CK": {
+  "nome_pt": "Ilhas Cook",
+  "nome_en": "Cook Islands",
+  "fips": [
+   "CW"
+  ],
+  "r": "oceania"
+ },
+ "CL": {
+  "nome_pt": "Chile",
+  "nome_en": "Chile",
+  "fips": [
+   "CI"
+  ],
+  "r": "america-do-sul"
+ },
+ "CM": {
+  "nome_pt": "Camarões",
+  "nome_en": "Cameroon",
+  "fips": [
+   "CM"
+  ],
+  "r": "africa-central-austral"
+ },
+ "CN": {
+  "nome_pt": "China",
+  "nome_en": "China",
+  "fips": [
+   "CH"
+  ],
+  "r": "leste-asiatico"
+ },
+ "CO": {
+  "nome_pt": "Colômbia",
+  "nome_en": "Colombia",
+  "fips": [
+   "CO"
+  ],
+  "r": "america-do-sul"
+ },
+ "CR": {
+  "nome_pt": "Costa Rica",
+  "nome_en": "Costa Rica",
+  "fips": [
+   "CS"
+  ],
+  "r": "america-central-caribe"
+ },
+ "CU": {
+  "nome_pt": "Cuba",
+  "nome_en": "Cuba",
+  "fips": [
+   "CU"
+  ],
+  "r": "america-central-caribe"
+ },
+ "CV": {
+  "nome_pt": "Cabo Verde",
+  "nome_en": "Cape Verde",
+  "fips": [
+   "CV"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "CW": {
+  "nome_pt": "Curaçao",
+  "nome_en": "Curaçao",
+  "fips": [
+   "NT"
+  ],
+  "r": "america-central-caribe"
+ },
+ "CY": {
+  "nome_pt": "Chipre",
+  "nome_en": "Cyprus",
+  "fips": [
+   "CY"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "CYN": {
+  "nome_pt": "República Turca do Chipre do Norte",
+  "nome_en": "Turkish Republic of Northern Cyprus",
+  "fips": [],
+  "r": "europa-central-balcas",
+  "ver": "CY"
+ },
+ "CZ": {
+  "nome_pt": "Tchéquia",
+  "nome_en": "Czech Republic",
+  "fips": [
+   "EZ"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "DE": {
+  "nome_pt": "Alemanha",
+  "nome_en": "Germany",
+  "fips": [
+   "GM"
+  ],
+  "r": "europa-ocidental"
+ },
+ "DJ": {
+  "nome_pt": "Djibuti",
+  "nome_en": "Djibouti",
+  "fips": [
+   "DJ"
+  ],
+  "r": "chifre-africa-oriental"
+ },
+ "DK": {
+  "nome_pt": "Dinamarca",
+  "nome_en": "Denmark",
+  "fips": [
+   "DA"
+  ],
+  "r": "europa-ocidental"
+ },
+ "DM": {
+  "nome_pt": "Dominica",
+  "nome_en": "Dominica",
+  "fips": [
+   "DO"
+  ],
+  "r": "america-central-caribe"
+ },
+ "DO": {
+  "nome_pt": "República Dominicana",
+  "nome_en": "Dominican Republic",
+  "fips": [
+   "DR"
+  ],
+  "r": "america-central-caribe"
+ },
+ "DZ": {
+  "nome_pt": "Argélia",
+  "nome_en": "Algeria",
+  "fips": [
+   "AG"
+  ],
+  "r": "norte-da-africa"
+ },
+ "EC": {
+  "nome_pt": "Equador",
+  "nome_en": "Ecuador",
+  "fips": [
+   "EC"
+  ],
+  "r": "america-do-sul"
+ },
+ "EE": {
+  "nome_pt": "Estônia",
+  "nome_en": "Estonia",
+  "fips": [
+   "EN"
+  ],
+  "r": "europa-oriental"
+ },
+ "EG": {
+  "nome_pt": "Egito",
+  "nome_en": "Egypt",
+  "fips": [
+   "EG"
+  ],
+  "r": "norte-da-africa"
+ },
+ "EH": {
+  "nome_pt": "Saara Ocidental",
+  "nome_en": "Western Sahara",
+  "fips": [
+   "WI"
+  ],
+  "r": "norte-da-africa"
+ },
+ "ER": {
+  "nome_pt": "Eritreia",
+  "nome_en": "Eritrea",
+  "fips": [
+   "ER"
+  ],
+  "r": "chifre-africa-oriental"
+ },
+ "ES": {
+  "nome_pt": "Espanha",
+  "nome_en": "Spain",
+  "fips": [
+   "SP"
+  ],
+  "r": "europa-ocidental"
+ },
+ "ET": {
+  "nome_pt": "Etiópia",
+  "nome_en": "Ethiopia",
+  "fips": [
+   "ET"
+  ],
+  "r": "chifre-africa-oriental"
+ },
+ "FI": {
+  "nome_pt": "Finlândia",
+  "nome_en": "Finland",
+  "fips": [
+   "FI"
+  ],
+  "r": "europa-ocidental"
+ },
+ "FJ": {
+  "nome_pt": "Fiji",
+  "nome_en": "Fiji",
+  "fips": [
+   "FJ"
+  ],
+  "r": "oceania"
+ },
+ "FK": {
+  "nome_pt": "Ilhas Malvinas",
+  "nome_en": "Falkland Islands",
+  "fips": [
+   "FK"
+  ],
+  "r": "america-do-sul"
+ },
+ "FM": {
+  "nome_pt": "Micronésia",
+  "nome_en": "Federated States of Micronesia",
+  "fips": [
+   "FM"
+  ],
+  "r": "oceania"
+ },
+ "FO": {
+  "nome_pt": "Ilhas Feroe",
+  "nome_en": "Faroe Islands",
+  "fips": [
+   "FO"
+  ],
+  "r": "europa-ocidental"
+ },
+ "FR": {
+  "nome_pt": "França",
+  "nome_en": "France",
+  "fips": [
+   "FR"
+  ],
+  "r": "europa-ocidental"
+ },
+ "GA": {
+  "nome_pt": "Gabão",
+  "nome_en": "Gabon",
+  "fips": [
+   "GB"
+  ],
+  "r": "africa-central-austral"
+ },
+ "GB": {
+  "nome_pt": "Reino Unido",
+  "nome_en": "United Kingdom",
+  "fips": [
+   "UK"
+  ],
+  "r": "europa-ocidental"
+ },
+ "GD": {
+  "nome_pt": "Granada",
+  "nome_en": "Grenada",
+  "fips": [
+   "GJ"
+  ],
+  "r": "america-central-caribe"
+ },
+ "GE": {
+  "nome_pt": "Geórgia",
+  "nome_en": "Georgia",
+  "fips": [
+   "GG"
+  ],
+  "r": "caucaso-asia-central"
+ },
+ "GG": {
+  "nome_pt": "Guernsey",
+  "nome_en": "Guernsey",
+  "fips": [
+   "GK"
+  ],
+  "r": "europa-ocidental"
+ },
+ "GH": {
+  "nome_pt": "Gana",
+  "nome_en": "Ghana",
+  "fips": [
+   "GH"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "GL": {
+  "nome_pt": "Groenlândia",
+  "nome_en": "Greenland",
+  "fips": [
+   "GL"
+  ],
+  "r": "america-do-norte"
+ },
+ "GM": {
+  "nome_pt": "Gâmbia",
+  "nome_en": "Gambia",
+  "fips": [
+   "GA"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "GN": {
+  "nome_pt": "Guiné",
+  "nome_en": "Guinea",
+  "fips": [
+   "GV"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "GQ": {
+  "nome_pt": "Guiné Equatorial",
+  "nome_en": "Equatorial Guinea",
+  "fips": [
+   "EK"
+  ],
+  "r": "africa-central-austral"
+ },
+ "GR": {
+  "nome_pt": "Grécia",
+  "nome_en": "Greece",
+  "fips": [
+   "GR"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "GS": {
+  "nome_pt": "Ilhas Geórgia do Sul e Sandwich do Sul",
+  "nome_en": "South Georgia and the South Sandwich Islands",
+  "fips": [
+   "SX"
+  ],
+  "r": "america-do-sul"
+ },
+ "GT": {
+  "nome_pt": "Guatemala",
+  "nome_en": "Guatemala",
+  "fips": [
+   "GT"
+  ],
+  "r": "america-central-caribe"
+ },
+ "GU": {
+  "nome_pt": "Guam",
+  "nome_en": "Guam",
+  "fips": [
+   "GQ"
+  ],
+  "r": "oceania"
+ },
+ "GW": {
+  "nome_pt": "Guiné-Bissau",
+  "nome_en": "Guinea-Bissau",
+  "fips": [
+   "PU"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "GY": {
+  "nome_pt": "Guiana",
+  "nome_en": "Guyana",
+  "fips": [
+   "GY"
+  ],
+  "r": "america-do-sul"
+ },
+ "HK": {
+  "nome_pt": "Hong Kong",
+  "nome_en": "Hong Kong",
+  "fips": [
+   "HK"
+  ],
+  "r": "leste-asiatico"
+ },
+ "HM": {
+  "nome_pt": "Ilha Heard e Ilhas McDonald",
+  "nome_en": "Heard Island and McDonald Islands",
+  "fips": [
+   "HM"
+  ],
+  "r": null
+ },
+ "HN": {
+  "nome_pt": "Honduras",
+  "nome_en": "Honduras",
+  "fips": [
+   "HO"
+  ],
+  "r": "america-central-caribe"
+ },
+ "HR": {
+  "nome_pt": "Croácia",
+  "nome_en": "Croatia",
+  "fips": [
+   "HR"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "HT": {
+  "nome_pt": "Haiti",
+  "nome_en": "Haiti",
+  "fips": [
+   "HA"
+  ],
+  "r": "america-central-caribe"
+ },
+ "HU": {
+  "nome_pt": "Hungria",
+  "nome_en": "Hungary",
+  "fips": [
+   "HU"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "ID": {
+  "nome_pt": "Indonésia",
+  "nome_en": "Indonesia",
+  "fips": [
+   "ID"
+  ],
+  "r": "sudeste-asiatico"
+ },
+ "IE": {
+  "nome_pt": "Irlanda",
+  "nome_en": "Ireland",
+  "fips": [
+   "EI"
+  ],
+  "r": "europa-ocidental"
+ },
+ "IL": {
+  "nome_pt": "Israel",
+  "nome_en": "Israel",
+  "fips": [
+   "IS"
+  ],
+  "r": "oriente-medio"
+ },
+ "IM": {
+  "nome_pt": "Ilha de Man",
+  "nome_en": "Isle of Man",
+  "fips": [
+   "IM"
+  ],
+  "r": "europa-ocidental"
+ },
+ "IN": {
+  "nome_pt": "Índia",
+  "nome_en": "India",
+  "fips": [
+   "IN"
+  ],
+  "r": "sul-da-asia"
+ },
+ "IO": {
+  "nome_pt": "Território Britânico do Oceano Índico",
+  "nome_en": "British Indian Ocean Territory",
+  "fips": [
+   "IO"
+  ],
+  "r": null
+ },
+ "IQ": {
+  "nome_pt": "Iraque",
+  "nome_en": "Iraq",
+  "fips": [
+   "IZ"
+  ],
+  "r": "oriente-medio"
+ },
+ "IR": {
+  "nome_pt": "Irã",
+  "nome_en": "Iran",
+  "fips": [
+   "IR"
+  ],
+  "r": "oriente-medio"
+ },
+ "IS": {
+  "nome_pt": "Islândia",
+  "nome_en": "Iceland",
+  "fips": [
+   "IC"
+  ],
+  "r": "europa-ocidental"
+ },
+ "IT": {
+  "nome_pt": "Itália",
+  "nome_en": "Italy",
+  "fips": [
+   "IT"
+  ],
+  "r": "europa-ocidental"
+ },
+ "JE": {
+  "nome_pt": "Jersey",
+  "nome_en": "Jersey",
+  "fips": [
+   "JE"
+  ],
+  "r": "europa-ocidental"
+ },
+ "JM": {
+  "nome_pt": "Jamaica",
+  "nome_en": "Jamaica",
+  "fips": [
+   "JM"
+  ],
+  "r": "america-central-caribe"
+ },
+ "JO": {
+  "nome_pt": "Jordânia",
+  "nome_en": "Jordan",
+  "fips": [
+   "JO"
+  ],
+  "r": "oriente-medio"
+ },
+ "JP": {
+  "nome_pt": "Japão",
+  "nome_en": "Japan",
+  "fips": [
+   "JA"
+  ],
+  "r": "leste-asiatico"
+ },
+ "KAS": {
+  "nome_pt": "Glaciar de Siachen",
+  "nome_en": "Siachen Glacier",
+  "fips": [],
+  "r": "sul-da-asia",
+  "ver": null
+ },
+ "KE": {
+  "nome_pt": "Quênia",
+  "nome_en": "Kenya",
+  "fips": [
+   "KE"
+  ],
+  "r": "chifre-africa-oriental"
+ },
+ "KG": {
+  "nome_pt": "Quirguistão",
+  "nome_en": "Kyrgyzstan",
+  "fips": [
+   "KG"
+  ],
+  "r": "caucaso-asia-central"
+ },
+ "KH": {
+  "nome_pt": "Camboja",
+  "nome_en": "Cambodia",
+  "fips": [
+   "CB"
+  ],
+  "r": "sudeste-asiatico"
+ },
+ "KI": {
+  "nome_pt": "Kiribati",
+  "nome_en": "Kiribati",
+  "fips": [
+   "KR"
+  ],
+  "r": "oceania"
+ },
+ "KM": {
+  "nome_pt": "Comores",
+  "nome_en": "Comoros",
+  "fips": [
+   "CN"
+  ],
+  "r": "africa-central-austral"
+ },
+ "KN": {
+  "nome_pt": "São Cristóvão e Nevis",
+  "nome_en": "Saint Kitts and Nevis",
+  "fips": [
+   "SC"
+  ],
+  "r": "america-central-caribe"
+ },
+ "KP": {
+  "nome_pt": "Coreia do Norte",
+  "nome_en": "North Korea",
+  "fips": [
+   "KN"
+  ],
+  "r": "leste-asiatico"
+ },
+ "KR": {
+  "nome_pt": "Coreia do Sul",
+  "nome_en": "South Korea",
+  "fips": [
+   "KS"
+  ],
+  "r": "leste-asiatico"
+ },
+ "KW": {
+  "nome_pt": "Kuwait",
+  "nome_en": "Kuwait",
+  "fips": [
+   "KU"
+  ],
+  "r": "oriente-medio"
+ },
+ "KY": {
+  "nome_pt": "Ilhas Cayman",
+  "nome_en": "Cayman Islands",
+  "fips": [
+   "CJ"
+  ],
+  "r": "america-central-caribe"
+ },
+ "KZ": {
+  "nome_pt": "Cazaquistão",
+  "nome_en": "Kazakhstan",
+  "fips": [
+   "KZ"
+  ],
+  "r": "caucaso-asia-central"
+ },
+ "LA": {
+  "nome_pt": "Laos",
+  "nome_en": "Laos",
+  "fips": [
+   "LA"
+  ],
+  "r": "sudeste-asiatico"
+ },
+ "LB": {
+  "nome_pt": "Líbano",
+  "nome_en": "Lebanon",
+  "fips": [
+   "LE"
+  ],
+  "r": "oriente-medio"
+ },
+ "LC": {
+  "nome_pt": "Santa Lúcia",
+  "nome_en": "Saint Lucia",
+  "fips": [
+   "ST"
+  ],
+  "r": "america-central-caribe"
+ },
+ "LI": {
+  "nome_pt": "Liechtenstein",
+  "nome_en": "Liechtenstein",
+  "fips": [
+   "LS"
+  ],
+  "r": "europa-ocidental"
+ },
+ "LK": {
+  "nome_pt": "Sri Lanka",
+  "nome_en": "Sri Lanka",
+  "fips": [
+   "CE"
+  ],
+  "r": "sul-da-asia"
+ },
+ "LR": {
+  "nome_pt": "Libéria",
+  "nome_en": "Liberia",
+  "fips": [
+   "LI"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "LS": {
+  "nome_pt": "Lesoto",
+  "nome_en": "Lesotho",
+  "fips": [
+   "LT"
+  ],
+  "r": "africa-central-austral"
+ },
+ "LT": {
+  "nome_pt": "Lituânia",
+  "nome_en": "Lithuania",
+  "fips": [
+   "LH"
+  ],
+  "r": "europa-oriental"
+ },
+ "LU": {
+  "nome_pt": "Luxemburgo",
+  "nome_en": "Luxembourg",
+  "fips": [
+   "LU"
+  ],
+  "r": "europa-ocidental"
+ },
+ "LV": {
+  "nome_pt": "Letônia",
+  "nome_en": "Latvia",
+  "fips": [
+   "LG"
+  ],
+  "r": "europa-oriental"
+ },
+ "LY": {
+  "nome_pt": "Líbia",
+  "nome_en": "Libya",
+  "fips": [
+   "LY"
+  ],
+  "r": "norte-da-africa"
+ },
+ "MA": {
+  "nome_pt": "Marrocos",
+  "nome_en": "Morocco",
+  "fips": [
+   "MO"
+  ],
+  "r": "norte-da-africa"
+ },
+ "MC": {
+  "nome_pt": "Mônaco",
+  "nome_en": "Monaco",
+  "fips": [
+   "MN"
+  ],
+  "r": "europa-ocidental"
+ },
+ "MD": {
+  "nome_pt": "Moldávia",
+  "nome_en": "Moldova",
+  "fips": [
+   "MD"
+  ],
+  "r": "europa-oriental"
+ },
+ "ME": {
+  "nome_pt": "Montenegro",
+  "nome_en": "Montenegro",
+  "fips": [
+   "MJ"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "MF": {
+  "nome_pt": "São Martinho",
+  "nome_en": "Saint Martin",
+  "fips": [
+   "RN"
+  ],
+  "r": "america-central-caribe"
+ },
+ "MG": {
+  "nome_pt": "Madagascar",
+  "nome_en": "Madagascar",
+  "fips": [
+   "MA"
+  ],
+  "r": "africa-central-austral"
+ },
+ "MH": {
+  "nome_pt": "Ilhas Marshall",
+  "nome_en": "Marshall Islands",
+  "fips": [
+   "RM"
+  ],
+  "r": "oceania"
+ },
+ "MK": {
+  "nome_pt": "Macedônia do Norte",
+  "nome_en": "North Macedonia",
+  "fips": [
+   "MK"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "ML": {
+  "nome_pt": "Mali",
+  "nome_en": "Mali",
+  "fips": [
+   "ML"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "MM": {
+  "nome_pt": "Myanmar",
+  "nome_en": "Myanmar",
+  "fips": [
+   "BM"
+  ],
+  "r": "sudeste-asiatico"
+ },
+ "MN": {
+  "nome_pt": "Mongólia",
+  "nome_en": "Mongolia",
+  "fips": [
+   "MG"
+  ],
+  "r": "leste-asiatico"
+ },
+ "MO": {
+  "nome_pt": "Macau",
+  "nome_en": "Macau",
+  "fips": [
+   "MC"
+  ],
+  "r": "leste-asiatico"
+ },
+ "MP": {
+  "nome_pt": "Ilhas Marianas do Norte",
+  "nome_en": "Northern Mariana Islands",
+  "fips": [
+   "CQ"
+  ],
+  "r": "oceania"
+ },
+ "MR": {
+  "nome_pt": "Mauritânia",
+  "nome_en": "Mauritania",
+  "fips": [
+   "MR"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "MS": {
+  "nome_pt": "Montserrat",
+  "nome_en": "Montserrat",
+  "fips": [
+   "MH"
+  ],
+  "r": "america-central-caribe"
+ },
+ "MT": {
+  "nome_pt": "Malta",
+  "nome_en": "Malta",
+  "fips": [
+   "MT"
+  ],
+  "r": "europa-ocidental"
+ },
+ "MU": {
+  "nome_pt": "Maurício",
+  "nome_en": "Mauritius",
+  "fips": [
+   "MP"
+  ],
+  "r": "africa-central-austral"
+ },
+ "MV": {
+  "nome_pt": "Maldivas",
+  "nome_en": "Maldives",
+  "fips": [
+   "MV"
+  ],
+  "r": "sul-da-asia"
+ },
+ "MW": {
+  "nome_pt": "Malaui",
+  "nome_en": "Malawi",
+  "fips": [
+   "MI"
+  ],
+  "r": "africa-central-austral"
+ },
+ "MX": {
+  "nome_pt": "México",
+  "nome_en": "Mexico",
+  "fips": [
+   "MX"
+  ],
+  "r": "america-do-norte"
+ },
+ "MY": {
+  "nome_pt": "Malásia",
+  "nome_en": "Malaysia",
+  "fips": [
+   "MY"
+  ],
+  "r": "sudeste-asiatico"
+ },
+ "MZ": {
+  "nome_pt": "Moçambique",
+  "nome_en": "Mozambique",
+  "fips": [
+   "MZ"
+  ],
+  "r": "africa-central-austral"
+ },
+ "NA": {
+  "nome_pt": "Namíbia",
+  "nome_en": "Namibia",
+  "fips": [
+   "WA"
+  ],
+  "r": "africa-central-austral"
+ },
+ "NC": {
+  "nome_pt": "Nova Caledônia",
+  "nome_en": "New Caledonia",
+  "fips": [
+   "NC"
+  ],
+  "r": "oceania"
+ },
+ "NE": {
+  "nome_pt": "Níger",
+  "nome_en": "Niger",
+  "fips": [
+   "NG"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "NF": {
+  "nome_pt": "Ilha Norfolk",
+  "nome_en": "Norfolk Island",
+  "fips": [
+   "NF"
+  ],
+  "r": "oceania"
+ },
+ "NG": {
+  "nome_pt": "Nigéria",
+  "nome_en": "Nigeria",
+  "fips": [
+   "NI"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "NI": {
+  "nome_pt": "Nicarágua",
+  "nome_en": "Nicaragua",
+  "fips": [
+   "NU"
+  ],
+  "r": "america-central-caribe"
+ },
+ "NL": {
+  "nome_pt": "Países Baixos",
+  "nome_en": "Netherlands",
+  "fips": [
+   "NL"
+  ],
+  "r": "europa-ocidental"
+ },
+ "NO": {
+  "nome_pt": "Noruega",
+  "nome_en": "Norway",
+  "fips": [
+   "NO"
+  ],
+  "r": "europa-ocidental"
+ },
+ "NP": {
+  "nome_pt": "Nepal",
+  "nome_en": "Nepal",
+  "fips": [
+   "NP"
+  ],
+  "r": "sul-da-asia"
+ },
+ "NR": {
+  "nome_pt": "Nauru",
+  "nome_en": "Nauru",
+  "fips": [
+   "NR"
+  ],
+  "r": "oceania"
+ },
+ "NU": {
+  "nome_pt": "Niue",
+  "nome_en": "Niue",
+  "fips": [
+   "NE"
+  ],
+  "r": "oceania"
+ },
+ "NZ": {
+  "nome_pt": "Nova Zelândia",
+  "nome_en": "New Zealand",
+  "fips": [
+   "NZ"
+  ],
+  "r": "oceania"
+ },
+ "OM": {
+  "nome_pt": "Omã",
+  "nome_en": "Oman",
+  "fips": [
+   "MU"
+  ],
+  "r": "oriente-medio"
+ },
+ "PA": {
+  "nome_pt": "Panamá",
+  "nome_en": "Panama",
+  "fips": [
+   "PM"
+  ],
+  "r": "america-central-caribe"
+ },
+ "PE": {
+  "nome_pt": "Peru",
+  "nome_en": "Peru",
+  "fips": [
+   "PE"
+  ],
+  "r": "america-do-sul"
+ },
+ "PF": {
+  "nome_pt": "Polinésia Francesa",
+  "nome_en": "French Polynesia",
+  "fips": [
+   "FP"
+  ],
+  "r": "oceania"
+ },
+ "PG": {
+  "nome_pt": "Papua-Nova Guiné",
+  "nome_en": "Papua New Guinea",
+  "fips": [
+   "PP"
+  ],
+  "r": "oceania"
+ },
+ "PH": {
+  "nome_pt": "Filipinas",
+  "nome_en": "Philippines",
+  "fips": [
+   "RP"
+  ],
+  "r": "sudeste-asiatico"
+ },
+ "PK": {
+  "nome_pt": "Paquistão",
+  "nome_en": "Pakistan",
+  "fips": [
+   "PK"
+  ],
+  "r": "sul-da-asia"
+ },
+ "PL": {
+  "nome_pt": "Polônia",
+  "nome_en": "Poland",
+  "fips": [
+   "PL"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "PM": {
+  "nome_pt": "Saint-Pierre e Miquelon",
+  "nome_en": "Saint Pierre and Miquelon",
+  "fips": [
+   "SB"
+  ],
+  "r": "america-do-norte"
+ },
+ "PN": {
+  "nome_pt": "Ilhas Pitcairn",
+  "nome_en": "Pitcairn Islands",
+  "fips": [
+   "PC"
+  ],
+  "r": "oceania"
+ },
+ "PR": {
+  "nome_pt": "Porto Rico",
+  "nome_en": "Puerto Rico",
+  "fips": [
+   "RQ"
+  ],
+  "r": "america-central-caribe"
+ },
+ "PS": {
+  "nome_pt": "Palestina",
+  "nome_en": "Palestine",
+  "fips": [
+   "WE",
+   "GZ"
+  ],
+  "r": "oriente-medio"
+ },
+ "PT": {
+  "nome_pt": "Portugal",
+  "nome_en": "Portugal",
+  "fips": [
+   "PO"
+  ],
+  "r": "europa-ocidental"
+ },
+ "PW": {
+  "nome_pt": "Palau",
+  "nome_en": "Palau",
+  "fips": [
+   "PS"
+  ],
+  "r": "oceania"
+ },
+ "PY": {
+  "nome_pt": "Paraguai",
+  "nome_en": "Paraguay",
+  "fips": [
+   "PA"
+  ],
+  "r": "america-do-sul"
+ },
+ "QA": {
+  "nome_pt": "Catar",
+  "nome_en": "Qatar",
+  "fips": [
+   "QA"
+  ],
+  "r": "oriente-medio"
+ },
+ "RO": {
+  "nome_pt": "Romênia",
+  "nome_en": "Romania",
+  "fips": [
+   "RO"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "RS": {
+  "nome_pt": "Sérvia",
+  "nome_en": "Serbia",
+  "fips": [
+   "RI"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "RU": {
+  "nome_pt": "Rússia",
+  "nome_en": "Russia",
+  "fips": [
+   "RS"
+  ],
+  "r": "russia"
+ },
+ "RW": {
+  "nome_pt": "Ruanda",
+  "nome_en": "Rwanda",
+  "fips": [
+   "RW"
+  ],
+  "r": "chifre-africa-oriental"
+ },
+ "SA": {
+  "nome_pt": "Arábia Saudita",
+  "nome_en": "Saudi Arabia",
+  "fips": [
+   "SA"
+  ],
+  "r": "oriente-medio"
+ },
+ "SB": {
+  "nome_pt": "Ilhas Salomão",
+  "nome_en": "Solomon Islands",
+  "fips": [
+   "BP"
+  ],
+  "r": "oceania"
+ },
+ "SC": {
+  "nome_pt": "Seychelles",
+  "nome_en": "Seychelles",
+  "fips": [
+   "SE"
+  ],
+  "r": "africa-central-austral"
+ },
+ "SD": {
+  "nome_pt": "Sudão",
+  "nome_en": "Sudan",
+  "fips": [
+   "SU"
+  ],
+  "r": "chifre-africa-oriental"
+ },
+ "SE": {
+  "nome_pt": "Suécia",
+  "nome_en": "Sweden",
+  "fips": [
+   "SW"
+  ],
+  "r": "europa-ocidental"
+ },
+ "SG": {
+  "nome_pt": "Singapura",
+  "nome_en": "Singapore",
+  "fips": [
+   "SN"
+  ],
+  "r": "sudeste-asiatico"
+ },
+ "SH": {
+  "nome_pt": "Santa Helena",
+  "nome_en": "Saint Helena",
+  "fips": [
+   "SH"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "SI": {
+  "nome_pt": "Eslovênia",
+  "nome_en": "Slovenia",
+  "fips": [
+   "SI"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "SK": {
+  "nome_pt": "Eslováquia",
+  "nome_en": "Slovakia",
+  "fips": [
+   "LO"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "SL": {
+  "nome_pt": "Serra Leoa",
+  "nome_en": "Sierra Leone",
+  "fips": [
+   "SL"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "SM": {
+  "nome_pt": "San Marino",
+  "nome_en": "San Marino",
+  "fips": [
+   "SM"
+  ],
+  "r": "europa-ocidental"
+ },
+ "SN": {
+  "nome_pt": "Senegal",
+  "nome_en": "Senegal",
+  "fips": [
+   "SG"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "SO": {
+  "nome_pt": "Somália",
+  "nome_en": "Somalia",
+  "fips": [
+   "SO"
+  ],
+  "r": "chifre-africa-oriental"
+ },
+ "SOL": {
+  "nome_pt": "Somalilândia",
+  "nome_en": "Somaliland",
+  "fips": [],
+  "r": "chifre-africa-oriental",
+  "ver": "SO"
+ },
+ "SR": {
+  "nome_pt": "Suriname",
+  "nome_en": "Suriname",
+  "fips": [
+   "NS"
+  ],
+  "r": "america-do-sul"
+ },
+ "SS": {
+  "nome_pt": "Sudão do Sul",
+  "nome_en": "South Sudan",
+  "fips": [
+   "OD"
+  ],
+  "r": "chifre-africa-oriental"
+ },
+ "ST": {
+  "nome_pt": "São Tomé e Príncipe",
+  "nome_en": "São Tomé and Príncipe",
+  "fips": [
+   "TP"
+  ],
+  "r": "africa-central-austral"
+ },
+ "SV": {
+  "nome_pt": "El Salvador",
+  "nome_en": "El Salvador",
+  "fips": [
+   "ES"
+  ],
+  "r": "america-central-caribe"
+ },
+ "SX": {
+  "nome_pt": "Sint Maarten",
+  "nome_en": "Sint Maarten",
+  "fips": [
+   "NT"
+  ],
+  "r": "america-central-caribe"
+ },
+ "SY": {
+  "nome_pt": "Síria",
+  "nome_en": "Syria",
+  "fips": [
+   "SY"
+  ],
+  "r": "oriente-medio"
+ },
+ "SZ": {
+  "nome_pt": "Essuatíni",
+  "nome_en": "Eswatini",
+  "fips": [
+   "WZ"
+  ],
+  "r": "africa-central-austral"
+ },
+ "TC": {
+  "nome_pt": "Turks e Caicos",
+  "nome_en": "Turks and Caicos Islands",
+  "fips": [
+   "TK"
+  ],
+  "r": "america-central-caribe"
+ },
+ "TD": {
+  "nome_pt": "Chade",
+  "nome_en": "Chad",
+  "fips": [
+   "CD"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "TF": {
+  "nome_pt": "Terras Austrais e Antárticas Francesas",
+  "nome_en": "French Southern and Antarctic Lands",
+  "fips": [
+   "FS"
+  ],
+  "r": null
+ },
+ "TG": {
+  "nome_pt": "Togo",
+  "nome_en": "Togo",
+  "fips": [
+   "TO"
+  ],
+  "r": "sahel-africa-ocidental"
+ },
+ "TH": {
+  "nome_pt": "Tailândia",
+  "nome_en": "Thailand",
+  "fips": [
+   "TH"
+  ],
+  "r": "sudeste-asiatico"
+ },
+ "TJ": {
+  "nome_pt": "Tajiquistão",
+  "nome_en": "Tajikistan",
+  "fips": [
+   "TI"
+  ],
+  "r": "caucaso-asia-central"
+ },
+ "TL": {
+  "nome_pt": "Timor-Leste",
+  "nome_en": "East Timor",
+  "fips": [
+   "TT"
+  ],
+  "r": "sudeste-asiatico"
+ },
+ "TM": {
+  "nome_pt": "Turcomenistão",
+  "nome_en": "Turkmenistan",
+  "fips": [
+   "TX"
+  ],
+  "r": "caucaso-asia-central"
+ },
+ "TN": {
+  "nome_pt": "Tunísia",
+  "nome_en": "Tunisia",
+  "fips": [
+   "TS"
+  ],
+  "r": "norte-da-africa"
+ },
+ "TO": {
+  "nome_pt": "Tonga",
+  "nome_en": "Tonga",
+  "fips": [
+   "TN"
+  ],
+  "r": "oceania"
+ },
+ "TR": {
+  "nome_pt": "Turquia",
+  "nome_en": "Turkey",
+  "fips": [
+   "TU"
+  ],
+  "r": "oriente-medio"
+ },
+ "TT": {
+  "nome_pt": "Trinidad e Tobago",
+  "nome_en": "Trinidad and Tobago",
+  "fips": [
+   "TD"
+  ],
+  "r": "america-central-caribe"
+ },
+ "TV": {
+  "nome_pt": "Tuvalu",
+  "nome_en": "Tuvalu",
+  "fips": [
+   "TV"
+  ],
+  "r": "oceania"
+ },
+ "TW": {
+  "nome_pt": "Taiwan",
+  "nome_en": "Taiwan",
+  "fips": [
+   "TW"
+  ],
+  "r": "leste-asiatico"
+ },
+ "TZ": {
+  "nome_pt": "Tanzânia",
+  "nome_en": "Tanzania",
+  "fips": [
+   "TZ"
+  ],
+  "r": "chifre-africa-oriental"
+ },
+ "UA": {
+  "nome_pt": "Ucrânia",
+  "nome_en": "Ukraine",
+  "fips": [
+   "UP"
+  ],
+  "r": "europa-oriental"
+ },
+ "UG": {
+  "nome_pt": "Uganda",
+  "nome_en": "Uganda",
+  "fips": [
+   "UG"
+  ],
+  "r": "chifre-africa-oriental"
+ },
+ "US": {
+  "nome_pt": "Estados Unidos",
+  "nome_en": "United States",
+  "fips": [
+   "US"
+  ],
+  "r": "america-do-norte"
+ },
+ "UY": {
+  "nome_pt": "Uruguai",
+  "nome_en": "Uruguay",
+  "fips": [
+   "UY"
+  ],
+  "r": "america-do-sul"
+ },
+ "UZ": {
+  "nome_pt": "Uzbequistão",
+  "nome_en": "Uzbekistan",
+  "fips": [
+   "UZ"
+  ],
+  "r": "caucaso-asia-central"
+ },
+ "VA": {
+  "nome_pt": "Vaticano",
+  "nome_en": "Vatican City",
+  "fips": [
+   "VT"
+  ],
+  "r": "europa-ocidental"
+ },
+ "VC": {
+  "nome_pt": "São Vicente e Granadinas",
+  "nome_en": "Saint Vincent and the Grenadines",
+  "fips": [
+   "VC"
+  ],
+  "r": "america-central-caribe"
+ },
+ "VE": {
+  "nome_pt": "Venezuela",
+  "nome_en": "Venezuela",
+  "fips": [
+   "VE"
+  ],
+  "r": "america-do-sul"
+ },
+ "VG": {
+  "nome_pt": "Ilhas Virgens Britânicas",
+  "nome_en": "British Virgin Islands",
+  "fips": [
+   "VI"
+  ],
+  "r": "america-central-caribe"
+ },
+ "VI": {
+  "nome_pt": "Ilhas Virgens Americanas",
+  "nome_en": "United States Virgin Islands",
+  "fips": [
+   "VQ"
+  ],
+  "r": "america-central-caribe"
+ },
+ "VN": {
+  "nome_pt": "Vietnã",
+  "nome_en": "Vietnam",
+  "fips": [
+   "VM"
+  ],
+  "r": "sudeste-asiatico"
+ },
+ "VU": {
+  "nome_pt": "Vanuatu",
+  "nome_en": "Vanuatu",
+  "fips": [
+   "NH"
+  ],
+  "r": "oceania"
+ },
+ "WF": {
+  "nome_pt": "Wallis e Futuna",
+  "nome_en": "Wallis and Futuna",
+  "fips": [
+   "WF"
+  ],
+  "r": "oceania"
+ },
+ "WS": {
+  "nome_pt": "Samoa",
+  "nome_en": "Samoa",
+  "fips": [
+   "WS"
+  ],
+  "r": "oceania"
+ },
+ "XK": {
+  "nome_pt": "Kosovo",
+  "nome_en": "Kosovo",
+  "fips": [
+   "KV"
+  ],
+  "r": "europa-central-balcas"
+ },
+ "YE": {
+  "nome_pt": "Iêmen",
+  "nome_en": "Yemen",
+  "fips": [
+   "YM"
+  ],
+  "r": "oriente-medio"
+ },
+ "ZA": {
+  "nome_pt": "África do Sul",
+  "nome_en": "South Africa",
+  "fips": [
+   "SF"
+  ],
+  "r": "africa-central-austral"
+ },
+ "ZM": {
+  "nome_pt": "Zâmbia",
+  "nome_en": "Zambia",
+  "fips": [
+   "ZA"
+  ],
+  "r": "africa-central-austral"
+ },
+ "ZW": {
+  "nome_pt": "Zimbábue",
+  "nome_en": "Zimbabwe",
+  "fips": [
+   "ZI"
+  ],
+  "r": "africa-central-austral"
+ }
+}

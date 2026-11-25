@@ -1,0 +1,2 @@
+requests>=2.31
+argostranslate==1.11.0

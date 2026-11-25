@@ -1,0 +1,104 @@
+name: Atualizar mapa
+
+on:
+  # Rodar à mão: aba Actions > Atualizar mapa > Run workflow (dá para informar países, ex.: US,BR)
+  workflow_dispatch:
+    inputs:
+      paises:
+        description: "Códigos ISO separados por vírgula (vazio = padrão do robo/config.json)"
+        required: false
+        default: ""
+  # Qualquer mudança no site, no robô ou nos temas (a rodada do Raccoon Mundi grava site/data/temas.json)
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "robo/**"
+      - ".github/workflows/atualizar.yml"
+  # Fase 1: coleta 2x por dia. Horário em UTC: 8h47 e 20h47 = 5h47 e 17h47 em Brasília.
+  # schedule:
+  #   - cron: "47 8,20 * * *"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: atualizar-mapa
+  cancel-in-progress: false
+
+jobs:
+  coletar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: robo/requirements.txt
+
+      - name: Restaurar modelos de tradução
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.local/share/argos-translate
+            ~/.local/cache/argos-translate
+            ~/stanza_resources
+          key: argos-${{ runner.os }}-inicio
+          restore-keys: argos-${{ runner.os }}-
+
+      - name: Instalar dependências
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r robo/requirements.txt
+
+      - name: Coletar notícias
+        env:
+          PAISES: ${{ github.event.inputs.paises }}
+          ARGOS_DEVICE_TYPE: cpu
+        run: |
+          if [ -n "$PAISES" ]; then python robo/coletar.py --paises "$PAISES"; else python robo/coletar.py; fi
+          ls ~/.local/share/argos-translate/packages 2>/dev/null > .argos-list || true
+
+      - name: Guardar modelos de tradução novos
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: |
+            ~/.local/share/argos-translate
+            ~/.local/cache/argos-translate
+            ~/stanza_resources
+          key: argos-${{ runner.os }}-${{ hashFiles('.argos-list') }}
+
+      - name: Gravar dados no repositório
+        run: |
+          git config user.name "robo-raccoon-mundi"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site/data/noticias.json
+          if git diff --cached --quiet; then
+            echo "Sem mudanças nos dados."
+          else
+            git commit -m "Dados: coleta de $(date -u +%Y-%m-%dT%H:%MZ)"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  publicar:
+    needs: coletar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,357 @@
+[
+ {
+  "id": "america-do-norte",
+  "nome_pt": "América do Norte",
+  "nome_en": "North America",
+  "paises": [
+   "BM",
+   "CA",
+   "GL",
+   "MX",
+   "PM",
+   "US"
+  ]
+ },
+ {
+  "id": "america-central-caribe",
+  "nome_pt": "América Central e Caribe",
+  "nome_en": "Central America & Caribbean",
+  "paises": [
+   "AG",
+   "AI",
+   "AW",
+   "BB",
+   "BL",
+   "BS",
+   "BZ",
+   "CR",
+   "CU",
+   "CW",
+   "DM",
+   "DO",
+   "GD",
+   "GT",
+   "HN",
+   "HT",
+   "JM",
+   "KN",
+   "KY",
+   "LC",
+   "MF",
+   "MS",
+   "NI",
+   "PA",
+   "PR",
+   "SV",
+   "SX",
+   "TC",
+   "TT",
+   "VC",
+   "VG",
+   "VI"
+  ]
+ },
+ {
+  "id": "america-do-sul",
+  "nome_pt": "América do Sul",
+  "nome_en": "South America",
+  "paises": [
+   "AR",
+   "BO",
+   "BR",
+   "CL",
+   "CO",
+   "EC",
+   "FK",
+   "GS",
+   "GY",
+   "PE",
+   "PY",
+   "SR",
+   "UY",
+   "VE"
+  ]
+ },
+ {
+  "id": "europa-ocidental",
+  "nome_pt": "Europa Ocidental",
+  "nome_en": "Western Europe",
+  "paises": [
+   "AD",
+   "AT",
+   "AX",
+   "BE",
+   "CH",
+   "DE",
+   "DK",
+   "ES",
+   "FI",
+   "FO",
+   "FR",
+   "GB",
+   "GG",
+   "IE",
+   "IM",
+   "IS",
+   "IT",
+   "JE",
+   "LI",
+   "LU",
+   "MC",
+   "MT",
+   "NL",
+   "NO",
+   "PT",
+   "SE",
+   "SM",
+   "VA"
+  ]
+ },
+ {
+  "id": "europa-central-balcas",
+  "nome_pt": "Europa Central e Bálcãs",
+  "nome_en": "Central Europe & Balkans",
+  "paises": [
+   "AL",
+   "BA",
+   "BG",
+   "CY",
+   "CYN",
+   "CZ",
+   "GR",
+   "HR",
+   "HU",
+   "ME",
+   "MK",
+   "PL",
+   "RO",
+   "RS",
+   "SI",
+   "SK",
+   "XK"
+  ]
+ },
+ {
+  "id": "europa-oriental",
+  "nome_pt": "Europa Oriental",
+  "nome_en": "Eastern Europe",
+  "paises": [
+   "BY",
+   "EE",
+   "LT",
+   "LV",
+   "MD",
+   "UA"
+  ]
+ },
+ {
+  "id": "russia",
+  "nome_pt": "Rússia",
+  "nome_en": "Russia",
+  "paises": [
+   "RU"
+  ]
+ },
+ {
+  "id": "caucaso-asia-central",
+  "nome_pt": "Cáucaso e Ásia Central",
+  "nome_en": "Caucasus & Central Asia",
+  "paises": [
+   "AM",
+   "AZ",
+   "GE",
+   "KG",
+   "KZ",
+   "TJ",
+   "TM",
+   "UZ"
+  ]
+ },
+ {
+  "id": "oriente-medio",
+  "nome_pt": "Oriente Médio",
+  "nome_en": "Middle East",
+  "paises": [
+   "AE",
+   "BH",
+   "IL",
+   "IQ",
+   "IR",
+   "JO",
+   "KW",
+   "LB",
+   "OM",
+   "PS",
+   "QA",
+   "SA",
+   "SY",
+   "TR",
+   "YE"
+  ]
+ },
+ {
+  "id": "norte-da-africa",
+  "nome_pt": "Norte da África",
+  "nome_en": "North Africa",
+  "paises": [
+   "DZ",
+   "EG",
+   "EH",
+   "LY",
+   "MA",
+   "TN"
+  ]
+ },
+ {
+  "id": "sahel-africa-ocidental",
+  "nome_pt": "Sahel e África Ocidental",
+  "nome_en": "Sahel & West Africa",
+  "paises": [
+   "BF",
+   "BJ",
+   "CI",
+   "CV",
+   "GH",
+   "GM",
+   "GN",
+   "GW",
+   "LR",
+   "ML",
+   "MR",
+   "NE",
+   "NG",
+   "SH",
+   "SL",
+   "SN",
+   "TD",
+   "TG"
+  ]
+ },
+ {
+  "id": "chifre-africa-oriental",
+  "nome_pt": "Chifre da África e África Oriental",
+  "nome_en": "Horn & East Africa",
+  "paises": [
+   "BI",
+   "DJ",
+   "ER",
+   "ET",
+   "KE",
+   "RW",
+   "SD",
+   "SO",
+   "SOL",
+   "SS",
+   "TZ",
+   "UG"
+  ]
+ },
+ {
+  "id": "africa-central-austral",
+  "nome_pt": "África Central e Austral",
+  "nome_en": "Central & Southern Africa",
+  "paises": [
+   "AO",
+   "BW",
+   "CD",
+   "CF",
+   "CG",
+   "CM",
+   "GA",
+   "GQ",
+   "KM",
+   "LS",
+   "MG",
+   "MU",
+   "MW",
+   "MZ",
+   "NA",
+   "SC",
+   "ST",
+   "SZ",
+   "ZA",
+   "ZM",
+   "ZW"
+  ]
+ },
+ {
+  "id": "sul-da-asia",
+  "nome_pt": "Sul da Ásia",
+  "nome_en": "South Asia",
+  "paises": [
+   "AF",
+   "BD",
+   "BT",
+   "IN",
+   "KAS",
+   "LK",
+   "MV",
+   "NP",
+   "PK"
+  ]
+ },
+ {
+  "id": "leste-asiatico",
+  "nome_pt": "Leste Asiático",
+  "nome_en": "East Asia",
+  "paises": [
+   "CN",
+   "HK",
+   "JP",
+   "KP",
+   "KR",
+   "MN",
+   "MO",
+   "TW"
+  ]
+ },
+ {
+  "id": "sudeste-asiatico",
+  "nome_pt": "Sudeste Asiático",
+  "nome_en": "Southeast Asia",
+  "paises": [
+   "BN",
+   "ID",
+   "KH",
+   "LA",
+   "MM",
+   "MY",
+   "PH",
+   "SG",
+   "TH",
+   "TL",
+   "VN"
+  ]
+ },
+ {
+  "id": "oceania",
+  "nome_pt": "Oceania",
+  "nome_en": "Oceania",
+  "paises": [
+   "AS",
+   "AU",
+   "CK",
+   "FJ",
+   "FM",
+   "GU",
+   "KI",
+   "MH",
+   "MP",
+   "NC",
+   "NF",
+   "NR",
+   "NU",
+   "NZ",
+   "PF",
+   "PG",
+   "PN",
+   "PW",
+   "SB",
+   "TO",
+   "TV",
+   "VU",
+   "WF",
+   "WS"
+  ]
+ }
+]
