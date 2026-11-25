@@ -3,7 +3,7 @@
 Mapa-múndi com as notícias recentes da **imprensa local** de cada região, para apoiar o Raccoon Mundi, o Substack de geopolítica.
 Quem acessa clica numa macrorregião ou num país e vê o que os jornais de lá publicaram nas últimas 12, 24 ou 48 horas.
 
-**Site:** https://raccoonmundi.github.io/
+**Site:** https://raccoonmundi.github.io/ · protótipo em globo: https://raccoonmundi.github.io/globo.html
 
 Links diretos para usar nos posts:
 - macrorregião: `…/mapa-raccoon-mundi/#r=oriente-medio`
@@ -56,3 +56,9 @@ npx mapshaper -i /tmp/geo_disputadas_full.geojson -simplify 60% keep-shapes -o s
 - A coleta é automática e não é checada item a item. O rodapé do site avisa isso.
 
 Mapa: Raccoon Mundi, com dados do Natural Earth e do GDELT.
+
+## Protótipo em globo
+
+`site/globo.html` mostra o mesmo mapa num globo (MapLibre GL JS 6, em `site/vendor/maplibre/`, com as fontes dos nomes em `site/fonts/`).
+`site/globo.js` é gerado: tudo o que não é mapa vem de `site/app.js` e a parte do mapa vem de `ferramentas/motor_globo.js`.
+Depois de mudar qualquer um dos dois, rode `python3 ferramentas/montar_globo.py`.
