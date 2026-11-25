@@ -21,6 +21,47 @@
   }
 
   function tresMundos(fc) { return fc; } // o globo já é contínuo: não precisa repetir o mundo
+
+  /* Dia e noite pelo horário real. O relógio do aparelho é corrigido pela hora do servidor do site
+     (cabeçalho Date da resposta), e a sombra da noite é redesenhada a cada minuto.
+     globo.html?noite=0 desliga. */
+  var NOITE = !/[?&]noite=0(&|$)/.test(location.search), desvioRelogio = 0;
+  function agoraReal() { return new Date(Date.now() + desvioRelogio); }
+  function sincronizarRelogio() {
+    var antes = Date.now();
+    return fetch('data/paises.json', { method: 'HEAD', cache: 'no-store' }).then(function (r) {
+      var d = Date.parse(r.headers.get('Date') || '');
+      if (d) desvioRelogio = d + (Date.now() - antes) / 2 - Date.now();
+    }).catch(function () { /* sem resposta: fica o relógio do aparelho */ });
+  }
+  function posicaoSol(d) { // aproximação da NOAA: ponto da Terra onde o sol está a pino
+    var dia = (d - Date.UTC(d.getUTCFullYear(), 0, 1)) / 864e5;
+    var g = 2 * Math.PI / 365 * dia;
+    var eqt = 229.18 * (0.000075 + 0.001868 * Math.cos(g) - 0.032077 * Math.sin(g) - 0.014615 * Math.cos(2 * g) - 0.040849 * Math.sin(2 * g));
+    var dec = 0.006918 - 0.399912 * Math.cos(g) + 0.070257 * Math.sin(g) - 0.006758 * Math.cos(2 * g) + 0.000907 * Math.sin(2 * g)
+      - 0.002697 * Math.cos(3 * g) + 0.00148 * Math.sin(3 * g);
+    var min = d.getUTCHours() * 60 + d.getUTCMinutes() + d.getUTCSeconds() / 60;
+    var lon = -15 * ((min + eqt) / 60 - 12);
+    return { lat: dec * 180 / Math.PI, lon: ((lon % 360) + 540) % 360 - 180 };
+  }
+  function areaNoite(sol) { // lado da Terra sem sol: além da linha onde o sol está no horizonte
+    var r = Math.PI / 180, tanDec = Math.tan((Math.abs(sol.lat) < 0.01 ? 0.01 : sol.lat) * r), pts = [];
+    for (var lon = -180; lon <= 180; lon += 2) pts.push([lon, Math.atan(-Math.cos((lon - sol.lon) * r) / tanDec) / r]);
+    var polo = sol.lat > 0 ? -90 : 90;
+    var linha = { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: pts.slice() } };
+    pts.push([180, polo], [-180, polo], pts[0]);
+    return { type: 'FeatureCollection', features: [{ type: 'Feature', properties: { tipo: 'noite' }, geometry: { type: 'Polygon', coordinates: [pts] } },
+      Object.assign(linha, { properties: { tipo: 'linha' } })] };
+  }
+  var relogio = null;
+  function atualizarNoite() {
+    if (!NOITE || !MAPA_PRONTO) return;
+    var agora = agoraReal();
+    mapa.getSource('noite').setData(areaNoite(posicaoSol(agora)));
+    if (!relogio) { relogio = el('div', { class: 'relogio-mapa' }); document.getElementById('mapa').appendChild(relogio); }
+    var h = new Intl.DateTimeFormat(estado.l === 'pt' ? 'pt-BR' : 'en-GB', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit' }).format(agora);
+    relogio.textContent = (estado.l === 'pt' ? 'Dia e noite agora · ' + h + ' em Brasília' : 'Day and night now · ' + h + ' Brasília time');
+  }
   function base() { return location.href.replace(/[#?].*$/, '').replace(/[^/]*$/, ''); }
   function pequeno() { return window.innerWidth < 820; }
   function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
@@ -76,6 +117,7 @@
         guerra: { type: 'geojson', data: G.guerra || VAZIO },
         estados: { type: 'geojson', data: G.estados || VAZIO },
         selPreench: { type: 'geojson', data: VAZIO },
+        noite: { type: 'geojson', data: VAZIO },
         selContorno: { type: 'geojson', data: VAZIO },
         rotulos: { type: 'geojson', data: VAZIO }
       },
@@ -93,6 +135,11 @@
         { id: 'guerra', type: 'fill', source: 'guerra', paint: { 'fill-pattern': ['match', ['get', 'tipo'], 'ocupado', 'hachura-guerra', 'hachura-contestada'] } },
         { id: 'guerra-linha', type: 'line', source: 'guerra',
           paint: { 'line-color': P.guerra, 'line-width': ['match', ['get', 'tipo'], 'ocupado', 1.4, 0.8], 'line-opacity': ['match', ['get', 'tipo'], 'ocupado', 0.95, 0.7] } },
+        // noite pelo horário real: sombra sobre o lado sem sol, com a borda suavizada
+        { id: 'noite', type: 'fill', source: 'noite', filter: ['==', ['get', 'tipo'], 'noite'], layout: { visibility: NOITE ? 'visible' : 'none' },
+          paint: { 'fill-color': '#06102a', 'fill-opacity': temaAtual() === 'escuro' ? 0.42 : 0.3 } },
+        { id: 'noite-borda', type: 'line', source: 'noite', filter: ['==', ['get', 'tipo'], 'linha'], layout: { visibility: NOITE ? 'visible' : 'none' },
+          paint: { 'line-color': '#06102a', 'line-width': 22, 'line-blur': 18, 'line-opacity': 0.18 } },
         // destaque da seleção: sombra desfocada um pouco abaixo, preenchimento erguido e contorno escuro (como no mapa plano)
         { id: 'sel-sombra-base', type: 'fill', source: 'selContorno',
           paint: { 'fill-color': P.sombra, 'fill-opacity': P.sombraOp * 0.55, 'fill-translate': [0, 5] } },
@@ -148,6 +195,7 @@
     p('estados-linha', 'line-color', P.bordaEstado);
     p('paises', 'fill-color', ['coalesce', ['feature-state', 'cor'], P.semRegiao]);
     p('rotulos', 'text-color', css('--rotulo')); p('rotulos', 'text-halo-color', css('--halo'));
+    p('noite', 'fill-opacity', temaAtual() === 'escuro' ? 0.42 : 0.3);
   }
 
   function restyle() {
@@ -162,6 +210,7 @@
     atualizarEstados();
     atualizarDestaque();
     atualizarRotulos();
+    atualizarNoite();
   }
 
   function featuresDaArea(id) {
@@ -356,6 +405,7 @@
       MAPA_PRONTO = true;
       criarHachura();
       aplicarModo3D();
+      if (NOITE) { atualizarNoite(); sincronizarRelogio().then(atualizarNoite); setInterval(atualizarNoite, 60000); }
       ultimaChaveRotulos = '';
       restyle();
       if (estado.sel) enquadrar(estado.sel.tipo, estado.sel.id);
