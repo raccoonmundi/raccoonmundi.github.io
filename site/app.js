@@ -16,6 +16,10 @@
       voltar: function (nome) { return '← ' + nome; },
       paisesDaRegiao: 'Countries', regioesMaisAtivas: 'Most active regions', destaques: 'Latest stories',
       destaquesMundo: 'Global geopolitics', nivel1: 'The country and the world', nivel2: 'At home',
+      estado: 'State', estadosLocais: 'States · local news', estadosIrPara: function (p) { return 'States of ' + p; },
+      noticiasLocais: function (n) { return n === 1 ? '1 local story' : num(n) + ' local stories'; },
+      dicaEstado: 'Local news, in the original language, with no geopolitics filter.',
+      semLocais: function (h) { return 'No local stories from this state in the last ' + h + ' h.'; },
       nivelMundoDica: 'Stories that involve more than one country.',
       semNoticias: 'No stories from the local press in this period.',
       semColeta: 'This country is not collected yet in the test phase.',
@@ -56,6 +60,10 @@
       voltar: function (nome) { return '← ' + nome; },
       paisesDaRegiao: 'Países', regioesMaisAtivas: 'Regiões mais ativas', destaques: 'Notícias recentes',
       destaquesMundo: 'Geopolítica global', nivel1: 'O país e o mundo', nivel2: 'Dentro do país',
+      estado: 'Estado', estadosLocais: 'Estados · notícias locais', estadosIrPara: function (p) { return 'Estados: ' + p; },
+      noticiasLocais: function (n) { return n === 1 ? '1 notícia local' : num(n) + ' notícias locais'; },
+      dicaEstado: 'Notícias locais, no idioma original, sem filtro geopolítico.',
+      semLocais: function (h) { return 'Nenhuma notícia local deste estado nas últimas ' + h + ' h.'; },
       nivelMundoDica: 'Notícias que envolvem mais de um país.',
       semNoticias: 'Nenhuma notícia da imprensa local neste período.',
       semColeta: 'Este país ainda não é coletado na fase de teste.',
@@ -102,7 +110,7 @@
     claro: {
       cores: ['#f6e3d6', '#eebfa2', '#e0916a', '#c9643a', '#a8400f'],
       zero: '#e9e3d7', semColeta: '#dcd7ce', semRegiao: '#e4dfd6', amostraBorda: '#d6cfc2',
-      bordaRegiao: '#ffffff', bordaMacro: '#ffffff', bordaPais: '#7d776c',
+      bordaRegiao: '#ffffff', bordaMacro: '#ffffff', bordaPais: '#7d776c', bordaEstado: 'rgba(255,255,255,0.95)',
       destaque: '#1f2a33', sombra: '#1f2a33', sombraOp: 0.45,
       disputa: '#2b3a44', disputaFundo: 'rgba(255,255,255,0.35)',
       guerra: '#8f1d0d', guerraFundo: 'rgba(143,29,13,0.16)', contestFundo: 'rgba(143,29,13,0.06)',
@@ -113,7 +121,7 @@
     escuro: {
       cores: ['#4b3126', '#713c23', '#9d4b23', '#cc602b', '#f3874e'],
       zero: '#2c333a', semColeta: '#20272e', semRegiao: '#262d34', amostraBorda: '#454f58',
-      bordaRegiao: '#111820', bordaMacro: '#0d151b', bordaPais: '#5b656e',
+      bordaRegiao: '#111820', bordaMacro: '#0d151b', bordaPais: '#5b656e', bordaEstado: 'rgba(13,21,27,0.95)',
       destaque: '#f3ede3', sombra: '#000000', sombraOp: 0.8,
       disputa: '#d3dbe0', disputaFundo: 'rgba(0,0,0,0.28)',
       guerra: '#ff7b5a', guerraFundo: 'rgba(255,123,90,0.18)', contestFundo: 'rgba(255,123,90,0.07)',
@@ -132,9 +140,9 @@
   var LIMIAR_PAISES = 4;
 
   var estado = { l: 'en', h: 24, modo: 'regioes', sel: null };
-  var D = { paises: {}, macros: [], macroPorId: {}, temas: [], temaPorId: {}, areas: [], areaPorId: {}, itens: [], porPais: {},
+  var D = { paises: {}, macros: [], macroPorId: {}, temas: [], temaPorId: {}, areas: [], areaPorId: {}, estados: {}, estadoPorId: {}, itens: [], porPais: {},
             volume: {}, coletados: null, gerado: null, teste: false };
-  var camadaGuerra = null;
+  var camadaGuerra = null, camadaEstados = null;
   var mapa, svg, camadaPaises, camadaMacros, camadaDisputa, camadaDestaque = null, macroLayer = {}, modoAuto = 'regioes';
   var G = {}; // contornos carregados (países e macrorregiões)
   var camadaRotulos = null;
@@ -162,6 +170,15 @@
   function urlSegura(u) { return typeof u === 'string' && /^https?:\/\//i.test(u); }
   function nomePais(iso) { var p = D.paises[iso]; return p ? (estado.l === 'pt' ? p.nome_pt : p.nome_en) : iso; }
   function nomeRegiao(id) { var r = D.macroPorId[id]; return r ? (estado.l === 'pt' ? r.nome_pt : r.nome_en) : id; }
+  function itensDoEstado(id) {
+    return D.itens.filter(function (i) { return i.nivel === 3 && i.estado === id && noPeriodo(i); })
+      .sort(function (a, b) { return b.visto_em < a.visto_em ? -1 : 1; });
+  }
+  function paisDaSelecao() { // país cujos estados aparecem no mapa (piloto: Brasil)
+    var s = estado.sel; if (!s) return null;
+    var k = s.tipo === 'p' ? s.id : s.tipo === 'e' ? D.estadoPorId[s.id].pais : null;
+    return k && D.estados[k] ? k : null;
+  }
   function nomeArea(a) { return estado.l === 'pt' ? a.nome_pt : a.nome_en; }
   function campoArea(a, k) { return estado.l === 'pt' ? a[k + '_pt'] : (a[k + '_en'] || a[k + '_pt']); }
   function itensDaArea(id) { // notícias que citam o lugar e, numa guerra, as do tema em foco ligado a ela
@@ -234,7 +251,8 @@
     var q = new URLSearchParams(location.hash.replace(/^#/, ''));
     if (q.get('l') === 'pt' || q.get('l') === 'en') estado.l = q.get('l');
     if (['12', '24', '48'].indexOf(q.get('h')) >= 0) estado.h = +q.get('h');
-    if (q.get('a') && D.areaPorId[q.get('a')]) estado.sel = { tipo: 'a', id: q.get('a') };
+    if (q.get('e') && D.estadoPorId[q.get('e')]) estado.sel = { tipo: 'e', id: q.get('e') };
+    else if (q.get('a') && D.areaPorId[q.get('a')]) estado.sel = { tipo: 'a', id: q.get('a') };
     else if (q.get('t') && D.temaPorId[q.get('t')]) estado.sel = { tipo: 't', id: q.get('t') };
     else if (q.get('p') && D.paises[q.get('p')]) estado.sel = { tipo: 'p', id: q.get('p') };
     else if (q.get('r') && D.macroPorId[q.get('r')]) estado.sel = { tipo: 'r', id: q.get('r') };
@@ -275,6 +293,7 @@
   function restyle() {
     camadaPaises.setStyle(estiloPais);
     camadaMacros.setStyle(estiloMacro);
+    atualizarEstados();
     atualizarDestaque();
     atualizarRotulos();
   }
@@ -289,6 +308,8 @@
       preench = G.paises.features.filter(function (f) { return f.properties.r === s.id; });
     } else if (s.tipo === 'a') {
       preench = contorno = featuresDaArea(s.id);
+    } else if (s.tipo === 'e') {
+      preench = contorno = G.estados.features.filter(function (f) { return f.properties.id === s.id; });
     } else {
       var alvo = s.tipo === 'p' ? [s.id] : ((D.temaPorId[s.id] || {}).paises || []);
       preench = contorno = G.paises.features.filter(function (f) { return alvo.indexOf(f.properties.k) >= 0; });
@@ -300,6 +321,7 @@
     var cima = L.geoJSON(fc(preench), { renderer: svg, smoothFactor: 0.4, interactive: false,
       style: function (f) {
         if (s.tipo === 'a') { var h = f.properties.tipo ? estiloGuerra(f) : estiloDisputa(); return { fillColor: h.fillColor, fillOpacity: 1, color: h.color, opacity: 1, weight: h.weight, dashArray: null }; }
+        if (s.tipo === 'e') { var cp = estiloPais({ properties: { k: D.estadoPorId[s.id].pais, r: (D.paises[D.estadoPorId[s.id].pais] || {}).r } }); return { fillColor: cp.fillColor, fillOpacity: 1, stroke: false }; }
         var e = estiloPais(f); return { fillColor: e.fillColor, fillOpacity: 1, color: e.color, opacity: e.opacity, weight: e.weight };
       } });
     var borda = L.geoJSON(fc(contorno), { renderer: svg, smoothFactor: 0.4, interactive: false,
@@ -311,6 +333,37 @@
     if (camadaDisputa) camadaDisputa.bringToFront();
     if (camadaGuerra) camadaGuerra.bringToFront();
     if (s.tipo === 'a') { sombra.bringToFront(); cima.bringToFront(); borda.bringToFront(); } // a área selecionada fica por cima das outras hachuras
+    if (camadaEstados && mapa.hasLayer(camadaEstados)) {
+      if (s.tipo === 'p') { // o país está erguido: as linhas dos estados sobem junto
+        camadaEstados.bringToFront();
+        camadaEstados.eachLayer(function (l) { l._path.setAttribute('transform', 'translate(0 -2)'); });
+      } else {
+        camadaEstados.eachLayer(function (l) { l._path.removeAttribute('transform'); });
+        sombra.bringToFront(); cima.bringToFront(); borda.bringToFront();
+      }
+    }
+  }
+  /* Estados (piloto: Brasil): aparecem só com o país ou um estado dele selecionado. */
+  function estiloEstado() { return { fill: true, fillColor: '#000', fillOpacity: 0, color: P.bordaEstado, weight: 0.9, opacity: 1, lineJoin: 'round' }; }
+  function atualizarEstados() {
+    if (!camadaEstados) return;
+    var k = paisDaSelecao();
+    if (k && !mapa.hasLayer(camadaEstados)) camadaEstados.addTo(mapa);
+    if (!k && mapa.hasLayer(camadaEstados)) mapa.removeLayer(camadaEstados);
+    if (k) camadaEstados.setStyle(estiloEstado);
+  }
+  function ligarEstado(f, layer) {
+    layer.on('mouseover', function () {
+      var n = itensDoEstado(f.properties.id).length;
+      layer.bindTooltip(f.properties.nome + ' · ' + t('noticiasLocais')(n), { sticky: true, className: 'rotulo-mapa', direction: 'top', offset: [0, -8] }).openTooltip();
+      layer.setStyle({ weight: 2.2, color: P.destaque });
+      layer.bringToFront();
+    });
+    layer.on('mouseout', function () { layer.unbindTooltip(); layer.setStyle(estiloEstado()); });
+    layer.on('click', function (e) {
+      L.DomEvent.stopPropagation(e); layer.unbindTooltip();
+      selecionar({ tipo: 'e', id: f.properties.id }, false);
+    });
   }
   function featuresDaArea(id) {
     var fs = (G.disputa ? G.disputa.features : []).filter(function (f) { return f.properties.a === id; });
@@ -362,6 +415,12 @@
       var pts = ((D.temaPorId[id] || {}).paises || []).map(function (k) { var p = D.paises[k]; return p && p.lx !== undefined ? [p.ly, p.lx] : null; })
         .filter(Boolean);
       if (pts.length) voarParaArea(L.latLngBounds(pts).pad(0.35), 4);
+    } else if (tipo === 'e') {
+      var be = null;
+      (G.estados ? G.estados.features : []).forEach(function (f) {
+        if (f.properties.id === id && f.properties.copia === 0) { var bb = L.geoJSON(f).getBounds(); be = be ? be.extend(bb) : bb; }
+      });
+      if (be) voarParaArea(be.pad(0.2), 6);
     } else if (tipo === 'a') {
       var ba = null;
       featuresDaArea(id).forEach(function (f) {
@@ -412,9 +471,13 @@
         cand.push({ ll: ROTULOS_REGIAO[id], linhas: quebrar(nomeRegiao(id).toUpperCase(), pequeno ? 12 : 16), cls: 'rotulo rotulo-regiao', fs: pequeno ? 10.5 : 12, prio: i });
       });
     } else {
+      var pe = paisDaSelecao();
+      if (pe) D.estados[pe].forEach(function (e) { // estados do país selecionado: sigla de longe, nome de perto
+        cand.push({ ll: [e.ly, e.lx], linhas: z >= 5 ? quebrar(e.nome.toUpperCase(), 14) : [e.uf], cls: 'rotulo rotulo-estado', fs: pequeno ? 9 : 10, prio: 50 });
+      });
       Object.keys(D.paises).forEach(function (k) {
         var p = D.paises[k];
-        if (!p.r || p.lx === undefined || z < p.mz + (pequeno ? 1 : 0.3)) return;
+        if (!p.r || p.lx === undefined || z < p.mz + (pequeno ? 1 : 0.3) || k === pe) return;
         cand.push({ ll: [p.ly, p.lx], linhas: quebrar(nomePais(k).toUpperCase(), 14), cls: 'rotulo rotulo-pais', fs: pequeno ? 9.5 : 10.5,
           prio: 100 + p.rank * 10 + p.mz });
       });
@@ -493,12 +556,13 @@
       onEachFeature: function (f, layer) { if (f.properties.copia === 0) macroLayer[f.properties.r] = layer; } }).addTo(mapa);
     camadaDisputa = L.geoJSON(geoDisputa, { renderer: svg, smoothFactor: 0.4, style: estiloDisputa, onEachFeature: ligarArea }).addTo(mapa);
     if (G.guerra) camadaGuerra = L.geoJSON(G.guerra, { renderer: svg, smoothFactor: 0.4, style: estiloGuerra, onEachFeature: ligarArea }).addTo(mapa);
+    if (G.estados) camadaEstados = L.geoJSON(G.estados, { renderer: svg, smoothFactor: 0.4, style: estiloEstado, onEachFeature: ligarEstado });
     criarHachura();
     mapa.createPane('rotulos').style.zIndex = 450;
     camadaRotulos = L.layerGroup().addTo(mapa);
     mapa.on('moveend', atualizarRotulos);
     mapa.on('movestart zoomstart', function () {
-      [camadaPaises, camadaDisputa, camadaGuerra].forEach(function (c) { if (c) c.eachLayer(function (l) { l.unbindTooltip(); }); });
+      [camadaPaises, camadaDisputa, camadaGuerra, camadaEstados].forEach(function (c) { if (c) c.eachLayer(function (l) { l.unbindTooltip(); }); });
     });
     mapa.on('zoomend', function () {
       var m = mapa.getZoom() >= LIMIAR_PAISES ? 'paises' : 'regioes';
@@ -531,7 +595,7 @@
       it.midia_estatal ? el('span', { class: 'selo', text: t('estatal') }) : null,
       it.midia_exilio ? el('span', { class: 'selo exilio', text: t('exilio') }) : null
     ]);
-    if (link) {
+    if (link && it.lc !== estado.l) { // notícia já no idioma da página dispensa o atalho de tradução
       var tr = el('a', { class: 'traduzir', href: 'https://translate.google.com/translate?sl=auto&tl=' + estado.l + '&u=' + encodeURIComponent(link),
         target: '_blank', rel: 'noopener', title: t('lerTraduzido'), 'aria-label': t('lerTraduzido') + ': ' + exib });
       tr.appendChild(iconeTraduzir()); tr.appendChild(document.createTextNode(t('traduzir')));
@@ -607,10 +671,28 @@
         add(el('p', { class: 'aviso', text: t('semColeta') }));
       } else {
         add(el('p', { class: 'resumo', text: resumo(itp) }));
+        if (D.estados[s.id]) { // piloto: estados com as notícias locais
+          var ests = D.estados[s.id].map(function (e) { return { e: e, n: itensDoEstado(e.id).length }; })
+            .sort(function (a, b) { return (b.n - a.n) || a.e.nome.localeCompare(b.e.nome); });
+          add(el('div', { class: 'secao', text: t('estadosLocais') }));
+          add(el('div', { class: 'lista-paises estados' }, ests.map(function (x) {
+            return el('button', { type: 'button', class: x.n ? '' : 'sem', title: x.e.nome, on: { click: function () { selecionar({ tipo: 'e', id: x.e.id }, true); } } },
+              [x.e.uf, x.n ? el('span', { class: 'n', text: num(x.n) }) : null]);
+          })));
+        }
         var p1 = itp.filter(function (i) { return i.nivel === 1; }), p2 = itp.filter(function (i) { return i.nivel !== 1; });
         if (p1.length) { add(el('div', { class: 'secao', text: t('nivel1') })); lista(variar(p1, 10, 10)).forEach(add); }
         if (p2.length || !p1.length) { add(el('div', { class: 'secao', text: t('nivel2') })); lista(variar(p2, 12, 12)).forEach(add); }
       }
+    } else if (s.tipo === 'e') {
+      var es = D.estadoPorId[s.id], ite = itensDoEstado(s.id);
+      add(el('button', { type: 'button', class: 'voltar', text: t('voltar')(nomePais(es.pais)), on: { click: function () { selecionar({ tipo: 'p', id: es.pais }, true); } } }));
+      add(el('div', { class: 'tipo', text: t('estado') + ' · ' + nomePais(es.pais) }));
+      add(el('h2', { text: es.nome }));
+      add(el('p', { class: 'resumo', text: t('noticiasLocais')(ite.length) + ' · ' + t('periodo')(estado.h) }));
+      add(el('p', { class: 'dica-secao', text: t('dicaEstado') }));
+      if (ite.length) lista(variar(ite, 15, 15)).forEach(add);
+      else add(el('p', { class: 'vazio', text: t('semLocais')(estado.h) }));
     } else if (s.tipo === 'a') {
       var ar = D.areaPorId[s.id], ita = itensDaArea(s.id);
       add(el('button', { type: 'button', class: 'voltar', text: t('voltar')(t('mundo')), on: { click: function () { selecionar(null, false); } } }));
@@ -707,6 +789,12 @@
     D.areas.slice().sort(function (a, b) { return nomeArea(a).localeCompare(nomeArea(b), estado.l); })
       .forEach(function (a) { g3.appendChild(el('option', { value: 'a:' + a.id, text: nomeArea(a) })); });
     s.appendChild(g1); s.appendChild(g2); if (D.areas.length) s.appendChild(g3);
+    Object.keys(D.estados).forEach(function (k) {
+      var g4 = el('optgroup', { label: t('estadosIrPara')(nomePais(k)) });
+      D.estados[k].slice().sort(function (a, b) { return a.nome.localeCompare(b.nome, estado.l); })
+        .forEach(function (e) { g4.appendChild(el('option', { value: 'e:' + e.id, text: e.nome })); });
+      s.appendChild(g4);
+    });
   }
   function atualizarBotoes() {
     document.querySelectorAll('#idioma button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.l === estado.l ? 'true' : 'false'); });
@@ -790,8 +878,16 @@
     carregar('data/noticias.json').catch(function () { return {}; }),
     carregar('geo/paises.geojson'), carregar('geo/macrorregioes.geojson'), carregar('geo/disputadas.geojson'),
     carregar('geo/zonas_guerra.geojson').catch(function () { return null; }),
-    carregar('data/areas.json').catch(function () { return []; })
+    carregar('data/areas.json').catch(function () { return []; }),
+    carregar('data/estados.json').catch(function () { return {}; }),
+    carregar('geo/estados/BR.geojson').catch(function () { return null; })
   ]).then(function (r) {
+    Object.keys(r[9] || {}).forEach(function (k) {
+      if (k.charAt(0) === '_') return;
+      D.estados[k] = r[9][k];
+      r[9][k].forEach(function (e) { e.pais = k; D.estadoPorId[e.id] = e; });
+    });
+    if (r[10] && r[10].features) G.estados = tresMundos(r[10]);
     D.areas = r[8] || [];
     D.areas.forEach(function (a) { D.areaPorId[a.id] = a; });
     D.paises = r[0]; D.macros = r[1]; D.temas = r[2] || [];

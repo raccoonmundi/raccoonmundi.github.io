@@ -266,7 +266,7 @@ def nomes_do_registro(c):
 # 2 = País: o que acontece no país e pode afetá-lo (política, economia, segurança nacionais).
 # 3 = Estado: notícia local, com estado identificado. Só nos países do piloto (config "nivel3_paises"),
 #     no idioma original e sem exigir tema geopolítico.
-NIVEIS_VERSAO = 3
+NIVEIS_VERSAO = 4
 # temas que indicam política nacional (o "LEADER" do GDELT pega até prefeito, por isso não entra)
 TEMAS_NACIONAIS = {"TAX_FNCACT_PRESIDENT", "TAX_FNCACT_MINISTER", "TAX_FNCACT_SENATOR", "TAX_FNCACT_LAWMAKER",
                    "TAX_FNCACT_CONGRESSMAN", "TAX_FNCACT_PRIME_MINISTER"}
@@ -315,7 +315,8 @@ def classificar(iso, temas_reg, pontos, locs, proprios, estados, piloto, estado_
         return 1, None
     if iso in piloto:
         ufs = {estados.por_fips.get(a) for cc, a in locs if cc in proprios and a and a != cc} - {None}
-        estado = estado_url or (next(iter(ufs)) if len(ufs) == 1 else None) or (uf_veiculo if not ufs else None)
+        # o estado precisa aparecer na matéria: sem lugar citado, notícia de portal regional (novela, celebridade) não é local
+        estado = estado_url or (next(iter(ufs)) if len(ufs) == 1 else None) or (uf_veiculo if uf_veiculo in ufs else None)
         if estado_url:  # a própria redação pôs a matéria na seção do estado (G1 regional)
             return 3, estado_url
         nacional = bool(temas_reg & TEMAS_NACIONAIS) or (estado and estado.endswith("-DF") and pontos >= 2)
