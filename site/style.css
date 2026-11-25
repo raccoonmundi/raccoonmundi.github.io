@@ -1,5 +1,7 @@
 :root {
+  color-scheme: light;
   --creme: #f7f4ee;
+  --superficie: #ffffff;
   --tinta: #1f2a33;
   --tinta-2: #4a5660;
   --tinta-3: #58636c;
@@ -8,7 +10,55 @@
   --linha: #e6e1d8;
   --oceano: #dbe7ec;
   --terra-vazia: #e9e3d7;
+  --borda: #cfc8bb;
+  --borda-chip: #d9b8a6;
+  --vidro: rgba(255,255,255,.94);
+  --sobre-tinta: #ffffff;
+  --sobre-acento: #ffffff;
+  --aviso-fundo: #fbf3ee;
+  --aviso-guerra: #8f1d0d;
+  --aviso-guerra-fundo: #f8ece9;
+  --selo-fundo: #f3e2d9;
+  --selo-exilio-fundo: #e3ecf2;
+  --realce: #eef3f6;
+  --ponto: #a7aeb4;
+  --rotulo: #2b3a44;
+  --rotulo-regiao: #1f2a33;
+  --rotulo-pais: #34434e;
+  --halo: #f7f4ee;
+  --sombra: rgba(31,42,51,.12);
   --painel: 400px;
+}
+/* Modo escuro */
+:root[data-tema="escuro"] {
+  color-scheme: dark;
+  --creme: #121820;
+  --superficie: #192129;
+  --tinta: #ebe6dd;
+  --tinta-2: #c3c9ce;
+  --tinta-3: #9ca6ae;
+  --acento: #f0875a;
+  --link: #8fbcd9;
+  --linha: #2a333c;
+  --oceano: #0d161c;
+  --terra-vazia: #2c333a;
+  --borda: #3a454f;
+  --borda-chip: #5c4337;
+  --vidro: rgba(25,33,41,.94);
+  --sobre-tinta: #121820;
+  --sobre-acento: #1a0f09;
+  --aviso-fundo: #2a211c;
+  --aviso-guerra: #ff7b5a;
+  --aviso-guerra-fundo: #2e1d19;
+  --selo-fundo: #3b261b;
+  --selo-exilio-fundo: #1c3141;
+  --realce: #22303b;
+  --ponto: #5f6a73;
+  --rotulo: #dfe4e7;
+  --rotulo-regiao: #f1ede6;
+  --rotulo-pais: #cfd6db;
+  --halo: #0d161c;
+  --sombra: rgba(0,0,0,.45);
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; }
@@ -34,19 +84,28 @@ button { font: inherit; color: inherit; }
 .sobretitulo { font-size: 12px; font-weight: 700; letter-spacing: .14em; color: var(--acento); }
 .topo h1 { margin: 4px 0 0; font-size: 22px; line-height: 1.15; font-weight: 800; letter-spacing: -.01em; }
 .controles { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.segmentado { display: inline-flex; border: 1px solid #cfc8bb; border-radius: 8px; overflow: hidden; background: #fff; }
+.segmentado { display: inline-flex; border: 1px solid var(--borda); border-radius: 8px; overflow: hidden; background: var(--superficie); }
 .segmentado button {
   border: 0; background: transparent; padding: 6px 11px; font-size: 13px; font-weight: 600; cursor: pointer;
   color: var(--tinta-2);
 }
-.segmentado button + button { border-left: 1px solid #cfc8bb; }
-.segmentado button[aria-pressed="true"] { background: var(--tinta); color: #fff; }
+.segmentado button + button { border-left: 1px solid var(--borda); }
+.segmentado button[aria-pressed="true"] { background: var(--tinta); color: var(--sobre-tinta); }
+.botao-tema {
+  width: 34px; height: 32px; display: inline-flex; align-items: center; justify-content: center; flex: none;
+  border: 1px solid var(--borda); border-radius: 8px; background: var(--superficie); color: var(--tinta-2); cursor: pointer; padding: 0;
+}
+.botao-tema:hover { color: var(--tinta); }
+.botao-tema:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
+.botao-tema .sol { display: none; }
+:root[data-tema="escuro"] .botao-tema .sol { display: block; }
+:root[data-tema="escuro"] .botao-tema .lua { display: none; }
 .segmentado button:focus-visible, select:focus-visible, .chip:focus-visible, .item a:focus-visible {
   outline: 2px solid var(--acento); outline-offset: 2px;
 }
 .ir-para select {
-  font: inherit; font-size: 13px; padding: 6px 8px; border: 1px solid #cfc8bb; border-radius: 8px;
-  background: #fff; color: var(--tinta); max-width: 220px;
+  font: inherit; font-size: 13px; padding: 6px 8px; border: 1px solid var(--borda); border-radius: 8px;
+  background: var(--superficie); color: var(--tinta); max-width: 220px;
 }
 
 /* Faixa dos temas em foco + período */
@@ -58,20 +117,23 @@ button { font: inherit; color: inherit; }
 .legenda-botao { display: none; }
 .temas .rotulo { font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--tinta-3); white-space: nowrap; }
 .chip {
-  border: 1px solid #d9b8a6; background: #fff; color: var(--tinta); border-radius: 999px;
+  border: 1px solid var(--borda-chip); background: var(--superficie); color: var(--tinta); border-radius: 999px;
   padding: 5px 12px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
 }
-.chip[aria-pressed="true"] { background: var(--acento); border-color: var(--acento); color: #fff; }
+.chip[aria-pressed="true"] { background: var(--acento); border-color: var(--acento); color: var(--sobre-acento); }
 
 /* Mapa + painel */
 .principal { flex: 1; display: flex; min-height: 0; }
 .mapa-area { position: relative; flex: 1; min-width: 0; }
 #mapa { position: absolute; inset: 0; background: var(--oceano); }
 .leaflet-container { font-family: inherit; background: var(--oceano); }
+.leaflet-bar a, .leaflet-bar a:hover { background-color: var(--superficie); color: var(--tinta); border-bottom-color: var(--linha); }
+.leaflet-bar a:hover { background-color: var(--realce); }
+.leaflet-touch .leaflet-bar { border-color: var(--borda); }
 /* sem o retângulo de foco do navegador ao clicar num país */
 .leaflet-container path:focus, .leaflet-container svg:focus, .leaflet-interactive:focus { outline: none; }
 .leaflet-tooltip.rotulo-mapa {
-  background: var(--tinta); color: #fff; border: 0; border-radius: 6px; font-size: 12px; font-weight: 600;
+  background: var(--tinta); color: var(--sobre-tinta); border: 0; border-radius: 6px; font-size: 12px; font-weight: 600;
   padding: 4px 8px; box-shadow: none;
 }
 .leaflet-tooltip.rotulo-mapa::before { display: none; }
@@ -80,16 +142,16 @@ button { font: inherit; color: inherit; }
 .rotulo-ancora { background: none; border: 0; }
 .rotulo {
   display: flex; align-items: center; justify-content: center; text-align: center; height: 100%;
-  font-weight: 700; letter-spacing: .08em; line-height: 1.2; color: #2b3a44; white-space: nowrap;
-  text-shadow: 0 0 2px #f7f4ee, 0 0 4px #f7f4ee, 0 0 7px #f7f4ee;
+  font-weight: 700; letter-spacing: .08em; line-height: 1.2; color: var(--rotulo); white-space: nowrap;
+  text-shadow: 0 0 2px var(--halo), 0 0 4px var(--halo), 0 0 7px var(--halo);
 }
-.rotulo-regiao { letter-spacing: .12em; color: #1f2a33; }
-.rotulo-pais { font-weight: 600; color: #34434e; }
-.modo { position: absolute; top: 12px; left: 56px; z-index: 500; box-shadow: 0 2px 8px rgba(31,42,51,.12); }
+.rotulo-regiao { letter-spacing: .12em; color: var(--rotulo-regiao); }
+.rotulo-pais { font-weight: 600; color: var(--rotulo-pais); }
+.modo { position: absolute; top: 12px; left: 56px; z-index: 500; box-shadow: 0 2px 8px var(--sombra); }
 .legenda {
-  position: absolute; left: 12px; bottom: 12px; z-index: 500; background: rgba(255,255,255,.94);
+  position: absolute; left: 12px; bottom: 12px; z-index: 500; background: var(--vidro);
   border-radius: 10px; padding: 8px 10px; font-size: 11.5px; color: var(--tinta-2);
-  box-shadow: 0 2px 8px rgba(31,42,51,.12); max-width: 260px;
+  box-shadow: 0 2px 8px var(--sombra); max-width: 260px;
 }
 .legenda .escala { display: flex; gap: 2px; margin: 4px 0; }
 .legenda .escala span { flex: 1; height: 8px; border-radius: 2px; }
@@ -97,7 +159,7 @@ button { font: inherit; color: inherit; }
 .legenda .amostra { width: 14px; height: 10px; border-radius: 2px; display: inline-block; }
 
 .painel {
-  width: var(--painel); border-left: 1px solid var(--linha); background: #fff; display: flex; flex-direction: column;
+  width: var(--painel); border-left: 1px solid var(--linha); background: var(--superficie); display: flex; flex-direction: column;
   min-height: 0; overflow-y: auto;
 }
 #painel-conteudo { flex: 1 0 auto; padding: 16px 18px; }
@@ -107,8 +169,8 @@ button { font: inherit; color: inherit; }
 .painel .resumo { font-size: 13px; color: var(--tinta-2); margin: 4px 0 12px; }
 .painel .contexto { font-size: 14px; line-height: 1.45; margin: 8px 0 12px; }
 .painel .voltar { background: none; border: 0; padding: 0; color: var(--link); font-size: 13px; cursor: pointer; margin-bottom: 8px; }
-.painel .aviso.guerra { border-left-color: #8f1d0d; background: #f8ece9; }
-.painel .aviso { background: #fbf3ee; border-left: 3px solid var(--acento); padding: 8px 10px; font-size: 13px; margin: 8px 0 12px; }
+.painel .aviso.guerra { border-left-color: var(--aviso-guerra) !important; background: var(--aviso-guerra-fundo) !important; }
+.painel .aviso { background: var(--aviso-fundo); border-left: 3px solid var(--acento); padding: 8px 10px; font-size: 13px; margin: 8px 0 12px; }
 .lista-paises { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 14px; }
 .lista-paises button {
   border: 1px solid var(--linha); background: var(--creme); border-radius: 999px; padding: 4px 10px;
@@ -126,17 +188,17 @@ button { font: inherit; color: inherit; }
 .item .original { font-size: 12.5px; color: var(--tinta-3); margin: 3px 0 0; line-height: 1.35; }
 .item .meta { font-size: 12px; color: var(--tinta-3); margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; }
 .item .meta .veiculo { color: var(--tinta-2); font-weight: 600; }
-.item .meta .ponto::before { content: "·"; margin-right: 6px; color: #a7aeb4; }
+.item .meta .ponto::before { content: "·"; margin-right: 6px; color: var(--ponto); }
 .item .meta .traduzir {
   margin-left: auto; display: inline-flex; align-items: center; gap: 4px; color: var(--link); text-decoration: none;
   font-weight: 600; border-radius: 6px; padding: 3px 6px;
 }
-.item .meta .traduzir:hover { background: #eef3f6; }
+.item .meta .traduzir:hover { background: var(--realce); }
 .selo {
   font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border-radius: 4px;
-  padding: 2px 6px; background: #f3e2d9; color: var(--acento);
+  padding: 2px 6px; background: var(--selo-fundo); color: var(--acento);
 }
-.selo.exilio { background: #e3ecf2; color: var(--link); }
+.selo.exilio { background: var(--selo-exilio-fundo); color: var(--link); }
 .vazio { color: var(--tinta-3); font-size: 14px; padding: 8px 0; }
 
 .rodape { border-top: 1px solid var(--linha); padding: 10px 18px 12px; font-size: 11.5px; color: var(--tinta-3); line-height: 1.45; }
@@ -146,9 +208,11 @@ button { font: inherit; color: inherit; }
 @media (max-width: 820px) {
   .topo { padding: 8px 12px; flex-wrap: nowrap; align-items: center; gap: 8px; }
   .topo h1 { display: none; }
+  .sobretitulo { font-size: 11px; letter-spacing: .1em; white-space: nowrap; }
   .controles { gap: 6px; flex-wrap: nowrap; }
   .ir-para { position: relative; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
-    border: 1px solid #cfc8bb; border-radius: 8px; background: #fff; color: var(--tinta); }
+    border: 1px solid var(--borda); border-radius: 8px; background: var(--superficie); color: var(--tinta); }
+  .botao-tema { width: 40px; height: 40px; }
   .ir-para select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; max-width: none; }
   .icone-busca { display: block; }
   .barra { padding: 6px 12px; gap: 8px; }
@@ -156,20 +220,20 @@ button { font: inherit; color: inherit; }
   .painel {
     position: absolute; left: 0; right: 0; bottom: 0; width: auto; height: 38%; z-index: 800;
     border-left: 0; border-top: 1px solid var(--linha); border-radius: 14px 14px 0 0;
-    box-shadow: 0 -6px 20px rgba(31,42,51,.15); transition: height .2s;
+    box-shadow: 0 -6px 20px var(--sombra); transition: height .2s;
   }
   .painel.aberto { height: 86%; }
   .alca {
-    display: block; width: 100%; height: 26px; border: 0; background: #fff; cursor: pointer; flex: none;
+    display: block; width: 100%; height: 26px; border: 0; background: var(--superficie); cursor: pointer; flex: none;
     position: sticky; top: 0; z-index: 2;
   }
-  .alca::before { content: ""; display: block; width: 40px; height: 4px; border-radius: 2px; background: #cfc8bb; margin: 10px auto; }
+  .alca::before { content: ""; display: block; width: 40px; height: 4px; border-radius: 2px; background: var(--borda); margin: 10px auto; }
   .legenda { display: none; bottom: calc(38% + 58px); font-size: 11px; }
   .legenda.aberta { display: block; }
   .legenda-botao {
     display: block; position: absolute; left: 12px; bottom: calc(38% + 12px); z-index: 500; min-height: 40px;
-    border: 1px solid #cfc8bb; border-radius: 8px; background: rgba(255,255,255,.95); padding: 6px 12px;
-    font-size: 13px; font-weight: 600; color: var(--tinta); box-shadow: 0 2px 8px rgba(31,42,51,.12); cursor: pointer;
+    border: 1px solid var(--borda); border-radius: 8px; background: var(--vidro); padding: 6px 12px;
+    font-size: 13px; font-weight: 600; color: var(--tinta); box-shadow: 0 2px 8px var(--sombra); cursor: pointer;
   }
   .modo { left: 12px; top: 10px; }
   .leaflet-control-zoom { display: none; }

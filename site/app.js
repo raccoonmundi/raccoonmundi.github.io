@@ -32,7 +32,7 @@
       ocupacaoUA: function (d) { return 'Part of the territory is under Russian military occupation, according to DeepStateMap (Ukrainian front-line mapping project) on ' + d + '.'; },
       creditoGuerra: 'Occupied areas: ',
       agora: 'just now', ha: function (n, u) { return n + ' ' + u + ' ago'; }, u: { m: 'min', h: 'h', d: 'd' },
-      erro: 'Could not load the map data. Try reloading the page.', expandir: 'Expand panel', legenda: 'Legend'
+      erro: 'Could not load the map data. Try reloading the page.', expandir: 'Expand panel', legenda: 'Legend', modoEscuro: 'Dark mode'
     },
     pt: {
       mapa: 'MAPA', titulo: 'O mundo pela imprensa local', irPara: 'Ir para', escolha: 'Ir para…',
@@ -60,7 +60,7 @@
       ocupacaoUA: function (d) { return 'Parte do território está sob ocupação militar russa, segundo o DeepStateMap (projeto ucraniano de mapeamento da linha de frente) em ' + d + '.'; },
       creditoGuerra: 'Áreas ocupadas: ',
       agora: 'agora', ha: function (n, u) { return 'há ' + n + ' ' + u; }, u: { m: 'min', h: 'h', d: 'd' },
-      erro: 'Não foi possível carregar os dados do mapa. Tente recarregar a página.', expandir: 'Expandir painel', legenda: 'Legenda'
+      erro: 'Não foi possível carregar os dados do mapa. Tente recarregar a página.', expandir: 'Expandir painel', legenda: 'Legenda', modoEscuro: 'Modo escuro'
     }
   };
   var IDIOMAS_PT = {
@@ -72,9 +72,35 @@
     Hungarian: 'Húngaro', Czech: 'Tcheco', Swedish: 'Sueco', Hausa: 'Hauçá', Swahili: 'Suaíli'
   };
 
-  var CORES = ['#f6e3d6', '#eebfa2', '#e0916a', '#c9643a', '#a8400f'];
+  /* Cores do mapa por tema. O significado não muda: mais notícias = laranja mais intenso, que no claro
+     escurece e no escuro clareia (sempre contrastando mais com o fundo). */
+  var PALETAS = {
+    claro: {
+      cores: ['#f6e3d6', '#eebfa2', '#e0916a', '#c9643a', '#a8400f'],
+      zero: '#e9e3d7', semColeta: '#dcd7ce', semRegiao: '#e4dfd6', amostraBorda: '#d6cfc2',
+      bordaRegiao: '#ffffff', bordaMacro: '#ffffff', bordaPais: '#7d776c',
+      destaque: '#1f2a33', sombra: '#1f2a33', sombraOp: 0.45,
+      disputa: '#2b3a44', disputaFundo: 'rgba(255,255,255,0.35)',
+      guerra: '#8f1d0d', guerraFundo: 'rgba(143,29,13,0.16)', contestFundo: 'rgba(143,29,13,0.06)',
+      legDisputa: 'repeating-linear-gradient(45deg,#efe9df 0 3px,#2b3a44 3px 4.5px);border:1px dashed #2b3a44',
+      legOcupado: 'repeating-linear-gradient(-45deg,#f1d9d2 0 3px,#8f1d0d 3px 5px);border:1px solid #8f1d0d',
+      legContestado: 'repeating-linear-gradient(-45deg,#f7ece8 0 2px,#c08070 2px 3px);border:1px dashed #8f1d0d'
+    },
+    escuro: {
+      cores: ['#4b3126', '#713c23', '#9d4b23', '#cc602b', '#f3874e'],
+      zero: '#2c333a', semColeta: '#20272e', semRegiao: '#262d34', amostraBorda: '#454f58',
+      bordaRegiao: '#111820', bordaMacro: '#0d151b', bordaPais: '#5b656e',
+      destaque: '#f3ede3', sombra: '#000000', sombraOp: 0.8,
+      disputa: '#d3dbe0', disputaFundo: 'rgba(0,0,0,0.28)',
+      guerra: '#ff7b5a', guerraFundo: 'rgba(255,123,90,0.18)', contestFundo: 'rgba(255,123,90,0.07)',
+      legDisputa: 'repeating-linear-gradient(45deg,#2c333a 0 3px,#d3dbe0 3px 4.5px);border:1px dashed #d3dbe0',
+      legOcupado: 'repeating-linear-gradient(-45deg,#3b2421 0 3px,#ff7b5a 3px 5px);border:1px solid #ff7b5a',
+      legContestado: 'repeating-linear-gradient(-45deg,#2b2523 0 2px,#a8604f 2px 3px);border:1px dashed #ff7b5a'
+    }
+  };
+  function temaAtual() { return document.documentElement.getAttribute('data-tema') === 'escuro' ? 'escuro' : 'claro'; }
+  var P = PALETAS[temaAtual()];
   var LIMITES_PAIS = [1, 2, 3, 4], LIMITES_REGIAO = [1, 2, 3, 4]; // recalculados pelos dados (quintis)
-  var COR_ZERO = '#e9e3d7', COR_SEM_COLETA = '#dcd7ce', COR_SEM_REGIAO = '#e4dfd6';
   var VISTAS = { // regiões que cruzam a linha de data: enquadramento manual
     'russia': [[62, 95], 2.5], 'oceania': [[-22, 155], 3], 'america-do-norte': [[46, -100], 2.5]
   };
@@ -140,10 +166,10 @@
     return algum ? s : null;
   }
   function cor(v, limites) {
-    if (v === null || v === undefined) return COR_SEM_COLETA;
-    if (v === 0) return COR_ZERO;
-    for (var i = 0; i < limites.length; i++) if (v <= limites[i]) return CORES[i];
-    return CORES[CORES.length - 1];
+    if (v === null || v === undefined) return P.semColeta;
+    if (v === 0) return P.zero;
+    for (var i = 0; i < limites.length; i++) if (v <= limites[i]) return P.cores[i];
+    return P.cores[P.cores.length - 1];
   }
   function quintis(valores) { // cinco faixas com quantidades parecidas de países (ou regiões)
     var v = valores.filter(function (x) { return x > 0; }).sort(function (a, b) { return a - b; });
@@ -195,16 +221,24 @@
   /* ---------- mapa ---------- */
   function estiloPais(f) {
     var k = f.properties.k, r = f.properties.r, tema = estado.sel && estado.sel.tipo === 't' ? D.temaPorId[estado.sel.id] : null;
-    if (!r) return { fillColor: COR_SEM_REGIAO, fillOpacity: 1, color: '#ffffff', weight: 0.4 };
+    if (!r) return { fillColor: P.semRegiao, fillOpacity: 1, color: P.bordaRegiao, weight: 0.4 };
     var fill = estado.modo === 'regioes' ? cor(volRegiao(r), LIMITES_REGIAO) : cor(coletado(k) ? (volPais(k) || 0) : null, LIMITES_PAIS);
     var s = estado.modo === 'regioes'
-      ? { fillColor: fill, fillOpacity: 1, color: '#ffffff', weight: 0.4, opacity: 0.9, lineJoin: 'round' }
-      : { fillColor: fill, fillOpacity: 1, color: '#7d776c', weight: 0.8, opacity: 0.85, lineJoin: 'round' };
+      ? { fillColor: fill, fillOpacity: 1, color: P.bordaRegiao, weight: 0.4, opacity: 0.9, lineJoin: 'round' }
+      : { fillColor: fill, fillOpacity: 1, color: P.bordaPais, weight: 0.8, opacity: 0.85, lineJoin: 'round' };
     if (tema && (tema.paises || []).indexOf(k) < 0) s.fillOpacity = 0.35;
     return s;
   }
   function estiloMacro() {
-    return { fill: false, color: '#ffffff', weight: estado.modo === 'regioes' ? 1.6 : 1 };
+    return { fill: false, color: P.bordaMacro, weight: estado.modo === 'regioes' ? 1.6 : 1 };
+  }
+  function estiloDisputa() {
+    return { fillColor: 'url(#hachura)', fillOpacity: 1, color: P.disputa, weight: 1.1, opacity: 0.85, dashArray: '4 3' };
+  }
+  function estiloGuerra(f) {
+    return f.properties.tipo === 'ocupado'
+      ? { fillColor: 'url(#hachura-guerra)', fillOpacity: 1, color: P.guerra, weight: 1.4, opacity: 0.95 }
+      : { fillColor: 'url(#hachura-contestada)', fillOpacity: 1, color: P.guerra, weight: 0.8, opacity: 0.7, dashArray: '2 3' };
   }
   function restyle() {
     camadaPaises.setStyle(estiloPais);
@@ -228,11 +262,11 @@
     if (!contorno.length) return;
     var fc = function (fs) { return { type: 'FeatureCollection', features: fs }; };
     var sombra = L.geoJSON(fc(contorno), { renderer: svg, smoothFactor: 0.4, interactive: false,
-      style: { stroke: false, fillColor: '#1f2a33', fillOpacity: 0.45 } });
+      style: { stroke: false, fillColor: P.sombra, fillOpacity: P.sombraOp } });
     var cima = L.geoJSON(fc(preench), { renderer: svg, smoothFactor: 0.4, interactive: false,
       style: function (f) { var e = estiloPais(f); return { fillColor: e.fillColor, fillOpacity: 1, color: e.color, opacity: e.opacity, weight: e.weight }; } });
     var borda = L.geoJSON(fc(contorno), { renderer: svg, smoothFactor: 0.4, interactive: false,
-      style: { fill: false, color: '#1f2a33', weight: 2, lineJoin: 'round' } });
+      style: { fill: false, color: P.destaque, weight: 2, lineJoin: 'round' } });
     camadaDestaque = L.layerGroup([sombra, cima, borda]).addTo(mapa);
     sombra.eachLayer(function (l) { l._path.setAttribute('filter', 'url(#sombra)'); l._path.setAttribute('transform', 'translate(0 6)'); });
     cima.eachLayer(function (l) { l._path.setAttribute('transform', 'translate(0 -2)'); });
@@ -342,26 +376,34 @@
       });
     });
   }
+  /* Hachuras e sombra em <defs> do SVG do mapa. Criadas uma vez; ao trocar o tema só as cores mudam. */
   function criarHachura() {
-    var c = svg._container; if (!c || c.querySelector('#hachura')) return;
-    var ns = 'http://www.w3.org/2000/svg', defs = document.createElementNS(ns, 'defs');
+    var c = svg._container; if (!c) return;
+    var ns = 'http://www.w3.org/2000/svg', defs = c.querySelector('defs');
+    if (!defs) { defs = document.createElementNS(ns, 'defs'); c.insertBefore(defs, c.firstChild); }
     var padrao = function (id, tam, ang, fundo, traco, larg, opac) {
-      var p = document.createElementNS(ns, 'pattern');
-      p.setAttribute('id', id); p.setAttribute('patternUnits', 'userSpaceOnUse'); p.setAttribute('width', tam); p.setAttribute('height', tam);
-      p.setAttribute('patternTransform', 'rotate(' + ang + ')');
-      var r = document.createElementNS(ns, 'rect'); r.setAttribute('width', tam); r.setAttribute('height', tam); r.setAttribute('fill', fundo);
-      var ln = document.createElementNS(ns, 'line'); ln.setAttribute('x1', '0'); ln.setAttribute('y1', '0'); ln.setAttribute('x2', '0'); ln.setAttribute('y2', tam);
-      ln.setAttribute('stroke', traco); ln.setAttribute('stroke-width', larg); ln.setAttribute('stroke-opacity', opac);
-      p.appendChild(r); p.appendChild(ln); defs.appendChild(p);
+      var p = defs.querySelector('#' + id), r, ln;
+      if (!p) {
+        p = document.createElementNS(ns, 'pattern');
+        p.setAttribute('id', id); p.setAttribute('patternUnits', 'userSpaceOnUse'); p.setAttribute('width', tam); p.setAttribute('height', tam);
+        p.setAttribute('patternTransform', 'rotate(' + ang + ')');
+        r = document.createElementNS(ns, 'rect'); r.setAttribute('width', tam); r.setAttribute('height', tam);
+        ln = document.createElementNS(ns, 'line'); ln.setAttribute('x1', '0'); ln.setAttribute('y1', '0'); ln.setAttribute('x2', '0'); ln.setAttribute('y2', tam);
+        ln.setAttribute('stroke-width', larg); ln.setAttribute('stroke-opacity', opac);
+        p.appendChild(r); p.appendChild(ln); defs.appendChild(p);
+      }
+      p.querySelector('rect').setAttribute('fill', fundo);
+      p.querySelector('line').setAttribute('stroke', traco);
     };
-    padrao('hachura', '7', 45, 'rgba(255,255,255,0.35)', '#2b3a44', '1.8', '0.75');          // área disputada
-    padrao('hachura-guerra', '8', -45, 'rgba(143,29,13,0.16)', '#8f1d0d', '2.6', '0.85');     // ocupação militar
-    padrao('hachura-contestada', '5', -45, 'rgba(143,29,13,0.06)', '#8f1d0d', '1', '0.5');    // zona contestada
-    var fl = document.createElementNS(ns, 'filter'); fl.setAttribute('id', 'sombra');
-    fl.setAttribute('x', '-30%'); fl.setAttribute('y', '-30%'); fl.setAttribute('width', '160%'); fl.setAttribute('height', '160%');
-    var bl = document.createElementNS(ns, 'feGaussianBlur'); bl.setAttribute('stdDeviation', '5');
-    fl.appendChild(bl); defs.appendChild(fl);
-    c.insertBefore(defs, c.firstChild);
+    padrao('hachura', '7', 45, P.disputaFundo, P.disputa, '1.8', '0.75');                // área disputada
+    padrao('hachura-guerra', '8', -45, P.guerraFundo, P.guerra, '2.6', '0.85');          // ocupação militar
+    padrao('hachura-contestada', '5', -45, P.contestFundo, P.guerra, '1', '0.5');        // zona contestada
+    if (!defs.querySelector('#sombra')) {
+      var fl = document.createElementNS(ns, 'filter'); fl.setAttribute('id', 'sombra');
+      fl.setAttribute('x', '-30%'); fl.setAttribute('y', '-30%'); fl.setAttribute('width', '160%'); fl.setAttribute('height', '160%');
+      var bl = document.createElementNS(ns, 'feGaussianBlur'); bl.setAttribute('stdDeviation', '5');
+      fl.appendChild(bl); defs.appendChild(fl);
+    }
   }
   function montarMapa(geoPaises, geoMacros, geoDisputa) {
     var pequeno = window.innerWidth < 820;
@@ -374,7 +416,7 @@
       layer.on('mouseover', function () {
         var txt = rotuloHover(f); if (!txt) return;
         layer.bindTooltip(txt, { sticky: true, className: 'rotulo-mapa', direction: 'top', offset: [0, -8] }).openTooltip();
-        if (estado.modo === 'paises') layer.setStyle({ weight: 2, color: '#1f2a33' });
+        if (estado.modo === 'paises') layer.setStyle({ weight: 2, color: P.destaque });
       });
       layer.on('mouseout', function () { layer.unbindTooltip(); camadaPaises.resetStyle(layer); });
       layer.on('click', function () {
@@ -386,13 +428,8 @@
     camadaMacros = L.geoJSON(geoMacros, { renderer: svg, smoothFactor: 0.4, interactive: false, style: estiloMacro,
       onEachFeature: function (f, layer) { if (f.properties.copia === 0) macroLayer[f.properties.r] = layer; } }).addTo(mapa);
     camadaDisputa = L.geoJSON(geoDisputa, { renderer: svg, smoothFactor: 0.4, interactive: false,
-      style: { fillColor: 'url(#hachura)', fillOpacity: 1, color: '#2b3a44', weight: 1.1, opacity: 0.85, dashArray: '4 3' } }).addTo(mapa);
-    if (G.guerra) camadaGuerra = L.geoJSON(G.guerra, { renderer: svg, smoothFactor: 0.4, interactive: false,
-      style: function (f) {
-        return f.properties.tipo === 'ocupado'
-          ? { fillColor: 'url(#hachura-guerra)', fillOpacity: 1, color: '#8f1d0d', weight: 1.4, opacity: 0.95 }
-          : { fillColor: 'url(#hachura-contestada)', fillOpacity: 1, color: '#8f1d0d', weight: 0.8, opacity: 0.7, dashArray: '2 3' };
-      } }).addTo(mapa);
+      style: estiloDisputa }).addTo(mapa);
+    if (G.guerra) camadaGuerra = L.geoJSON(G.guerra, { renderer: svg, smoothFactor: 0.4, interactive: false, style: estiloGuerra }).addTo(mapa);
     criarHachura();
     mapa.createPane('rotulos').style.zIndex = 450;
     camadaRotulos = L.layerGroup().addTo(mapa);
@@ -527,14 +564,14 @@
   function renderLegenda() {
     var g = document.getElementById('legenda'); g.textContent = '';
     g.appendChild(el('div', { text: t('legTitulo') }));
-    g.appendChild(el('div', { class: 'escala' }, CORES.map(function (c) { return el('span', { style: 'background:' + c }); })));
+    g.appendChild(el('div', { class: 'escala' }, P.cores.map(function (c) { return el('span', { style: 'background:' + c }); })));
     g.appendChild(el('div', { style: 'display:flex;justify-content:space-between' }, [el('span', { text: t('menos') }), el('span', { text: t('mais') })]));
-    g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + COR_ZERO + ';border:1px solid #d6cfc2' }), t('legSem')]));
-    if (D.teste || !D.gerado) g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + COR_SEM_COLETA }), t('legSemColeta')]));
-    g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:repeating-linear-gradient(45deg,#efe9df 0 3px,#2b3a44 3px 4.5px);border:1px dashed #2b3a44' }), t('legDisputa')]));
+    g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.zero + ';border:1px solid ' + P.amostraBorda }), t('legSem')]));
+    if (D.teste || !D.gerado) g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.semColeta }), t('legSemColeta')]));
+    g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.legDisputa }), t('legDisputa')]));
     if (G.guerraMeta) {
-      g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:repeating-linear-gradient(-45deg,#f1d9d2 0 3px,#8f1d0d 3px 5px);border:1px solid #8f1d0d' }), t('legOcupado')(dataCurta(G.guerraMeta.data))]));
-      g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:repeating-linear-gradient(-45deg,#f7ece8 0 2px,#c08070 2px 3px);border:1px dashed #8f1d0d' }), t('legContestado')]));
+      g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.legOcupado }), t('legOcupado')(dataCurta(G.guerraMeta.data))]));
+      g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.legContestado }), t('legContestado')]));
     }
   }
   function renderTemas() {
@@ -573,6 +610,24 @@
     document.documentElement.lang = estado.l === 'pt' ? 'pt-BR' : 'en';
     document.querySelectorAll('[data-i18n]').forEach(function (e) { e.textContent = t(e.dataset.i18n); });
     document.getElementById('alca').setAttribute('aria-label', t('expandir'));
+    atualizarBotaoTema();
+  }
+  /* Modo claro/escuro: segue o sistema até a pessoa escolher; a escolha fica guardada neste navegador. */
+  function atualizarBotaoTema() {
+    var b = document.getElementById('tema'); if (!b) return;
+    b.setAttribute('aria-pressed', temaAtual() === 'escuro' ? 'true' : 'false');
+    b.setAttribute('aria-label', t('modoEscuro')); b.title = t('modoEscuro');
+  }
+  function aplicarTema(tm, gravar) {
+    document.documentElement.setAttribute('data-tema', tm);
+    P = PALETAS[tm];
+    if (gravar) { try { localStorage.setItem('mapa-tema', tm); } catch (e) { /* sem armazenamento: vale só nesta visita */ } }
+    atualizarBotaoTema();
+    if (!mapa) return;
+    criarHachura();
+    camadaDisputa.setStyle(estiloDisputa);
+    if (camadaGuerra) camadaGuerra.setStyle(estiloGuerra);
+    renderLegenda(); restyle();
   }
   function renderTudo() {
     traduzirInterface(); atualizarBotoes(); renderTemas(); renderIrPara(); renderLegenda(); renderPainel(); renderRodape(); restyle();
@@ -602,6 +657,14 @@
       selecionar({ tipo: v.slice(0, 1), id: v.slice(2) }, true); e.target.value = '';
     });
     document.getElementById('alca').addEventListener('click', function () { document.getElementById('painel').classList.toggle('aberto'); });
+    document.getElementById('tema').addEventListener('click', function () { aplicarTema(temaAtual() === 'escuro' ? 'claro' : 'escuro', true); });
+    try {
+      var mq = window.matchMedia('(prefers-color-scheme: dark)'), siga = function (e) {
+        var salvo = null; try { salvo = localStorage.getItem('mapa-tema'); } catch (x) { /* nada */ }
+        if (!salvo) aplicarTema(e.matches ? 'escuro' : 'claro', false);
+      };
+      if (mq.addEventListener) mq.addEventListener('change', siga); else if (mq.addListener) mq.addListener(siga);
+    } catch (e) { /* navegador sem matchMedia */ }
     document.getElementById('legenda-botao').addEventListener('click', function () {
       var g = document.getElementById('legenda'), aberta = g.classList.toggle('aberta');
       this.setAttribute('aria-expanded', aberta ? 'true' : 'false');
