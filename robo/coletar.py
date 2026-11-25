@@ -76,7 +76,7 @@ CCTLD_GENERICOS = {"tv", "io", "co", "me", "ai", "fm", "cc", "ws", "to", "gg", "
                    "ac", "cx", "la", "im", "eu", "su", "tk", "ml", "ga", "cf", "gq"}
 RE_TITULO = re.compile(r"<PAGE_TITLE>(.*?)</PAGE_TITLE>", re.S)
 RE_SEPARADOR = re.compile(r"(\s+[|—–-]\s+|\s*:\s+)")
-TRAD_VERSAO = 2  # mude para refazer todas as traduções
+TRAD_VERSAO = 3  # mude para refazer todas as traduções
 
 
 def limpar_titulo(titulo, dominio):
@@ -309,9 +309,16 @@ def traduzir(itens, anteriores, log):
         # traduz cada trecho separado por ":" ou travessão: o Argos às vezes descarta o que vem depois deles
         try:
             pedacos = RE_SEPARADOR.split(texto)
-            saida = "".join(p if (i % 2 or not re.search(r"\w", p)) else tradutor.translate(p, de, para).strip().rstrip(":")
-                            for i, p in enumerate(pedacos))
-            return saida.strip() or None
+            saida = []
+            for i, p in enumerate(pedacos):
+                if i % 2 or not re.search(r"\w", p):
+                    saida.append(p)
+                    continue
+                trad = tradutor.translate(p, de, para).strip()
+                if i < len(pedacos) - 1 or not p.rstrip().endswith((".", "!", "?")):
+                    trad = trad.rstrip(".:;")  # o Argos acrescenta ponto final que o título não tem
+                saida.append(trad)
+            return "".join(saida).strip() or None
         except Exception as e:  # noqa: BLE001
             log(f"  falha ao traduzir ({de}->{para}): {e}")
             return None
