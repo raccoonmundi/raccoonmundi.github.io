@@ -63,6 +63,8 @@ button { font: inherit; color: inherit; }
 .mapa-area { position: relative; flex: 1; min-width: 0; }
 #mapa { position: absolute; inset: 0; background: var(--oceano); }
 .leaflet-container { font-family: inherit; background: var(--oceano); }
+/* sem o retângulo de foco do navegador ao clicar num país */
+.leaflet-container path:focus, .leaflet-container svg:focus, .leaflet-interactive:focus { outline: none; }
 .leaflet-tooltip.rotulo-mapa {
   background: var(--tinta); color: #fff; border: 0; border-radius: 6px; font-size: 12px; font-weight: 600;
   padding: 4px 8px; box-shadow: none;
