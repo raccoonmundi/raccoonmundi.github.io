@@ -252,7 +252,7 @@ def temas_do_registro(iso, texto, temas_reg, prontos, pontos):
     for tm in prontos:
         if tm["paises"] and iso not in tm["paises"]:
             continue
-        if tm["temas_gdelt"] and not (tm["temas_gdelt"] & temas_reg):
+        if temas_reg is not None and tm["temas_gdelt"] and not (tm["temas_gdelt"] & temas_reg):
             continue
         if all(any(t.search(texto) for t in g) for g in tm["grupos"]):
             out.append(tm["id"])
@@ -462,6 +462,9 @@ def main():
         dom = it["veiculo"]
         if pais_de(dom) != it["pais"] or any(dom == b or dom.endswith("." + b) for b in bloqueio):
             continue  # correções de país ou bloqueios novos valem também para o histórico
+        # histórico: o tema em foco é reavaliado pelo título (temas mudam a cada rodada do Raccoon Mundi)
+        texto = ((it.get("titulo_en") or "") + " | " + it["titulo_original"]).lower()
+        it = dict(it, temas=temas_do_registro(it["pais"], texto, None, temas, it.get("pontos", 1)))
         candidatas[id_] = dict(it, titulo_original=limpar_titulo(it["titulo_original"], dom), midia_estatal=any(dom == e or dom.endswith("." + e) for e in estatal),
                                midia_exilio=any(dom == e or dom.endswith("." + e) for e in exilio))
     por_pais = {}
