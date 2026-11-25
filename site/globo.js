@@ -338,7 +338,7 @@
       version: 8,
       projection: { type: 'globe' },
       light: { anchor: 'viewport', color: '#ffffff', intensity: 0.45, position: [1.3, 200, 35] },
-      sky: { 'sky-color': '#7db4e8', 'horizon-color': '#cfe6f7', 'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 4, 0.7, 6, 0] },
+      sky: { 'atmosphere-blend': 0 }, // sem o brilho de atmosfera: parecia luz do sol, sem seguir o horário real
       glyphs: base() + 'fonts/{fontstack}/{range}.pbf',
       sources: {
         paises: { type: 'geojson', data: G.paises, promoteId: 'k' },
