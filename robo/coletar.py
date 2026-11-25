@@ -75,6 +75,26 @@ IDIOMAS = {
 CCTLD_GENERICOS = {"tv", "io", "co", "me", "ai", "fm", "cc", "ws", "to", "gg", "nu", "sh", "st", "vc", "pw",
                    "ac", "cx", "la", "im", "eu", "su", "tk", "ml", "ga", "cf", "gq"}
 RE_TITULO = re.compile(r"<PAGE_TITLE>(.*?)</PAGE_TITLE>", re.S)
+RE_SEPARADOR = re.compile(r"(\s+[|—–-]\s+|\s*:\s+)")
+TRAD_VERSAO = 2  # mude para refazer todas as traduções
+
+
+def limpar_titulo(titulo, dominio):
+    """Tira do fim do título o nome do site ou da editoria ("... — DSnews.ua", "... | Reuters", "... - Mundo")."""
+    rotulos = dominio.split(".")
+    raiz = rotulos[-2] if len(rotulos) >= 2 else rotulos[0]
+    if len(rotulos) >= 3 and len(raiz) <= 3:  # ex.: bbc.co.uk, folha.com.br
+        raiz = rotulos[-3]
+    for _ in range(2):
+        partes = re.split(r"\s+[|—–-]\s+", titulo)
+        if len(partes) < 2:
+            break
+        ultimo = partes[-1].strip()
+        if (raiz.lower() in ultimo.lower().replace(" ", "") and len(ultimo.split()) <= 4) or len(ultimo.split()) == 1:
+            titulo = re.sub(r"\s+[|—–-]\s+" + re.escape(ultimo) + r"\s*$", "", titulo).strip()
+        else:
+            break
+    return titulo
 
 
 def agora():
@@ -240,7 +260,7 @@ def temas_do_registro(iso, texto, temas_reg, prontos):
 def traduzir(itens, anteriores, log):
     for it in itens:  # reaproveita as traduções já feitas
         p = anteriores.get(it["id"])
-        if p:
+        if p and p.get("tv") == TRAD_VERSAO:
             it["titulo_en"] = it.get("titulo_en") or p.get("titulo_en")
             it["titulo_pt"] = it.get("titulo_pt") or p.get("titulo_pt")
         if it.get("lc") == "en":
@@ -283,13 +303,19 @@ def traduzir(itens, anteriores, log):
     destino_pt = "pb" if any(p.from_code == "en" and p.to_code == "pb" for p in disponiveis) else "pt"
 
     def tr(texto, de, para):
+        # traduz cada trecho separado por ":" ou travessão: o Argos às vezes descarta o que vem depois deles
         try:
-            return tradutor.translate(texto, de, para).strip() or None
+            pedacos = RE_SEPARADOR.split(texto)
+            saida = "".join(p if (i % 2 or not re.search(r"\w", p)) else tradutor.translate(p, de, para).strip().rstrip(":")
+                            for i, p in enumerate(pedacos))
+            return saida.strip() or None
         except Exception as e:  # noqa: BLE001
             log(f"  falha ao traduzir ({de}->{para}): {e}")
             return None
 
     cont = {"en": 0, "pt": 0, "sem_modelo": {}}
+    for it in itens:
+        it["tv"] = TRAD_VERSAO
     for it in pendentes:
         lc = it.get("lc")
         if not it.get("titulo_en") and lc and lc != "en":
@@ -395,7 +421,7 @@ def main():
                     continue
                 cont_arq[iso] = cont_arq.get(iso, 0) + 1
                 m = RE_TITULO.search(c[26])
-                titulo = re.sub(r"\s+", " ", html.unescape(m.group(1))).strip() if m else ""
+                titulo = limpar_titulo(re.sub(r"\s+", " ", html.unescape(m.group(1))).strip(), dominio) if m else ""
                 if len(titulo) < 12:
                     continue
                 lang3 = "eng"
@@ -423,7 +449,7 @@ def main():
         dom = it["veiculo"]
         if pais_de(dom) != it["pais"] or any(dom == b or dom.endswith("." + b) for b in bloqueio):
             continue  # correções de país ou bloqueios novos valem também para o histórico
-        candidatas[id_] = dict(it, midia_estatal=any(dom == e or dom.endswith("." + e) for e in estatal),
+        candidatas[id_] = dict(it, titulo_original=limpar_titulo(it["titulo_original"], dom), midia_estatal=any(dom == e or dom.endswith("." + e) for e in estatal),
                                midia_exilio=any(dom == e or dom.endswith("." + e) for e in exilio))
     por_pais = {}
     for it in candidatas.values():
@@ -485,11 +511,11 @@ def main():
     }
     extra = {"arquivos": n_arquivos, "registros": n_registros, "temas": temas_rel, "traducao": trad}
     md = resumo_markdown(saida, extra, time.time() - inicio)
-    if n_arquivos:
+    if n_arquivos or anteriores:  # sem arquivo novo, regrava o histórico com as correções atuais
         with open(os.path.join(DADOS, "noticias.json"), "w", encoding="utf-8") as f:
             json.dump(saida, f, ensure_ascii=False, separators=(",", ":"))
-    else:
-        md = "**Nenhum arquivo do GDELT foi lido: os dados anteriores foram mantidos.**\n\n" + md
+    if not n_arquivos:
+        md = "**Nenhum arquivo novo do GDELT nesta execução: só o histórico foi reprocessado.**\n\n" + md
         print("::warning::Nenhum arquivo do GDELT foi lido; dados anteriores mantidos.")
     print(md)
     if os.environ.get("GITHUB_STEP_SUMMARY"):

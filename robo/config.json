@@ -114,7 +114,8 @@
   "inkl.com",
   "headtopics.com",
   "newsr.in",
-  "ground.news"
+  "ground.news",
+  "finanznachrichten.de"
  ],
  "bloqueio": [],
  "veiculo_pais": {
@@ -129,6 +130,7 @@
   "voanews.com": "US",
   "rferl.org": "US",
   "iranhumanrights.org": null,
-  "iranherald.com": null
+  "iranherald.com": null,
+  "al-monitor.com": "US"
  }
 }
