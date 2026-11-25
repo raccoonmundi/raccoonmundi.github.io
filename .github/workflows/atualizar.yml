@@ -34,6 +34,8 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main  # parte sempre dos dados mais recentes, mesmo numa execução que ficou na fila
 
       - uses: actions/setup-python@v5
         with:
@@ -85,7 +87,7 @@ jobs:
             echo "Sem mudanças nos dados."
           else
             git commit -m "Dados: coleta de $(date -u +%Y-%m-%dT%H:%MZ)"
-            git pull --rebase origin main
+            git pull --rebase -X theirs origin main  # em conflito, vale a coleta desta execução
             git push origin HEAD:main
           fi
 

@@ -245,6 +245,22 @@ def preparar_temas(temas):
     return prontos
 
 
+def conferir_temas_pelo_titulo(itens, prontos):
+    """O título (traduzido ou original) precisa citar ao menos um dos lados do tema.
+    Temas novos ou alterados pela rodada valem para o histórico se o título citar todos os lados."""
+    por_id = {tm["id"]: tm for tm in prontos}
+    for it in itens:
+        texto = ((it.get("titulo_en") or "") + " | " + it["titulo_original"]).lower()
+        mantidos = []
+        for tm in prontos:
+            if (tm["paises"] and it["pais"] not in tm["paises"]) or it.get("pontos", 1) < 2:
+                continue
+            lados = [any(t.search(texto) for t in g) for g in tm["grupos"]]
+            if (tm["id"] in it["temas"] and any(lados)) or all(lados):
+                mantidos.append(tm["id"])
+        it["temas"] = [t for t in mantidos if t in por_id]
+
+
 def temas_do_registro(iso, texto, temas_reg, prontos, pontos):
     out = []
     if pontos < 2:  # tema em foco exige matéria claramente geopolítica
@@ -462,9 +478,6 @@ def main():
         dom = it["veiculo"]
         if pais_de(dom) != it["pais"] or any(dom == b or dom.endswith("." + b) for b in bloqueio):
             continue  # correções de país ou bloqueios novos valem também para o histórico
-        # histórico: o tema em foco é reavaliado pelo título (temas mudam a cada rodada do Raccoon Mundi)
-        texto = ((it.get("titulo_en") or "") + " | " + it["titulo_original"]).lower()
-        it = dict(it, temas=temas_do_registro(it["pais"], texto, None, temas, it.get("pontos", 1)))
         candidatas[id_] = dict(it, titulo_original=limpar_titulo(it["titulo_original"], dom), midia_estatal=any(dom == e or dom.endswith("." + e) for e in estatal),
                                midia_exilio=any(dom == e or dom.endswith("." + e) for e in exilio))
     por_pais = {}
@@ -512,6 +525,12 @@ def main():
     if not args.sem_traducao:
         log("Traduzindo títulos")
         trad = traduzir(itens, anteriores, log)
+
+    conferir_temas_pelo_titulo(itens, temas)
+    temas_rel = {}
+    for it in itens:
+        for t in it["temas"]:
+            temas_rel[t] = temas_rel.get(t, 0) + 1
 
     itens.sort(key=lambda x: x["visto_em"], reverse=True)
     saida = {
