@@ -52,7 +52,7 @@
     return {
       version: 8,
       projection: { type: 'globe' },
-      sky: { 'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 4, 0.6, 6, 0] },
+      sky: { 'sky-color': '#7db4e8', 'horizon-color': '#cfe6f7', 'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 4, 0.7, 6, 0] },
       glyphs: base() + 'fonts/{fontstack}/{range}.pbf',
       sources: {
         paises: { type: 'geojson', data: G.paises, promoteId: 'k' },
