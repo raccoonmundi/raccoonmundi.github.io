@@ -107,7 +107,7 @@ def mapa_de_uma_semana_atras(sessao):
 
 def main():
     sessao = requests.Session()
-    sessao.headers["User-Agent"] = "mapa-raccoon-mundi/1.0 (+https://github.com/KaueMB23/mapa-raccoon-mundi)"
+    sessao.headers["User-Agent"] = "mapa-raccoon-mundi/1.0 (+https://github.com/raccoonmundi/raccoonmundi.github.io)"
     try:
         r = sessao.get(URL, timeout=90)
         r.raise_for_status()

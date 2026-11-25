@@ -45,7 +45,7 @@ import requests
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DADOS = os.path.join(RAIZ, "site", "data")
 BASE = "http://data.gdeltproject.org/gdeltv2/"
-USER_AGENT = "mapa-raccoon-mundi/1.0 (+https://github.com/KaueMB23/mapa-raccoon-mundi)"
+USER_AGENT = "mapa-raccoon-mundi/1.0 (+https://github.com/raccoonmundi/raccoonmundi.github.io)"
 TABELA_URL = "https://blog.gdeltproject.org/wp-content/uploads/2021-news-outlets-by-countrycode-2015-2021.csv"
 TABELA_ARQ = os.path.join(os.path.expanduser("~"), ".cache", "mapa-raccoon-mundi", "outlets-by-country.csv")
 

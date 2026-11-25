@@ -3,7 +3,7 @@
 Mapa-múndi com as notícias recentes da **imprensa local** de cada região, para apoiar o Raccoon Mundi, o Substack de geopolítica.
 Quem acessa clica numa macrorregião ou num país e vê o que os jornais de lá publicaram nas últimas 12, 24 ou 48 horas.
 
-**Site:** https://raccoonmundi.github.io/mapa-raccoon-mundi/
+**Site:** https://raccoonmundi.github.io/
 
 Links diretos para usar nos posts:
 - macrorregião: `…/mapa-raccoon-mundi/#r=oriente-medio`
