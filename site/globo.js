@@ -586,7 +586,8 @@
   function ponto(ll, props) { return { type: 'Feature', properties: props, geometry: { type: 'Point', coordinates: [ll[1], ll[0]] } }; }
   function atualizarRotulos() {
     var pe = estado.modo === 'paises' ? paisDaSelecao() : null;
-    var chave = estado.modo + '|' + estado.l + '|' + pe;
+    var estSel = estado.sel && estado.sel.tipo === 'e' ? estado.sel.id : '';
+    var chave = estado.modo + '|' + estado.l + '|' + pe + '|' + estSel;
     if (chave === ultimaChaveRotulos) return;
     ultimaChaveRotulos = chave;
     var fs = [];
@@ -596,7 +597,7 @@
       });
     } else {
       if (pe) D.estados[pe].forEach(function (e) {
-        var temMon = MON.some(function (m) { return m.estado === e.id; }); // o rótulo desce para não cobrir a maquete
+        var temMon = MON.some(function (m) { return m.estado === e.id && (m.nivel !== 'estado' || estSel === e.id); }); // o rótulo desce para não cobrir a maquete
         fs.push(ponto([e.ly, e.lx], { nome: e.nome, uf: e.uf, tipo: 'estado', prio: 50, mz: 0, off: temMon ? [0, 1.6] : [0, 0] }));
       });
       Object.keys(D.paises).forEach(function (k) {
@@ -618,7 +619,8 @@
      Blocos próprios em fill-extrusion, lidos de data/monumentos.json (sem modelos de terceiros).
      As medidas das peças são "unidades de tela" (≈ 1 px no zoom 3), convertidas em metros conforme o zoom:
      o monumento fica com tamanho de tela quase fixo, crescendo um pouco ao aproximar.
-     Aparecem a partir do zoom de país (MapLibre ≥ 3) ou quando o país do monumento está na seleção;
+     Referência do país: aparece a partir do zoom de país (MapLibre ≥ 3) ou quando o país está na seleção.
+     Referência de estado ("nivel": "estado", piloto Brasil): só aparece com aquele estado selecionado;
      com a seleção erguida no 3D, ficam em cima dela. À noite (horário real), ficam mais escuros.
      globo.html?monumentos=0 desliga. */
   var MONUMENTOS = !/[?&]monumentos=0(&|$)/.test(location.search), ZOOM_MONUMENTOS = 3;
@@ -686,7 +688,8 @@
     var sol = NOITE ? posicaoSol(agoraReal()) : null, escuro = temaAtual() === 'escuro', animando = false, lista = [];
     MON.forEach(function (m) {
       var naSelecao = sel.paises.indexOf(m.pais) >= 0 || sel.pais === m.pais;
-      if (!MONUMENTOS || !(z >= ZOOM_MONUMENTOS || naSelecao)) { delete monDesde[m.id]; return; }
+      var ligado = m.nivel === 'estado' ? sel.estado === m.estado : (z >= ZOOM_MONUMENTOS || naSelecao);
+      if (!MONUMENTOS || !ligado) { delete monDesde[m.id]; return; }
       if (!monDesde[m.id]) monDesde[m.id] = agora;
       var f = Math.min(1, (agora - monDesde[m.id]) / 450);
       if (f < 1) animando = true;

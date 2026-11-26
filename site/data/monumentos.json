@@ -1,5 +1,5 @@
 {
- "_comentario": "Monumentos 3D do globo, em estilo maquete. Cada peça é um bloco erguido (fill-extrusion). Medidas em unidades de tela (cerca de 1 px no zoom 3 do MapLibre); x para leste, y para norte, a partir do ponto lat/lon. Formas: r = retângulo [x, y, largura, profundidade, base, topo, cor]; c = cilindro [x, y, raio, base, topo, cor, lados]; o = octógono [x, y, lado, chanfro, base, topo, cor]; e = estrela [x, y, raio externo, raio interno, pontas, base, topo, cor]; deg = pirâmide em degraus [x, y, lado, degraus, altura, cor, cor alternada, base]. Primeiro lote: 8 monumentos; depois entra uma referência para cada país.",
+ "_comentario": "Monumentos 3D do globo, em estilo maquete. Cada peça é um bloco erguido (fill-extrusion). Medidas em unidades de tela (cerca de 1 px no zoom 3 do MapLibre); x para leste, y para norte, a partir do ponto lat/lon. Formas: r = retângulo [x, y, largura, profundidade, base, topo, cor]; c = cilindro [x, y, raio, base, topo, cor, lados]; o = octógono [x, y, lado, chanfro, base, topo, cor]; e = estrela [x, y, raio externo, raio interno, pontas, base, topo, cor]; deg = pirâmide em degraus [x, y, lado, degraus, altura, cor, cor alternada, base]. Campo nivel = estado: referência de estado, que só aparece com o estado selecionado (no país aparece só a referência nacional). Primeiro lote: 8 monumentos; depois entra uma referência para cada país.",
  "monumentos": [
   {
    "id": "cristo-redentor", "pais": "BR", "estado": "BR-RJ", "lat": -22.9519, "lon": -43.2105,
@@ -16,7 +16,7 @@
    ]
   },
   {
-   "id": "masp", "pais": "BR", "estado": "BR-SP", "lat": -23.5614, "lon": -46.6559,
+   "id": "masp", "pais": "BR", "estado": "BR-SP", "nivel": "estado", "lat": -23.5614, "lon": -46.6559,
    "nome_pt": "MASP", "nome_en": "MASP (São Paulo Museum of Art)", "lugar_pt": "São Paulo, Brasil", "lugar_en": "São Paulo, Brazil",
    "pecas": [
     ["r", 0, 0, 23.5, 11.5, 0, 0.5, "#bdb8ad"],
