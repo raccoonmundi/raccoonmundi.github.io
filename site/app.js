@@ -8,7 +8,6 @@
   var T = {
     en: {
       mapa: 'MAP', titulo: 'The world through its local press', irPara: 'Go to', escolha: 'Go to…', filtroRegiao: 'Region', filtroPais: 'Country', escolhaRegiao: 'Region…', escolhaPais: 'Country…',
-      naRegiao: function (r) { return 'Region: ' + r; }, todosPaises: 'All countries',
       regioes: 'Regions', paises: 'Countries', mundo: 'World', regiao: 'Region', pais: 'Country',
       tema: 'In focus', emFoco: 'IN FOCUS', ultimas: 'Latest from the local press',
       focoAria: 'Most-covered world stories', focoTipo: 'Story in focus', posFoco: function (i, n) { return i + ' of ' + n; },
@@ -61,7 +60,6 @@
     },
     pt: {
       mapa: 'MAPA', titulo: 'O mundo pela imprensa local', irPara: 'Ir para', escolha: 'Ir para…', filtroRegiao: 'Região', filtroPais: 'País', escolhaRegiao: 'Região…', escolhaPais: 'País…',
-      naRegiao: function (r) { return 'Região: ' + r; }, todosPaises: 'Todos os países',
       regioes: 'Regiões', paises: 'Países', mundo: 'Mundo', regiao: 'Região', pais: 'País',
       tema: 'Em foco', emFoco: 'EM FOCO', ultimas: 'O mais recente da imprensa local',
       focoAria: 'Notícias do mundo mais repercutidas', focoTipo: 'Notícia em foco', posFoco: function (i, n) { return i + ' de ' + n; },
@@ -980,7 +978,7 @@
     requestAnimationFrame(function () { faixa.style.setProperty('--duracao', Math.max(20, Math.round(faixa.scrollWidth / 2 / 45)) + 's'); });
   }
   /* Filtros: um para região (e as áreas em guerra ou disputa) e outro para país (e os estados do piloto).
-     Mostram a seleção atual; com uma região escolhida, os países dela vêm primeiro no filtro de país. */
+     Mostram a seleção atual. */
   function regiaoDaSelecao() {
     var s = estado.sel; if (!s) return null;
     if (s.tipo === 'r') return s.id;
@@ -1004,16 +1002,9 @@
     }
     sp.textContent = ''; sp.setAttribute('aria-label', t('filtroPais')); sp.parentNode.title = t('filtroPais');
     sp.appendChild(el('option', { value: '', text: t('escolhaPais') }));
-    var reg = regiaoDaSelecao(), comRegiao = Object.keys(D.paises).filter(function (k) { return D.paises[k].r; });
-    if (reg && D.macroPorId[reg]) {
-      var gr = el('optgroup', { label: t('naRegiao')(nomeRegiao(reg)) });
-      comRegiao.filter(function (k) { return D.paises[k].r === reg; }).sort(porNome)
-        .forEach(function (k) { gr.appendChild(el('option', { value: 'p:' + k, text: nomePais(k) })); });
-      sp.appendChild(gr);
-    }
-    var gt = el('optgroup', { label: reg ? t('todosPaises') : t('paises') });
-    comRegiao.sort(porNome).forEach(function (k) { gt.appendChild(el('option', { value: 'p:' + k, text: nomePais(k) })); });
-    sp.appendChild(gt);
+    var reg = regiaoDaSelecao(); // só os países, em ordem alfabética (sem agrupar por região)
+    Object.keys(D.paises).filter(function (k) { return D.paises[k].r; }).sort(porNome)
+      .forEach(function (k) { sp.appendChild(el('option', { value: 'p:' + k, text: nomePais(k) })); });
     Object.keys(D.estados).forEach(function (k) {
       var g4 = el('optgroup', { label: t('estadosIrPara')(nomePais(k)) });
       D.estados[k].slice().sort(function (a, b) { return a.nome.localeCompare(b.nome, estado.l); })
