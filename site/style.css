@@ -346,3 +346,5 @@ button { font: inherit; color: inherit; }
 .legenda .cor-por-linha > span { display: block; margin-bottom: 4px; }
 .legenda .cor-por { display: flex; width: 100%; }
 .legenda .cor-por button { flex: 1 1 auto; padding: 4px 6px; font-size: 12px; white-space: nowrap; }
+.painel .aviso.situacao .nome-conf { font-weight: 700; color: var(--tinta); }
+.painel .papel-conf { font-size: 12px; font-weight: 700; color: var(--tinta-2); margin: 10px 0 4px; }

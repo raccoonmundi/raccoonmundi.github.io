@@ -402,7 +402,7 @@
     if (s.tipo === 'p') return { paises: [s.id], estado: null };
     if (s.tipo === 'e') return { paises: [], estado: s.id, pais: (D.estadoPorId[s.id] || {}).pais };
     if (s.tipo === 'r') return { paises: Object.keys(regiaoDoPais).filter(function (k) { return regiaoDoPais[k] === s.id; }), estado: null };
-    if (s.tipo === 't' || s.tipo === 'n') return { paises: paisesDoGrupo(s) || [], estado: null };
+    if (s.tipo === 't' || s.tipo === 'n' || s.tipo === 'g') return { paises: paisesDoGrupo(s) || [], estado: null };
     return { paises: [], estado: null };
   }
   function atualizarMonumentos() {
@@ -507,8 +507,8 @@
     if (tipo === 'r') {
       if (VISTAS[id]) voarPara(VISTAS[id][0], VISTAS[id][1] - (pequeno() ? 0.5 : 0));
       else voarParaArea(caixa(G.macros.features.filter(function (f) { return f.properties.r === id; })), 5);
-    } else if (tipo === 't' || tipo === 'n') {
-      var pts = (paisesDoGrupo({ tipo: tipo, id: id }) || []).map(function (k) { var p = D.paises[k]; return p && p.lx !== undefined ? ponto([p.ly, p.lx], {}) : null; }).filter(Boolean);
+    } else if (tipo === 't' || tipo === 'n' || tipo === 'g') {
+      var pts = focoDoGrupo({ tipo: tipo, id: id }).map(function (k) { var p = D.paises[k]; return p && p.lx !== undefined ? ponto([p.ly, p.lx], {}) : null; }).filter(Boolean);
       if (pts.length) voarParaArea(amplia(caixa(pts), 0.35), 4);
     } else if (tipo === 'e') {
       voarParaArea(amplia(caixa(G.estados.features.filter(function (f) { return f.properties.id === id; })), 0.2), 6);

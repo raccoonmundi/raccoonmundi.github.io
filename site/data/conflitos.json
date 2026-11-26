@@ -16,7 +16,21 @@
     "UA": "guerra",
     "RU": "fora"
    },
-   "mortos_2026": 70675
+   "mortos_2026": 70675,
+   "nomes": [
+    "Ukraine",
+    "Ukrainian",
+    "Kyiv",
+    "Kiev",
+    "Donbas",
+    "Donetsk",
+    "Zaporizhzhia",
+    "Kharkiv",
+    "Kherson",
+    "Zelensky",
+    "Zelenskyy"
+   ],
+   "area": "ucrania"
   },
   {
    "id": "ira-eua-israel",
@@ -36,7 +50,14 @@
     "BH": "atingido",
     "JO": "atingido"
    },
-   "mortos_2026": 3859
+   "mortos_2026": 3859,
+   "nomes": [
+    "Iran",
+    "Iranian",
+    "Tehran",
+    "Hormuz",
+    "IRGC"
+   ]
   },
   {
    "id": "iemen",
@@ -52,7 +73,16 @@
     "YE": "guerra",
     "SA": "fora"
    },
-   "mortos_2026": 6504
+   "mortos_2026": 6504,
+   "nomes": [
+    "Yemen",
+    "Yemeni",
+    "Houthi",
+    "Houthis",
+    "Aden",
+    "Sanaa",
+    "Mocha"
+   ]
   },
   {
    "id": "sudao",
@@ -67,7 +97,16 @@
    "paises": {
     "SD": "guerra"
    },
-   "mortos_2026": 3977
+   "mortos_2026": 3977,
+   "nomes": [
+    "Sudan",
+    "Sudanese",
+    "RSF",
+    "El Fasher",
+    "Khartoum",
+    "Darfur",
+    "Kordofan"
+   ]
   },
   {
    "id": "somalia",
@@ -82,7 +121,14 @@
    "paises": {
     "SO": "guerra"
    },
-   "mortos_2026": 3069
+   "mortos_2026": 3069,
+   "nomes": [
+    "Somalia",
+    "Somali",
+    "al-Shabaab",
+    "Al-Shabaab",
+    "Mogadishu"
+   ]
   },
   {
    "id": "paquistao-ttp",
@@ -97,7 +143,12 @@
    "paises": {
     "PK": "guerra"
    },
-   "mortos_2026": 2357
+   "mortos_2026": 2357,
+   "nomes": [
+    "TTP",
+    "Pakistani Taliban",
+    "Khyber Pakhtunkhwa"
+   ]
   },
   {
    "id": "paquistao-baloch",
@@ -112,7 +163,11 @@
    "paises": {
     "PK": "guerra"
    },
-   "mortos_2026": 1572
+   "mortos_2026": 1572,
+   "nomes": [
+    "Balochistan",
+    "Baloch"
+   ]
   },
   {
    "id": "etiopia-fano",
@@ -127,7 +182,11 @@
    "paises": {
     "ET": "guerra"
    },
-   "mortos_2026": 2116
+   "mortos_2026": 2116,
+   "nomes": [
+    "Fano",
+    "Amhara"
+   ]
   },
   {
    "id": "etiopia-tigre",
@@ -142,7 +201,12 @@
    "paises": {
     "ET": "guerra"
    },
-   "mortos_2026": 1040
+   "mortos_2026": 1040,
+   "nomes": [
+    "Tigray",
+    "TPLF",
+    "Mekelle"
+   ]
   },
   {
    "id": "nigeria-ei",
@@ -157,7 +221,12 @@
    "paises": {
     "NG": "guerra"
    },
-   "mortos_2026": 2033
+   "mortos_2026": 2033,
+   "nomes": [
+    "Boko Haram",
+    "ISWAP",
+    "Borno"
+   ]
   },
   {
    "id": "nigeria-noroeste",
@@ -172,7 +241,13 @@
    "paises": {
     "NG": "guerra"
    },
-   "mortos_2026": 1909
+   "mortos_2026": 1909,
+   "nomes": [
+    "Zamfara",
+    "Katsina",
+    "Sokoto",
+    "bandits"
+   ]
   },
   {
    "id": "burkina-jnim",
@@ -187,7 +262,11 @@
    "paises": {
     "BF": "guerra"
    },
-   "mortos_2026": 1810
+   "mortos_2026": 1810,
+   "nomes": [
+    "Burkina Faso",
+    "Burkinabe"
+   ]
   },
   {
    "id": "mali-jnim",
@@ -202,7 +281,13 @@
    "paises": {
     "ML": "guerra"
    },
-   "mortos_2026": 1007
+   "mortos_2026": 1007,
+   "nomes": [
+    "Mali",
+    "Malian",
+    "Bamako",
+    "JNIM"
+   ]
   },
   {
    "id": "congo-m23",
@@ -216,7 +301,13 @@
    "situacao_en": "Fighting continues in Kivu despite the Doha and Washington agreements.",
    "paises": {
     "CD": "guerra"
-   }
+   },
+   "nomes": [
+    "M23",
+    "Goma",
+    "Kivu",
+    "Bukavu"
+   ]
   },
   {
    "id": "mianmar",
@@ -230,7 +321,12 @@
    "situacao_en": "Nationwide civil war since the coup.",
    "paises": {
     "MM": "guerra"
-   }
+   },
+   "nomes": [
+    "Myanmar",
+    "Burma",
+    "Burmese"
+   ]
   },
   {
    "id": "israel-hezbollah",
@@ -246,7 +342,13 @@
     "LB": "conflito",
     "IL": "fora"
    },
-   "mortos_2026": 4597
+   "mortos_2026": 4597,
+   "nomes": [
+    "Hezbollah",
+    "Lebanon",
+    "Lebanese",
+    "Beirut"
+   ]
   },
   {
    "id": "israel-gaza",
@@ -262,7 +364,14 @@
     "PS": "conflito",
     "IL": "fora"
    },
-   "mortos_2026": 1302
+   "mortos_2026": 1302,
+   "nomes": [
+    "Gaza",
+    "Hamas",
+    "West Bank",
+    "Palestinian",
+    "Palestinians"
+   ]
   },
   {
    "id": "siria",
@@ -276,7 +385,14 @@
    "situacao_en": "Several smaller conflicts after Assad.",
    "paises": {
     "SY": "conflito"
-   }
+   },
+   "nomes": [
+    "Syria",
+    "Syrian",
+    "Damascus",
+    "Suwayda",
+    "Sweida"
+   ]
   },
   {
    "id": "iraque",
@@ -290,7 +406,12 @@
    "situacao_en": "New conflict linked to the Iran war.",
    "paises": {
     "IQ": "conflito"
-   }
+   },
+   "nomes": [
+    "Iraq",
+    "Iraqi",
+    "Baghdad"
+   ]
   },
   {
    "id": "paquistao-afeganistao",
@@ -305,7 +426,13 @@
    "paises": {
     "AF": "conflito",
     "PK": "guerra"
-   }
+   },
+   "nomes": [
+    "Afghanistan",
+    "Afghan",
+    "Torkham",
+    "Kabul"
+   ]
   },
   {
    "id": "afeganistao-interno",
@@ -319,7 +446,12 @@
    "situacao_en": "Smaller-scale insurgencies.",
    "paises": {
     "AF": "conflito"
-   }
+   },
+   "nomes": [
+    "ISIS-K",
+    "ISKP",
+    "Afghanistan"
+   ]
   },
   {
    "id": "india",
@@ -333,7 +465,13 @@
    "situacao_en": "Insurgency in the centre and east; Kashmir on alert.",
    "paises": {
     "IN": "conflito"
-   }
+   },
+   "nomes": [
+    "Maoist",
+    "Maoists",
+    "Naxal",
+    "Kashmir"
+   ]
   },
   {
    "id": "sudao-do-sul",
@@ -347,7 +485,10 @@
    "situacao_en": "Armed fighting below war level.",
    "paises": {
     "SS": "conflito"
-   }
+   },
+   "nomes": [
+    "South Sudan"
+   ]
   },
   {
    "id": "rca",
@@ -361,7 +502,10 @@
    "situacao_en": "Armed fighting below war level.",
    "paises": {
     "CF": "conflito"
-   }
+   },
+   "nomes": [
+    "Central African Republic"
+   ]
   },
   {
    "id": "niger",
@@ -375,7 +519,12 @@
    "situacao_en": "Armed fighting below war level.",
    "paises": {
     "NE": "conflito"
-   }
+   },
+   "nomes": [
+    "Niger",
+    "Nigerien",
+    "Niamey"
+   ]
   },
   {
    "id": "camaroes",
@@ -389,7 +538,11 @@
    "situacao_en": "Armed fighting below war level.",
    "paises": {
     "CM": "conflito"
-   }
+   },
+   "nomes": [
+    "Cameroon",
+    "Ambazonia"
+   ]
   },
   {
    "id": "mocambique",
@@ -403,7 +556,11 @@
    "situacao_en": "Armed fighting below war level.",
    "paises": {
     "MZ": "conflito"
-   }
+   },
+   "nomes": [
+    "Mozambique",
+    "Cabo Delgado"
+   ]
   },
   {
    "id": "tailandia-sul",
@@ -417,7 +574,11 @@
    "situacao_en": "Armed fighting below war level.",
    "paises": {
     "TH": "conflito"
-   }
+   },
+   "nomes": [
+    "Pattani",
+    "Narathiwat"
+   ]
   },
   {
    "id": "filipinas",
@@ -431,7 +592,12 @@
    "situacao_en": "Armed fighting below war level.",
    "paises": {
     "PH": "conflito"
-   }
+   },
+   "nomes": [
+    "Philippines",
+    "Mindanao",
+    "New People's Army"
+   ]
   },
   {
    "id": "papua",
@@ -445,7 +611,10 @@
    "situacao_en": "Armed fighting below war level.",
    "paises": {
     "ID": "conflito"
-   }
+   },
+   "nomes": [
+    "Papua"
+   ]
   },
   {
    "id": "mexico",
@@ -459,7 +628,15 @@
    "situacao_en": "Armed fighting below war level.",
    "paises": {
     "MX": "conflito"
-   }
+   },
+   "nomes": [
+    "cartel",
+    "cartels",
+    "Cartel",
+    "Sinaloa",
+    "Jalisco",
+    "CJNG"
+   ]
   },
   {
    "id": "haiti",
@@ -473,7 +650,12 @@
    "situacao_en": "Armed fighting below war level.",
    "paises": {
     "HT": "conflito"
-   }
+   },
+   "nomes": [
+    "Haiti",
+    "Haitian",
+    "Port-au-Prince"
+   ]
   },
   {
    "id": "colombia",
@@ -487,7 +669,14 @@
    "situacao_en": "Armed fighting below war level.",
    "paises": {
     "CO": "conflito"
-   }
+   },
+   "nomes": [
+    "ELN",
+    "FARC",
+    "Clan del Golfo",
+    "Colombia",
+    "Colombian"
+   ]
   },
   {
    "id": "equador",
@@ -501,7 +690,11 @@
    "situacao_en": "Armed fighting below war level.",
    "paises": {
     "EC": "conflito"
-   }
+   },
+   "nomes": [
+    "Ecuador",
+    "Ecuadorian"
+   ]
   },
   {
    "id": "benin-togo",
@@ -516,7 +709,11 @@
    "paises": {
     "BJ": "conflito",
     "TG": "conflito"
-   }
+   },
+   "nomes": [
+    "Benin",
+    "Togo"
+   ]
   },
   {
    "id": "china-taiwan",
@@ -531,7 +728,12 @@
    "paises": {
     "CN": "tensao",
     "TW": "tensao"
-   }
+   },
+   "nomes": [
+    "Taiwan",
+    "Taiwanese",
+    "Taipei"
+   ]
   },
   {
    "id": "russia-otan",
@@ -548,7 +750,16 @@
     "LT": "tensao",
     "LV": "tensao",
     "EE": "tensao"
-   }
+   },
+   "nomes": [
+    "NATO",
+    "Baltic",
+    "Baltics",
+    "Poland",
+    "Lithuania",
+    "Latvia",
+    "Estonia"
+   ]
   },
   {
    "id": "etiopia-eritreia",
@@ -562,7 +773,11 @@
    "situacao_en": "Diplomatic rupture and border tension.",
    "paises": {
     "ER": "tensao"
-   }
+   },
+   "nomes": [
+    "Eritrea",
+    "Eritrean"
+   ]
   },
   {
    "id": "eua-venezuela",
@@ -576,7 +791,12 @@
    "situacao_en": "A US operation in January, over the next day.",
    "paises": {
     "VE": "tensao"
-   }
+   },
+   "nomes": [
+    "Venezuela",
+    "Venezuelan",
+    "Maduro"
+   ]
   },
   {
    "id": "tailandia-camboja",
@@ -590,7 +810,11 @@
    "situacao_en": "Border fighting ended in a ceasefire.",
    "paises": {
     "KH": "tensao"
-   }
+   },
+   "nomes": [
+    "Cambodia",
+    "Cambodian"
+   ]
   }
  ],
  "paises": {

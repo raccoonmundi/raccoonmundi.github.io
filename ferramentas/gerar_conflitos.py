@@ -64,6 +64,53 @@ c("russia-otan","tensao","Rússia × OTAN (flanco leste)","Russia–NATO (easter
 c("etiopia-eritreia","tensao","Etiópia × Eritreia","Ethiopia–Eritrea","Etiópia × Eritreia","Ethiopia vs Eritrea","2025","Ruptura diplomática e tensão na fronteira.","Diplomatic rupture and border tension.", {"ER":"tensao"})
 c("eua-venezuela","tensao","EUA × Venezuela","US–Venezuela","EUA × Venezuela","US vs Venezuela","2026","Operação americana em janeiro, encerrada no dia seguinte.","A US operation in January, over the next day.", {"VE":"tensao"})
 c("tailandia-camboja","tensao","Tailândia × Camboja","Thailand–Cambodia","Tailândia × Camboja","Thailand vs Cambodia","2025","Combates na fronteira terminaram com cessar-fogo.","Border fighting ended in a ceasefire.", {"KH":"tensao"})
+# palavras (em inglês, como nos títulos traduzidos) que ligam uma notícia ao conflito
+NOMES = {
+ "russia-ucrania": ["Ukraine", "Ukrainian", "Kyiv", "Kiev", "Donbas", "Donetsk", "Zaporizhzhia", "Kharkiv", "Kherson", "Zelensky", "Zelenskyy"],
+ "ira-eua-israel": ["Iran", "Iranian", "Tehran", "Hormuz", "IRGC"],
+ "iemen": ["Yemen", "Yemeni", "Houthi", "Houthis", "Aden", "Sanaa", "Mocha"],
+ "sudao": ["Sudan", "Sudanese", "RSF", "El Fasher", "Khartoum", "Darfur", "Kordofan"],
+ "somalia": ["Somalia", "Somali", "al-Shabaab", "Al-Shabaab", "Mogadishu"],
+ "paquistao-ttp": ["TTP", "Pakistani Taliban", "Khyber Pakhtunkhwa"],
+ "paquistao-baloch": ["Balochistan", "Baloch"],
+ "etiopia-fano": ["Fano", "Amhara"],
+ "etiopia-tigre": ["Tigray", "TPLF", "Mekelle"],
+ "nigeria-ei": ["Boko Haram", "ISWAP", "Borno"],
+ "nigeria-noroeste": ["Zamfara", "Katsina", "Sokoto", "bandits"],
+ "burkina-jnim": ["Burkina Faso", "Burkinabe"],
+ "mali-jnim": ["Mali", "Malian", "Bamako", "JNIM"],
+ "congo-m23": ["M23", "Goma", "Kivu", "Bukavu"],
+ "mianmar": ["Myanmar", "Burma", "Burmese"],
+ "israel-hezbollah": ["Hezbollah", "Lebanon", "Lebanese", "Beirut"],
+ "israel-gaza": ["Gaza", "Hamas", "West Bank", "Palestinian", "Palestinians"],
+ "siria": ["Syria", "Syrian", "Damascus", "Suwayda", "Sweida"],
+ "iraque": ["Iraq", "Iraqi", "Baghdad"],
+ "paquistao-afeganistao": ["Afghanistan", "Afghan", "Torkham", "Kabul"],
+ "afeganistao-interno": ["ISIS-K", "ISKP", "Afghanistan"],
+ "india": ["Maoist", "Maoists", "Naxal", "Kashmir"],
+ "sudao-do-sul": ["South Sudan"],
+ "rca": ["Central African Republic"],
+ "niger": ["Niger", "Nigerien", "Niamey"],
+ "camaroes": ["Cameroon", "Ambazonia"],
+ "mocambique": ["Mozambique", "Cabo Delgado"],
+ "tailandia-sul": ["Pattani", "Narathiwat"],
+ "filipinas": ["Philippines", "Mindanao", "New People's Army"],
+ "papua": ["Papua"],
+ "mexico": ["cartel", "cartels", "Cartel", "Sinaloa", "Jalisco", "CJNG"],
+ "haiti": ["Haiti", "Haitian", "Port-au-Prince"],
+ "colombia": ["ELN", "FARC", "Clan del Golfo", "Colombia", "Colombian"],
+ "equador": ["Ecuador", "Ecuadorian"],
+ "benin-togo": ["Benin", "Togo"],
+ "china-taiwan": ["Taiwan", "Taiwanese", "Taipei"],
+ "russia-otan": ["NATO", "Baltic", "Baltics", "Poland", "Lithuania", "Latvia", "Estonia"],
+ "etiopia-eritreia": ["Eritrea", "Eritrean"],
+ "eua-venezuela": ["Venezuela", "Venezuelan", "Maduro"],
+ "tailandia-camboja": ["Cambodia", "Cambodian"],
+}
+AREA = {"russia-ucrania": "ucrania"}  # área hachurada ligada ao conflito (areas.json)
+for x in C:
+    x["nomes"] = NOMES.get(x["id"], [])
+    if x["id"] in AREA: x["area"] = AREA[x["id"]]
 ordem = {"guerra":5, "fora":4, "conflito":3, "atingido":2, "tensao":1}
 paises = {}
 for x in C:
