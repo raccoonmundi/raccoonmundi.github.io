@@ -64,3 +64,7 @@ Mapa: Raccoon Mundi, com dados do Natural Earth e do GDELT.
 Depois de mudar qualquer um dos dois, rode `python3 ferramentas/montar_globo.py`.
 No globo, a seleção sobe em 3D e a câmera inclina; `globo.html?3d=0` volta ao destaque plano (sombra, área erguida e contorno).
 Monumentos 3D em estilo maquete (blocos próprios, sem modelos de terceiros): `site/data/monumentos.json` é gerado por `python3 ferramentas/gerar_monumentos.py` (edite o gerador). A referência de cada país aparece a partir do zoom de país ou com o país selecionado; as referências dos estados brasileiros, só com o estado selecionado. Maquetes vizinhas que encavalariam ficam só com a mais conhecida (ou a da seleção). `globo.html?monumentos=0` desliga.
+
+## Quase em tempo real
+
+O workflow roda a cada 15 minutos (2 min depois de cada arquivo novo do GDELT). Entre as rodadas, o histórico do robô fica no cache do GitHub Actions (`robo/estado.py`); os dados só vão para o repositório uma vez por dia (rodada das 7h40 de Brasília) e quando a execução vem de um push ou é manual. A página confere `data/noticias.json` a cada 5 minutos e se atualiza sem recarregar.

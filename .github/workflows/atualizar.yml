@@ -15,10 +15,12 @@ on:
       - "site/**"
       - "robo/**"
       - ".github/workflows/atualizar.yml"
-  # Coleta 2x por dia (fase de teste, ligado em 26/11/2026). Horário em UTC: 8h47 e 20h47 = 5h47 e 17h47 em Brasília.
-  # Cada rodada também atualiza a área ocupada na Ucrânia (DeepStateMap).
+  # Quase em tempo real (ligado em 26/11/2026): a cada 15 min, 2 min depois de o GDELT publicar o arquivo novo
+  # (:00, :15, :30, :45). Cada rodada também atualiza a área ocupada na Ucrânia (DeepStateMap) e publica o site.
+  # A rodada das 10h40 UTC (7h40 em Brasília) também grava os dados no repositório (1x por dia).
   schedule:
-    - cron: "47 8,20 * * *"
+    - cron: "2,17,32,47 * * * *"
+    - cron: "40 10 * * *"
 
 permissions:
   contents: write
@@ -55,6 +57,17 @@ jobs:
           key: argos-${{ runner.os }}-inicio
           restore-keys: argos-${{ runner.os }}-
 
+      # Entre as rodadas, o histórico do robô fica no cache (o repositório só recebe os dados 1x por dia)
+      - name: Restaurar o estado da última coleta
+        uses: actions/cache/restore@v4
+        with:
+          path: .estado-robo
+          key: estado-robo-${{ github.run_id }}
+          restore-keys: estado-robo-
+
+      - name: Usar o estado mais recente (cache ou repositório)
+        run: python robo/estado.py restaurar
+
       - name: Instalar dependências
         run: |
           pip install torch --index-url https://download.pytorch.org/whl/cpu
@@ -82,7 +95,18 @@ jobs:
             ~/.cache/mapa-raccoon-mundi
           key: argos-${{ runner.os }}-${{ hashFiles('.argos-list') }}
 
-      - name: Gravar dados no repositório
+      - name: Guardar o estado desta coleta
+        run: python robo/estado.py guardar
+
+      - name: Salvar o estado no cache
+        uses: actions/cache/save@v4
+        continue-on-error: true
+        with:
+          path: .estado-robo
+          key: estado-robo-${{ github.run_id }}
+
+      - name: Gravar dados no repositório (1x por dia, e quando a rodada vem de push ou é manual)
+        if: github.event_name != 'schedule' || github.event.schedule == '40 10 * * *'
         run: |
           git config user.name "robo-raccoon-mundi"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

@@ -1,3 +1,4 @@
 __pycache__/
 *.pyc
 .argos-list
+.estado-robo/

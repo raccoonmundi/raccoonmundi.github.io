@@ -1542,6 +1542,31 @@
   function carregar(u) {
     return fetch(u, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(u + ' ' + r.status); return r.json(); });
   }
+  function aplicarNoticias(n) {
+    D.itens = n.itens || []; D.volume = n.volume || {}; D.coletados = n.paises_coletados || null;
+    D.tom = n.tom_medio || {};
+    D.gerado = n.gerado_em || null; D.teste = !!n.teste; D.fontesConhecidas = !!n.somente_fontes_conhecidas;
+    D.porPais = {};
+    D.itens.forEach(function (it) { (D.porPais[it.pais] = D.porPais[it.pais] || []).push(it); });
+    Object.keys(D.porPais).forEach(function (k) { D.porPais[k].sort(function (a, b) { return b.visto_em < a.visto_em ? -1 : 1; }); });
+    calcularEscalas();
+  }
+  /* Quase em tempo real: o robô publica a cada 15 min; a página confere a cada 5 min (e ao voltar para a aba)
+     e, se os dados mudaram, atualiza cores, Em foco e rodapé sem recarregar. O painel só é redesenhado se a
+     pessoa não estiver lendo mais abaixo nele. */
+  function buscarNovidades() {
+    if (document.hidden || !D.gerado) return;
+    carregar('data/noticias.json').then(function (n) {
+      if (!n || !n.gerado_em || n.gerado_em === D.gerado) return;
+      var painel = document.getElementById('painel-conteudo'), lendo = painel && painel.scrollTop > 40;
+      aplicarNoticias(n);
+      renderTemas(); renderLegenda(); renderRodape(); restyle();
+      if (!lendo) renderPainel();
+    }).catch(function () { /* sem rede: tenta de novo na próxima */ });
+  }
+  setInterval(buscarNovidades, 5 * 60 * 1000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) buscarNovidades(); });
+
   Promise.all([
     carregar('data/paises.json'), carregar('data/macrorregioes.json'), carregar('data/temas.json'),
     carregar('data/noticias.json').catch(function () { return {}; }),
@@ -1567,13 +1592,7 @@
     D.paises = r[0]; D.macros = r[1]; D.temas = r[2] || [];
     D.macros.forEach(function (m) { D.macroPorId[m.id] = m; });
     D.temas.forEach(function (tm) { D.temaPorId[tm.id] = tm; });
-    var n = r[3] || {};
-    D.itens = n.itens || []; D.volume = n.volume || {}; D.coletados = n.paises_coletados || null;
-    D.tom = n.tom_medio || {};
-    D.gerado = n.gerado_em || null; D.teste = !!n.teste; D.fontesConhecidas = !!n.somente_fontes_conhecidas;
-    D.itens.forEach(function (it) { (D.porPais[it.pais] = D.porPais[it.pais] || []).push(it); });
-    Object.keys(D.porPais).forEach(function (k) { D.porPais[k].sort(function (a, b) { return b.visto_em < a.visto_em ? -1 : 1; }); });
-    calcularEscalas();
+    aplicarNoticias(r[3] || {});
     lerRota();
     var guerraOk = r[7] && r[7].features && r[7].features.length;
     var guerraComCrimeia = guerraOk && r[7].ocupado_km2 !== undefined; // arquivo novo já soma a Crimeia e o Donbas de 2014
