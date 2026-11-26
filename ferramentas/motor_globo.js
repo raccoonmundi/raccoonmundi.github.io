@@ -68,10 +68,10 @@
   function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
 
   function corDoPais(k) {
-    var r = regiaoDoPais[k], tema = estado.sel && estado.sel.tipo === 't' ? D.temaPorId[estado.sel.id] : null;
+    var r = regiaoDoPais[k], grupo = paisesDoGrupo(estado.sel);
     if (!r) return { cor: P.semRegiao, op: 1 };
     var c = corDoValor(k, r);
-    return { cor: c, op: tema && (tema.paises || []).indexOf(k) < 0 ? 0.35 : 1 };
+    return { cor: c, op: grupo && grupo.indexOf(k) < 0 ? 0.35 : 1 };
   }
   function estiloDisputa() { return { color: P.disputa, weight: 1.1 }; }
   function estiloGuerra(f) { return { color: P.guerra, weight: f && f.properties.tipo === 'ocupado' ? 1.4 : 0.8 }; }
@@ -238,7 +238,7 @@
       } else if (s.tipo === 'e') {
         preench = contorno = (G.estados ? G.estados.features : []).filter(function (f) { return f.properties.id === s.id; });
       } else {
-        var alvo = s.tipo === 'p' ? [s.id] : ((D.temaPorId[s.id] || {}).paises || []);
+        var alvo = s.tipo === 'p' ? [s.id] : (paisesDoGrupo(s) || []);
         preench = contorno = G.paises.features.filter(function (f) { return alvo.indexOf(f.properties.k) >= 0; });
       }
     }
@@ -398,7 +398,7 @@
     if (s.tipo === 'p') return { paises: [s.id], estado: null };
     if (s.tipo === 'e') return { paises: [], estado: s.id, pais: (D.estadoPorId[s.id] || {}).pais };
     if (s.tipo === 'r') return { paises: Object.keys(regiaoDoPais).filter(function (k) { return regiaoDoPais[k] === s.id; }), estado: null };
-    if (s.tipo === 't') return { paises: ((D.temaPorId[s.id] || {}).paises || []), estado: null };
+    if (s.tipo === 't' || s.tipo === 'n') return { paises: paisesDoGrupo(s) || [], estado: null };
     return { paises: [], estado: null };
   }
   function atualizarMonumentos() {
@@ -503,8 +503,8 @@
     if (tipo === 'r') {
       if (VISTAS[id]) voarPara(VISTAS[id][0], VISTAS[id][1] - (pequeno() ? 0.5 : 0));
       else voarParaArea(caixa(G.macros.features.filter(function (f) { return f.properties.r === id; })), 5);
-    } else if (tipo === 't') {
-      var pts = ((D.temaPorId[id] || {}).paises || []).map(function (k) { var p = D.paises[k]; return p && p.lx !== undefined ? ponto([p.ly, p.lx], {}) : null; }).filter(Boolean);
+    } else if (tipo === 't' || tipo === 'n') {
+      var pts = (paisesDoGrupo({ tipo: tipo, id: id }) || []).map(function (k) { var p = D.paises[k]; return p && p.lx !== undefined ? ponto([p.ly, p.lx], {}) : null; }).filter(Boolean);
       if (pts.length) voarParaArea(amplia(caixa(pts), 0.35), 4);
     } else if (tipo === 'e') {
       voarParaArea(amplia(caixa(G.estados.features.filter(function (f) { return f.properties.id === id; })), 0.2), 6);

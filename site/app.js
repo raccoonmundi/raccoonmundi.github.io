@@ -10,6 +10,11 @@
       mapa: 'MAP', titulo: 'The world through its local press', irPara: 'Go to', escolha: 'Go to…',
       regioes: 'Regions', paises: 'Countries', mundo: 'World', regiao: 'Region', pais: 'Country',
       tema: 'In focus', emFoco: 'IN FOCUS', ultimas: 'Latest from the local press',
+      focoAria: 'Most-covered world stories', focoTipo: 'Story in focus', posFoco: function (i, n) { return i + ' of ' + n; },
+      veiculosCurto: function (v) { return v === 1 ? '1 outlet' : v + ' outlets'; },
+      repercussao: function (v, p) { return (v === 1 ? '1 outlet' : v + ' outlets') + ' in ' + (p === 1 ? '1 country' : p + ' countries'); },
+      comoCadaPais: "How each country's press covered it", focoSumiu: 'This story is no longer in the selected period.',
+      focoDica: 'Same story, grouped from the local press of different countries. The more countries and outlets, the higher it ranks.',
       noticias: function (n) { return n === 1 ? '1 story' : num(n) + ' stories'; },
       dePaises: function (m) { return m === 1 ? 'from 1 country' : 'from ' + m + ' countries'; },
       periodo: function (h) { return 'last ' + h + ' h'; },
@@ -57,6 +62,11 @@
       mapa: 'MAPA', titulo: 'O mundo pela imprensa local', irPara: 'Ir para', escolha: 'Ir para…',
       regioes: 'Regiões', paises: 'Países', mundo: 'Mundo', regiao: 'Região', pais: 'País',
       tema: 'Em foco', emFoco: 'EM FOCO', ultimas: 'O mais recente da imprensa local',
+      focoAria: 'Notícias do mundo mais repercutidas', focoTipo: 'Notícia em foco', posFoco: function (i, n) { return i + ' de ' + n; },
+      veiculosCurto: function (v) { return v === 1 ? '1 veículo' : v + ' veículos'; },
+      repercussao: function (v, p) { return (v === 1 ? '1 veículo' : v + ' veículos') + ' em ' + (p === 1 ? '1 país' : p + ' países'); },
+      comoCadaPais: 'Como a imprensa de cada país noticiou', focoSumiu: 'Esta notícia saiu do período escolhido.',
+      focoDica: 'A mesma história, juntada da imprensa local de vários países. Quanto mais países e veículos, mais alto fica.',
       noticias: function (n) { return n === 1 ? '1 notícia' : num(n) + ' notícias'; },
       dePaises: function (m) { return m === 1 ? 'de 1 país' : 'de ' + m + ' países'; },
       periodo: function (h) { return 'últimas ' + h + ' h'; },
@@ -280,7 +290,123 @@
     return t('ha')(Math.round(h / 24), t('u').d);
   }
 
-  /* ---------- rota (#r= #p= #t= &l= &h=) ---------- */
+  /* ---------- em foco: as notícias do mundo mais repercutidas ----------
+     Junta as matérias (níveis 1 e 2) que contam a mesma história: títulos em inglês parecidos, com mais peso
+     para nomes próprios, números e palavras raras no período. A história sobe pelos países e veículos que
+     noticiaram; precisa ter ao menos uma matéria do nível 1 (Mundo). As 5 primeiras passam na esteira. */
+  var PARADA = {};
+  ('a an the of to in on for and or but with at by from as is are was were be been has have had will would could should may might can it its ' +
+   'this that these those after before over under into amid about against than then their his her they them he she we our you your not no new ' +
+   'says said say more most up out off what who why how when where which while just also first last two three one year years day days week news ' +
+   'report reports via per vs within during least people xinhua').split(' ').forEach(function (w) { PARADA[w] = 1; });
+  function palavrasDoTitulo(txt) {
+    var out = {}, pal = (txt || '').match(/[A-Za-zÀ-ÿ0-9][A-Za-zÀ-ÿ0-9'’.\-]*/g) || [];
+    pal.forEach(function (x, k) {
+      var b = x.toLowerCase().replace(/['’]s$/, '').replace(/^['’.\-]+|['’.\-]+$/g, '');
+      if (b === 'u.s' || b === 'us' || b === 'usa') b = 'united';
+      if (b === 'states' || b.length < 3 || PARADA[b]) return;
+      if (b.length > 4 && b.charAt(b.length - 1) === 's') b = b.slice(0, -1);
+      out[b] = (k > 0 && /^[A-ZÀ-Þ]/.test(x)) || /^[0-9]/.test(x) ? 1.5 : 1;
+    });
+    return out;
+  }
+  // países citados nos títulos (nome em inglês e português, e alguns atalhos comuns nas manchetes)
+  var ATALHOS_PAIS = { 'U.S.': 'US', 'US': 'US', 'USA': 'US', 'American': 'US', 'Washington': 'US', 'Trump': 'US', 'Pentagon': 'US', 'White House': 'US',
+    'Russian': 'RU', 'Moscow': 'RU', 'Kremlin': 'RU', 'Putin': 'RU', 'Chinese': 'CN', 'Beijing': 'CN', 'Xi': 'CN',
+    'Ukrainian': 'UA', 'Kyiv': 'UA', 'Kiev': 'UA', 'Zelensky': 'UA', 'Zelenskyy': 'UA', 'Iranian': 'IR', 'Tehran': 'IR',
+    'Israeli': 'IL', 'Netanyahu': 'IL', 'Gaza': 'PS', 'Palestinian': 'PS', 'Saudi': 'SA', 'Riyadh': 'SA', 'Egyptian': 'EG', 'Cairo': 'EG', 'Giza': 'EG',
+    'Indian': 'IN', 'New Delhi': 'IN', 'Modi': 'IN', 'Brazilian': 'BR', 'Lula': 'BR', 'German': 'DE', 'Berlin': 'DE', 'Nigerian': 'NG', 'Abuja': 'NG',
+    'Houthis': 'YE', 'Houthi': 'YE', 'Yemeni': 'YE', 'Syrian': 'SY', 'Lebanese': 'LB', 'Hezbollah': 'LB', 'Turkish': 'TR', 'Japanese': 'JP', 'Tokyo': 'JP',
+    'British': 'GB', 'London': 'GB', 'UK': 'GB', 'French': 'FR', 'Paris': 'FR', 'Macron': 'FR', 'Taiwanese': 'TW', 'Taipei': 'TW',
+    'North Korea': 'KP', 'Pyongyang': 'KP', 'South Korea': 'KR', 'Seoul': 'KR', 'Pakistani': 'PK', 'Venezuelan': 'VE', 'Mexican': 'MX',
+    'Abkhazia': 'GE', 'South Ossetia': 'GE', 'Georgian': 'GE' };
+  var buscaPais = null;
+  function paisesCitados(txt) {
+    if (!buscaPais) {
+      buscaPais = [];
+      var junta = function (nome, k) { if (nome && nome.length > 2) buscaPais.push({ k: k, re: new RegExp('(^|[^A-Za-zÀ-ÿ])' + nome.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![A-Za-zÀ-ÿ])') }); };
+      Object.keys(D.paises).forEach(function (k) { var p = D.paises[k]; if (p.r) { junta(p.nome_en, k); junta(p.nome_pt, k); } });
+      Object.keys(ATALHOS_PAIS).forEach(function (a) { if (D.paises[ATALHOS_PAIS[a]]) junta(a, ATALHOS_PAIS[a]); });
+    }
+    var achou = {};
+    buscaPais.forEach(function (b) { if (b.re.test(txt)) achou[b.k] = 1; });
+    return Object.keys(achou);
+  }
+  var cacheFoco = { chave: null, lista: [] };
+  function historias() {
+    var chave = estado.h + '|' + D.itens.length + '|' + D.gerado;
+    if (cacheFoco.chave === chave) return cacheFoco.lista;
+    var its = D.itens.filter(function (i) { return (i.nivel === 1 || i.nivel === 2) && noPeriodo(i); });
+    var df = {}, n = its.length;
+    var pal = its.map(function (i) { var w = palavrasDoTitulo(i.titulo_en || i.titulo_original); Object.keys(w).forEach(function (k) { df[k] = (df[k] || 0) + 1; }); return w; });
+    var pesos = pal.map(function (w) {
+      var o = { w: {}, s: 0 };
+      Object.keys(w).forEach(function (k) { o.w[k] = w[k] * Math.log((n + 1) / (df[k] + 0.5)); o.s += o.w[k]; });
+      return o;
+    });
+    var sim = function (a, b) {
+      var sh = 0; Object.keys(a.w).forEach(function (k) { if (b.w[k] !== undefined) sh += Math.min(a.w[k], b.w[k]); });
+      return [sh, sh / Math.max(1e-9, Math.min(a.s, b.s))];
+    };
+    var ordem = its.map(function (x, k) { return k; }).sort(function (a, b) { return its[a].visto_em < its[b].visto_em ? 1 : its[a].visto_em > its[b].visto_em ? -1 : 0; });
+    var grupos = [];
+    ordem.forEach(function (k) { // entra no grupo mais parecido: média de semelhança ≥ 0,3 e ao menos um par forte
+      var melhor = null, bs = 0;
+      grupos.forEach(function (g) {
+        var soma = 0, forte = 0;
+        g.forEach(function (j) { var r = sim(pesos[k], pesos[j]); soma += r[1]; if (r[0] > forte) forte = r[0]; });
+        var media = soma / g.length;
+        if (forte >= 5 && media >= 0.3 && media > bs) { melhor = g; bs = media; }
+      });
+      if (melhor) melhor.push(k); else grupos.push([k]);
+    });
+    var lista = grupos.map(function (g) {
+      var membros = g.map(function (k) { return its[k]; });
+      if (!membros.some(function (i) { return i.nivel === 1; })) return null;
+      var fontes = {}, veiculos = {}, citados = {};
+      membros.forEach(function (i) {
+        fontes[i.pais] = (fontes[i.pais] || 0) + 1; veiculos[i.veiculo] = 1;
+        paisesCitados(i.titulo_en || '').forEach(function (k) { citados[k] = (citados[k] || 0) + 1; });
+      });
+      var mk = g[0], ms = -1; // manchete: a matéria do nível 1 mais parecida com as demais
+      g.forEach(function (k) {
+        if (its[k].nivel !== 1) return;
+        var s2 = 0; g.forEach(function (j) { if (j !== k) s2 += sim(pesos[k], pesos[j])[1]; });
+        if (s2 > ms) { ms = s2; mk = k; }
+      });
+      var minimo = Math.max(1, Math.ceil(membros.length * 0.3));
+      var envolvidos = Object.keys(citados).filter(function (k) { return citados[k] >= minimo; }).sort(function (a, b) { return citados[b] - citados[a]; });
+      var paisesFonte = Object.keys(fontes).sort(function (a, b) { return fontes[b] - fontes[a] || nomePais(a).localeCompare(nomePais(b)); });
+      return { id: its[mk].id, manchete: its[mk], itens: membros, paisesFonte: paisesFonte, nVeiculos: Object.keys(veiculos).length,
+        envolvidos: envolvidos, pontos: 2 * paisesFonte.length + Object.keys(veiculos).length, recente: membros[0].visto_em };
+    }).filter(Boolean);
+    lista.sort(function (a, b) { return b.pontos - a.pontos || (a.recente < b.recente ? 1 : -1); });
+    cacheFoco = { chave: chave, lista: lista };
+    return lista;
+  }
+  function historiasFoco() { // as 5 da esteira; sem repercussão suficiente, completa com as do Mundo mais recentes de outros países
+    var top = [], vistos = {};
+    historias().forEach(function (h) {
+      if (top.length >= 5) return;
+      if (h.nVeiculos < 2 && vistos[h.paisesFonte[0]]) return;
+      top.push(h); vistos[h.paisesFonte[0]] = 1;
+    });
+    return top;
+  }
+  function historiaPorId(id) {
+    var hs = historias();
+    for (var i = 0; i < hs.length; i++) if (hs[i].id === id || hs[i].itens.some(function (x) { return x.id === id; })) return hs[i];
+    return null;
+  }
+  function paisesDoGrupo(s) { // tema ou notícia em foco: países destacados no mapa
+    if (!s) return null;
+    if (s.tipo === 't') return (D.temaPorId[s.id] || {}).paises || [];
+    if (s.tipo === 'n') { var h = historiaPorId(s.id); return h ? (h.envolvidos.length ? h.envolvidos : h.paisesFonte) : []; }
+    return null;
+  }
+  function tituloExib(it) { return estado.l === 'pt' ? (it.titulo_pt || it.titulo_en || it.titulo_original) : (it.titulo_en || it.titulo_original); }
+
+  /* ---------- rota (#r= #p= #t= #n= &l= &h=) ---------- */
   function lerRota() {
     var q = new URLSearchParams(location.hash.replace(/^#/, ''));
     if (q.get('l') === 'pt' || q.get('l') === 'en') estado.l = q.get('l');
@@ -289,6 +415,7 @@
     if (q.get('e') && D.estadoPorId[q.get('e')]) estado.sel = { tipo: 'e', id: q.get('e') };
     else if (q.get('a') && D.areaPorId[q.get('a')]) estado.sel = { tipo: 'a', id: q.get('a') };
     else if (q.get('t') && D.temaPorId[q.get('t')]) estado.sel = { tipo: 't', id: q.get('t') };
+    else if (q.get('n') && historiaPorId(q.get('n'))) estado.sel = { tipo: 'n', id: q.get('n') };
     else if (q.get('p') && D.paises[q.get('p')]) estado.sel = { tipo: 'p', id: q.get('p') };
     else if (q.get('r') && D.macroPorId[q.get('r')]) estado.sel = { tipo: 'r', id: q.get('r') };
     else estado.sel = null;
@@ -306,13 +433,13 @@
 
   /* ---------- mapa ---------- */
   function estiloPais(f) {
-    var k = f.properties.k, r = f.properties.r, tema = estado.sel && estado.sel.tipo === 't' ? D.temaPorId[estado.sel.id] : null;
+    var k = f.properties.k, r = f.properties.r, grupo = paisesDoGrupo(estado.sel);
     if (!r) return { fillColor: P.semRegiao, fillOpacity: 1, color: P.bordaRegiao, weight: 0.4 };
     var fill = corDoValor(k, r);
     var s = estado.modo === 'regioes'
       ? { fillColor: fill, fillOpacity: 1, color: P.bordaRegiao, weight: 0.4, opacity: 0.9, lineJoin: 'round' }
       : { fillColor: fill, fillOpacity: 1, color: P.bordaPais, weight: 0.8, opacity: 0.85, lineJoin: 'round' };
-    if (tema && (tema.paises || []).indexOf(k) < 0) s.fillOpacity = 0.35;
+    if (grupo && grupo.indexOf(k) < 0) s.fillOpacity = 0.35;
     return s;
   }
   function estiloMacro() {
@@ -347,7 +474,7 @@
     } else if (s.tipo === 'e') {
       preench = contorno = G.estados.features.filter(function (f) { return f.properties.id === s.id; });
     } else {
-      var alvo = s.tipo === 'p' ? [s.id] : ((D.temaPorId[s.id] || {}).paises || []);
+      var alvo = s.tipo === 'p' ? [s.id] : (paisesDoGrupo(s) || []);
       preench = contorno = G.paises.features.filter(function (f) { return alvo.indexOf(f.properties.k) >= 0; });
     }
     if (!contorno.length) return;
@@ -442,8 +569,8 @@
     if (tipo === 'r') {
       if (VISTAS[id]) voarPara(VISTAS[id][0], VISTAS[id][1] - (window.innerWidth < 820 ? 0.5 : 0));
       else if (macroLayer[id]) voarParaArea(macroLayer[id].getBounds(), 5);
-    } else if (tipo === 't') { // tema: enquadra os países envolvidos pelos pontos dos nomes
-      var pts = ((D.temaPorId[id] || {}).paises || []).map(function (k) { var p = D.paises[k]; return p && p.lx !== undefined ? [p.ly, p.lx] : null; })
+    } else if (tipo === 't' || tipo === 'n') { // tema ou notícia em foco: enquadra os países envolvidos pelos pontos dos nomes
+      var pts = (paisesDoGrupo({ tipo: tipo, id: id }) || []).map(function (k) { var p = D.paises[k]; return p && p.lx !== undefined ? [p.ly, p.lx] : null; })
         .filter(Boolean);
       if (pts.length) voarParaArea(L.latLngBounds(pts).pad(0.35), 4);
     } else if (tipo === 'e') {
@@ -754,6 +881,25 @@
       add(el('div', { class: 'lista-paises' }, (tm.paises || []).filter(function (i) { return D.paises[i]; }).map(botaoPais)));
       add(el('p', { class: 'resumo', text: resumo(itt) }));
       lista(variar(itt, 15, 4)).forEach(add);
+    } else if (s.tipo === 'n') {
+      var hi = historiaPorId(s.id), top = historiasFoco(), pos = top.indexOf(hi);
+      add(el('button', { type: 'button', class: 'voltar', text: t('voltar')(t('mundo')), on: { click: function () { selecionar(null, false); } } }));
+      add(el('div', { class: 'tipo', text: t('focoTipo') + (pos >= 0 ? ' · ' + t('posFoco')(pos + 1, top.length) : '') }));
+      if (!hi) { add(el('p', { class: 'vazio', text: t('focoSumiu') })); }
+      else {
+        add(el('h2', { text: tituloExib(hi.manchete) }));
+        add(el('p', { class: 'resumo', text: t('repercussao')(hi.nVeiculos, hi.paisesFonte.length) + ' · ' + relativo(hi.recente) }));
+        add(el('p', { class: 'dica-secao', text: t('focoDica') }));
+        if (hi.envolvidos.length) {
+          add(el('div', { class: 'secao', text: t('paisesEnvolvidos') }));
+          add(el('div', { class: 'lista-paises' }, hi.envolvidos.filter(function (k) { return D.paises[k]; }).map(botaoPais)));
+        }
+        add(el('div', { class: 'secao', text: t('comoCadaPais') }));
+        hi.paisesFonte.forEach(function (k) {
+          add(el('button', { type: 'button', class: 'pais-fonte', text: nomePais(k), on: { click: function () { selecionar({ tipo: 'p', id: k }, true); } } }));
+          lista(hi.itens.filter(function (i) { return i.pais === k; })).forEach(add);
+        });
+      }
     }
     c.scrollTop = 0;
     var h2 = c.querySelector('h2'), viva = document.getElementById('anuncio');
@@ -802,16 +948,34 @@
     }
     if (D.areas.length) g.appendChild(el('div', { class: 'dica', text: t('legClique') }));
   }
+  /* Em foco: esteira com as 5 notícias do mundo mais repercutidas. Passa sozinha e para com o mouse ou o foco;
+     quem prefere menos movimento vê a lista parada, com rolagem. */
+  var chaveFoco = '';
   function renderTemas() {
-    var n = document.getElementById('temas'); n.textContent = '';
-    var ativos = D.temas.filter(function (x) { return x.ativo !== false; });
-    n.hidden = !ativos.length;
+    var n = document.getElementById('temas'), top = historiasFoco();
+    var chave = estado.l + '|' + top.map(function (h) { return h.id + ':' + h.nVeiculos; }).join(',');
+    var marcar = function () {
+      n.querySelectorAll('.manchete').forEach(function (b) { b.setAttribute('aria-pressed', estado.sel && estado.sel.tipo === 'n' && historiaPorId(estado.sel.id) && historiaPorId(estado.sel.id).id === b.dataset.id ? 'true' : 'false'); });
+    };
+    if (chave === chaveFoco) { marcar(); return; }
+    chaveFoco = chave; n.textContent = '';
+    n.setAttribute('aria-label', t('focoAria'));
+    n.hidden = !top.length;
     n.appendChild(el('span', { class: 'rotulo', text: t('emFoco') }));
-    ativos.forEach(function (tm) {
-      var on = estado.sel && estado.sel.tipo === 't' && estado.sel.id === tm.id;
-      n.appendChild(el('button', { type: 'button', class: 'chip', 'aria-pressed': on ? 'true' : 'false', text: nomeTema(tm),
-        on: { click: function () { selecionar(on ? null : { tipo: 't', id: tm.id }, false); } } }));
-    });
+    var metade = function (copia) {
+      return el('div', copia ? { class: 'metade', 'aria-hidden': 'true' } : { class: 'metade' }, top.map(function (h, i) {
+        var b = el('button', { type: 'button', class: 'manchete', 'data-id': h.id, title: tituloExib(h.manchete),
+          on: { click: function () { selecionar({ tipo: 'n', id: h.id }, true); } } },
+          [el('span', { class: 'pos', text: String(i + 1) }), el('span', { class: 'txt', text: tituloExib(h.manchete) }),
+           el('span', { class: 'meta', text: t('veiculosCurto')(h.nVeiculos) })]);
+        if (copia) b.tabIndex = -1;
+        return b;
+      }));
+    };
+    var faixa = el('div', { class: 'faixa' }, [metade(false), metade(true)]);
+    n.appendChild(el('div', { class: 'esteira' }, [faixa]));
+    marcar();
+    requestAnimationFrame(function () { faixa.style.setProperty('--duracao', Math.max(20, Math.round(faixa.scrollWidth / 2 / 45)) + 's'); });
   }
   function renderIrPara() {
     var s = document.getElementById('ir-para'); s.textContent = '';
@@ -884,7 +1048,7 @@
       var b = e.target.closest('button'); if (!b) return; estado.l = b.dataset.l; gravarRota(); renderTudo();
     });
     document.getElementById('periodo').addEventListener('click', function (e) {
-      var b = e.target.closest('button'); if (!b) return; estado.h = +b.dataset.h; gravarRota(); atualizarBotoes(); renderPainel();
+      var b = e.target.closest('button'); if (!b) return; estado.h = +b.dataset.h; gravarRota(); atualizarBotoes(); renderTemas(); renderPainel(); restyle();
     });
     document.getElementById('modo').addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return; estado.modo = b.dataset.m; atualizarModo(); restyle();
