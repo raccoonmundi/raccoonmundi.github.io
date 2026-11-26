@@ -8,6 +8,7 @@
   var T = {
     en: {
       mapa: 'MAP', titulo: 'The world through its local press', irPara: 'Go to', escolha: 'Go to…', filtroRegiao: 'Region', filtroPais: 'Country', escolhaRegiao: 'Region…', escolhaPais: 'Country…',
+      filtroArea: 'Wars and disputes', escolhaArea: 'Wars and disputes…', grupoGuerras: 'At war', grupoDisputas: 'Disputed areas',
       regioes: 'Regions', paises: 'Countries', mundo: 'World', regiao: 'Region', pais: 'Country',
       tema: 'In focus', emFoco: 'IN FOCUS', ultimas: 'Latest from the local press',
       focoAria: 'Most-covered world stories', focoTipo: 'Story in focus', posFoco: function (i, n) { return i + ' of ' + n; },
@@ -60,6 +61,7 @@
     },
     pt: {
       mapa: 'MAPA', titulo: 'O mundo pela imprensa local', irPara: 'Ir para', escolha: 'Ir para…', filtroRegiao: 'Região', filtroPais: 'País', escolhaRegiao: 'Região…', escolhaPais: 'País…',
+      filtroArea: 'Guerras e disputas', escolhaArea: 'Guerras e disputas…', grupoGuerras: 'Em guerra', grupoDisputas: 'Áreas disputadas',
       regioes: 'Regiões', paises: 'Países', mundo: 'Mundo', regiao: 'Região', pais: 'País',
       tema: 'Em foco', emFoco: 'EM FOCO', ultimas: 'O mais recente da imprensa local',
       focoAria: 'Notícias do mundo mais repercutidas', focoTipo: 'Notícia em foco', posFoco: function (i, n) { return i + ' de ' + n; },
@@ -977,8 +979,7 @@
     marcar();
     requestAnimationFrame(function () { faixa.style.setProperty('--duracao', Math.max(20, Math.round(faixa.scrollWidth / 2 / 45)) + 's'); });
   }
-  /* Filtros: um para região (e as áreas em guerra ou disputa) e outro para país (e os estados do piloto).
-     Mostram a seleção atual. */
+  /* Filtros: região, país (com os estados do piloto) e guerras e disputas. Mostram a seleção atual. */
   function regiaoDaSelecao() {
     var s = estado.sel; if (!s) return null;
     if (s.tipo === 'r') return s.id;
@@ -990,16 +991,20 @@
     var porNome = function (a, b) { return nomePais(a).localeCompare(nomePais(b), estado.l); };
     sr.textContent = ''; sr.setAttribute('aria-label', t('filtroRegiao')); sr.parentNode.title = t('filtroRegiao');
     sr.appendChild(el('option', { value: '', text: t('escolhaRegiao') }));
-    var g1 = el('optgroup', { label: t('regioes') });
     D.macros.slice().sort(function (a, b) { return nomeRegiao(a.id).localeCompare(nomeRegiao(b.id), estado.l); })
-      .forEach(function (r) { g1.appendChild(el('option', { value: 'r:' + r.id, text: nomeRegiao(r.id) })); });
-    sr.appendChild(g1);
-    if (D.areas.length) {
-      var g2 = el('optgroup', { label: t('areasIrPara') });
-      D.areas.slice().sort(function (a, b) { return nomeArea(a).localeCompare(nomeArea(b), estado.l); })
-        .forEach(function (a) { g2.appendChild(el('option', { value: 'a:' + a.id, text: nomeArea(a) })); });
-      sr.appendChild(g2);
-    }
+      .forEach(function (r) { sr.appendChild(el('option', { value: 'r:' + r.id, text: nomeRegiao(r.id) })); });
+    var sa = document.getElementById('filtro-area');
+    sa.textContent = ''; sa.setAttribute('aria-label', t('filtroArea')); sa.parentNode.title = t('filtroArea');
+    sa.parentNode.hidden = !D.areas.length;
+    sa.appendChild(el('option', { value: '', text: t('escolhaArea') }));
+    [['guerra', t('grupoGuerras')], ['disputa', t('grupoDisputas')]].forEach(function (g) {
+      var as = D.areas.filter(function (a) { return (a.tipo === 'guerra') === (g[0] === 'guerra'); })
+        .sort(function (a, b) { return nomeArea(a).localeCompare(nomeArea(b), estado.l); });
+      if (!as.length) return;
+      var og = el('optgroup', { label: g[1] });
+      as.forEach(function (a) { og.appendChild(el('option', { value: 'a:' + a.id, text: nomeArea(a) })); });
+      sa.appendChild(og);
+    });
     sp.textContent = ''; sp.setAttribute('aria-label', t('filtroPais')); sp.parentNode.title = t('filtroPais');
     sp.appendChild(el('option', { value: '', text: t('escolhaPais') }));
     var reg = regiaoDaSelecao(); // só os países, em ordem alfabética (sem agrupar por região)
@@ -1011,7 +1016,8 @@
         .forEach(function (e) { g4.appendChild(el('option', { value: 'e:' + e.id, text: e.nome })); });
       sp.appendChild(g4);
     });
-    sr.value = s && s.tipo === 'a' ? 'a:' + s.id : reg ? 'r:' + reg : '';
+    sr.value = reg ? 'r:' + reg : '';
+    sa.value = s && s.tipo === 'a' ? 'a:' + s.id : '';
     sp.value = s && (s.tipo === 'p' || s.tipo === 'e') ? s.tipo + ':' + s.id : '';
   }
   function atualizarBotoes() {
@@ -1068,7 +1074,7 @@
     document.getElementById('modo').addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return; estado.modo = b.dataset.m; atualizarModo(); restyle();
     });
-    ['filtro-regiao', 'filtro-pais'].forEach(function (id) {
+    ['filtro-regiao', 'filtro-pais', 'filtro-area'].forEach(function (id) {
       document.getElementById(id).addEventListener('change', function (e) {
         var v = e.target.value; if (!v) { renderIrPara(); return; }
         selecionar({ tipo: v.slice(0, 1), id: v.slice(2) }, true);

@@ -105,7 +105,7 @@ button { font: inherit; color: inherit; }
 }
 .ir-para select {
   font: inherit; font-size: 13px; padding: 6px 8px; border: 1px solid var(--borda); border-radius: 8px;
-  background: var(--superficie); color: var(--tinta); max-width: 200px; width: 170px;
+  background: var(--superficie); color: var(--tinta); max-width: 190px; width: 160px;
 }
 
 /* Faixa dos temas em foco + período */
@@ -318,4 +318,15 @@ button { font: inherit; color: inherit; }
 @media (max-width: 820px) {
   .temas .rotulo { display: none; } /* no celular, a esteira usa a largura toda; os números já dizem o que é */
   #periodo button { padding: 0 8px; font-size: 12px; }
+}
+/* Três filtros (região, país, guerras e disputas) */
+@media (max-width: 1180px) and (min-width: 821px) { .ir-para select { width: 132px; } }
+@media (max-width: 820px) {
+  .sufixo { display: none; }
+  .ir-para, .botao-tema { width: 36px; height: 36px; }
+  #idioma button { padding: 0 8px; height: 36px; min-height: 36px; }
+}
+@media (max-width: 370px) {
+  .ir-para, .botao-tema { width: 34px; height: 34px; }
+  .controles { gap: 3px; }
 }

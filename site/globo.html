@@ -59,7 +59,7 @@
 <body>
 <header class="topo">
   <div class="marca">
-    <div class="sobretitulo">RACCOON MUNDI · <span data-i18n="mapa">MAP</span><span class="selo-prototipo">GLOBO</span></div>
+    <div class="sobretitulo">RACCOON MUNDI<span class="sufixo"> · <span data-i18n="mapa">MAP</span></span><span class="selo-prototipo">GLOBO</span></div>
     <h1 data-i18n="titulo">The world through its local press</h1>
   </div>
   <div class="controles">
@@ -72,6 +72,11 @@
       <svg class="icone-busca" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
       <span class="sr" data-i18n="filtroPais">Country</span>
       <select id="filtro-pais" aria-label="Country"></select>
+    </label>
+    <label class="ir-para" title="Wars and disputes">
+      <svg class="icone-busca" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M4.8 13.5l8.7-8.7M8 19.2L19.2 8M14 19.5l5.5-5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span class="sr" data-i18n="filtroArea">Wars and disputes</span>
+      <select id="filtro-area" aria-label="Wars and disputes"></select>
     </label>
     <div class="segmentado" role="group" aria-label="Language" id="idioma">
       <button type="button" data-l="en">EN</button>
