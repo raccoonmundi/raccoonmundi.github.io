@@ -340,22 +340,48 @@
     for (var i = 0; i < n * 2; i++) { var g = Math.PI / 2 + i / (n * 2) * 2 * Math.PI, r = i % 2 ? r2 : r1; pts.push([x + r * Math.cos(g), y + r * Math.sin(g)]); }
     pts.push(pts[0]); return pts;
   }
-  function pecasDe(m) { // cada peça vira { anel, b, t, c } (em unidades)
+  function anelElipse(x, y, rx, ry, n, a0, a1, sentido) { // arco de elipse (graus), sem fechar
+    var pts = [], ini = a0 === undefined ? 0 : a0, fim = a1 === undefined ? 360 : a1, k = Math.max(3, Math.round(n * (fim - ini) / 360));
+    for (var i = 0; i <= k; i++) { var g = (sentido > 0 ? ini + (fim - ini) * i / k : fim - (fim - ini) * i / k) * Math.PI / 180; pts.push([x + rx * Math.cos(g), y + ry * Math.sin(g)]); }
+    return pts;
+  }
+  function fechar(anel) { var a = anel[0], z = anel[anel.length - 1]; return a[0] === z[0] && a[1] === z[1] ? anel : anel.concat([a]); }
+  function pecasDe(m) { // cada peça vira { aneis, b, t, c } (em unidades); o primeiro anel é o contorno, os outros são furos
     if (m._pecas) return m._pecas;
     var out = [];
     (m.pecas || []).forEach(function (p) {
       var f = p[0];
-      if (f === 'r') out.push({ anel: anelRet(p[1], p[2], p[3], p[4]), b: p[5], t: p[6], c: p[7] });
-      else if (f === 'c') out.push({ anel: anelCirc(p[1], p[2], p[3], p[7] || 10), b: p[4], t: p[5], c: p[6] });
-      else if (f === 'o') out.push({ anel: anelOcto(p[1], p[2], p[3], p[4]), b: p[5], t: p[6], c: p[7] });
-      else if (f === 'e') out.push({ anel: anelEstrela(p[1], p[2], p[3], p[4], p[5]), b: p[6], t: p[7], c: p[8] });
-      else if (f === 'deg') { // pirâmide em degraus: cada degrau é um bloco um pouco menor
-        var n = p[4], h = p[5] / n, b0 = p[8] || 0;
-        for (var i = 0; i < n; i++) { var l = p[3] * (1 - i / n); out.push({ anel: anelRet(p[1], p[2], l, l), b: b0 + i * h, t: b0 + (i + 1) * h, c: i % 2 && p[7] ? p[7] : p[6] }); }
+      if (f === 'r') out.push({ aneis: [anelRet(p[1], p[2], p[3], p[4])], b: p[5], t: p[6], c: p[7] });
+      else if (f === 'c') out.push({ aneis: [anelCirc(p[1], p[2], p[3], p[7] || 10)], b: p[4], t: p[5], c: p[6] });
+      else if (f === 'o') out.push({ aneis: [anelOcto(p[1], p[2], p[3], p[4])], b: p[5], t: p[6], c: p[7] });
+      else if (f === 'e') out.push({ aneis: [anelEstrela(p[1], p[2], p[3], p[4], p[5])], b: p[6], t: p[7], c: p[8] });
+      else if (f === 'p') out.push({ aneis: p[1].map(fechar), b: p[2], t: p[3], c: p[4] });
+      else if (f === 'a') { // anel elíptico [a, x, y, rx, ry, rx interno, ry interno, base, topo, cor, lados, ângulo inicial, ângulo final]
+        var n = p[10] || 24, setor = p[11] !== undefined;
+        if (!setor) {
+          var fora = fechar(anelElipse(p[1], p[2], p[3], p[4], n, 0, 360, 1).slice(0, -1));
+          out.push({ aneis: p[5] > 0 ? [fora, fechar(anelElipse(p[1], p[2], p[5], p[6], n, 0, 360, -1).slice(0, -1))] : [fora], b: p[7], t: p[8], c: p[9] });
+        } else {
+          var arco = anelElipse(p[1], p[2], p[3], p[4], n, p[11], p[12], 1);
+          arco = arco.concat(p[5] > 0 ? anelElipse(p[1], p[2], p[5], p[6], n, p[11], p[12], -1) : [[p[1], p[2]]]);
+          out.push({ aneis: [fechar(arco)], b: p[7], t: p[8], c: p[9] });
+        }
+      } else if (f === 'deg') { // pirâmide em degraus: cada degrau é um bloco um pouco menor
+        var nd = p[4], h = p[5] / nd, b0 = p[8] || 0;
+        for (var i = 0; i < nd; i++) { var l = p[3] * (1 - i / nd); out.push({ aneis: [anelRet(p[1], p[2], l, l)], b: b0 + i * h, t: b0 + (i + 1) * h, c: i % 2 && p[7] ? p[7] : p[6] }); }
       }
     });
+    var raio = 0; // alcance da maquete a partir do ponto (para não encavalar com a vizinha)
+    out.forEach(function (q) { q.aneis[0].forEach(function (pt) { raio = Math.max(raio, Math.sqrt(pt[0] * pt[0] + pt[1] * pt[1])); }); });
+    m._raio = raio; // em unidades (a escala do monumento entra em kmPorUnidade)
     return (m._pecas = out);
   }
+  function distanciaKm(a, b) {
+    var r = Math.PI / 180, dl = (b.lat - a.lat) * r, dg = (b.lon - a.lon) * r;
+    var h = Math.sin(dl / 2) * Math.sin(dl / 2) + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dg / 2) * Math.sin(dg / 2);
+    return 12742 * Math.asin(Math.min(1, Math.sqrt(h)));
+  }
+  function kmPorUnidade(m, z) { return 40075.016686 * Math.cos(m.lat * Math.PI / 180) / (512 * Math.pow(2, z)) * escalaMonumento(z) * (m.escala || 1); }
   function escurecer(hex, k) {
     var n = parseInt(hex.slice(1), 16);
     return '#' + [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(function (v) { return ('0' + Math.round(v * k).toString(16)).slice(-2); }).join('');
@@ -379,10 +405,24 @@
     if (!MAPA_PRONTO || !MON.length || !mapa.getSource('monumentos')) return;
     var z = Math.round(mapa.getZoom() * 20) / 20, agora = performance.now(), sel = selecaoDosMonumentos();
     var sol = NOITE ? posicaoSol(agoraReal()) : null, escuro = temaAtual() === 'escuro', animando = false, lista = [];
+    var c = mapa.getCenter(), centro = { lat: c.lat, lon: c.lng }, cv = mapa.getCanvas();
+    var alcance = Math.sqrt(cv.clientWidth * cv.clientWidth + cv.clientHeight * cv.clientHeight) * 0.75 * 40075.016686 / (512 * Math.pow(2, z)); // km até a borda da tela, com folga
+    var candidatos = [];
     MON.forEach(function (m) {
+      pecasDe(m);
       var naSelecao = sel.paises.indexOf(m.pais) >= 0 || sel.pais === m.pais;
       var ligado = m.nivel === 'estado' ? sel.estado === m.estado : (z >= ZOOM_MONUMENTOS || naSelecao);
-      if (!MONUMENTOS || !ligado) { delete monDesde[m.id]; return; }
+      if (ligado && !(m.nivel === 'estado' || sel.estado === m.estado) && distanciaKm(centro, m) > alcance) ligado = false; // fora da vista
+      if (MONUMENTOS && ligado) candidatos.push({ m: m, sel: m.nivel === 'estado' || naSelecao ? 0 : 1 });
+    });
+    candidatos.sort(function (a, b) { return a.sel - b.sel || (a.m.prio || 5) - (b.m.prio || 5); });
+    var aceitos = [];
+    candidatos.forEach(function (x) {
+      var m = x.m, livre = aceitos.every(function (o) { return distanciaKm(m, o) > (m._raio * kmPorUnidade(m, z) + o._raio * kmPorUnidade(o, z)) * 0.85; });
+      if (livre) aceitos.push(m);
+    });
+    MON.forEach(function (m) {
+      if (aceitos.indexOf(m) < 0) { delete monDesde[m.id]; return; }
       if (!monDesde[m.id]) monDesde[m.id] = agora;
       var f = Math.min(1, (agora - monDesde[m.id]) / 450);
       if (f < 1) animando = true;
@@ -394,11 +434,11 @@
       monChave = chave;
       var fs = [];
       lista.forEach(function (x) {
-        var m = x.m, u = 40075016.686 * Math.cos(m.lat * Math.PI / 180) / (512 * Math.pow(2, z)) * escalaMonumento(z); // metros por unidade
+        var m = x.m, u = kmPorUnidade(m, z) * 1000; // metros por unidade
         var kx = u / (111320 * Math.cos(m.lat * Math.PI / 180)), ky = u / 110574;
         pecasDe(m).forEach(function (p) {
           fs.push({ type: 'Feature', properties: { m: m.id, cor: x.luz < 1 ? escurecer(p.c, x.luz) : p.c, b: x.base + p.b * u * x.cresce, h: x.base + p.t * u * x.cresce },
-            geometry: { type: 'Polygon', coordinates: [p.anel.map(function (q) { return [m.lon + q[0] * kx, m.lat + q[1] * ky]; })] } });
+            geometry: { type: 'Polygon', coordinates: p.aneis.map(function (a) { return a.map(function (q) { return [m.lon + q[0] * kx, m.lat + q[1] * ky]; }); }) } });
         });
       });
       mapa.getSource('monumentos').setData({ type: 'FeatureCollection', features: fs });
@@ -539,7 +579,7 @@
       if (estado.sel) enquadrar(estado.sel.tipo, estado.sel.id);
       carregarMonumentos();
     });
-    mapa.on('zoom', agendarMonumentos);
+    mapa.on('move', agendarMonumentos); // zoom e arrasto: entram os monumentos que chegam à vista
     mapa.on('mousemove', function (e) {
       var mon = monumentoEm(e.point);
       if (mon) { mapa.getCanvas().style.cursor = 'pointer'; marcarHover(null); mostrarDica(e.point, textoMonumento(mon)); return; }
