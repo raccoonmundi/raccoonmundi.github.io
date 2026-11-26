@@ -7,7 +7,7 @@
 
   var T = {
     en: {
-      mapa: 'MAP', titulo: 'The world through its local press', irPara: 'Go to', escolha: 'Go to…', filtroRegiao: 'Region', filtroPais: 'Country', escolhaRegiao: 'Region…', escolhaPais: 'Country…',
+      mapa: 'MAP', titulo: 'The world through its local press', irPara: 'Go to', escolha: 'Go to…', filtroRegiao: 'Region', filtroPais: 'Country', escolhaRegiao: 'Region…', escolhaPais: 'Country…', filtroEstado: 'State', escolhaEstado: 'State…',
       filtroArea: 'Conflicts', escolhaArea: 'Conflicts…', grupoGuerras: 'Wars', grupoConflitos: 'Armed conflicts', grupoTensoes: 'Tensions', grupoDisputas: 'Territorial disputes',
       tipoConf: { guerra: 'War', conflito: 'Armed conflict', tensao: 'Tension' }, papeis: 'Countries and their role', noticiasConflito: 'News about the conflict',
       semNoticiasConflito: function (h) { return 'No news about this conflict in the last ' + h + ' h.'; }, verConflito: 'See the conflict', verOcupada: 'See the occupied area',
@@ -66,7 +66,7 @@
       erro: 'Could not load the map data. Try reloading the page.', expandir: 'Expand panel', legenda: 'Legend', modoEscuro: 'Dark mode'
     },
     pt: {
-      mapa: 'MAPA', titulo: 'O mundo pela imprensa local', irPara: 'Ir para', escolha: 'Ir para…', filtroRegiao: 'Região', filtroPais: 'País', escolhaRegiao: 'Região…', escolhaPais: 'País…',
+      mapa: 'MAPA', titulo: 'O mundo pela imprensa local', irPara: 'Ir para', escolha: 'Ir para…', filtroRegiao: 'Região', filtroPais: 'País', escolhaRegiao: 'Região…', escolhaPais: 'País…', filtroEstado: 'Estado', escolhaEstado: 'Estado…',
       filtroArea: 'Conflitos', escolhaArea: 'Conflitos…', grupoGuerras: 'Guerras', grupoConflitos: 'Conflitos armados', grupoTensoes: 'Tensões', grupoDisputas: 'Disputas territoriais',
       tipoConf: { guerra: 'Guerra', conflito: 'Conflito armado', tensao: 'Tensão' }, papeis: 'Países e o papel de cada um', noticiasConflito: 'Notícias sobre o conflito',
       semNoticiasConflito: function (h) { return 'Sem notícias sobre este conflito nas últimas ' + h + ' h.'; }, verConflito: 'Ver o conflito', verOcupada: 'Ver a área ocupada',
@@ -1095,7 +1095,7 @@
     marcar();
     requestAnimationFrame(function () { faixa.style.setProperty('--duracao', Math.max(20, Math.round(faixa.scrollWidth / 2 / 45)) + 's'); });
   }
-  /* Filtros: região, país (com os estados do piloto) e guerras e disputas. Mostram a seleção atual. */
+  /* Filtros: região, país, estado (só com o Brasil ou um estado dele selecionado) e conflitos. Mostram a seleção atual. */
   function regiaoDaSelecao() {
     var s = estado.sel; if (!s) return null;
     if (s.tipo === 'r') return s.id;
@@ -1133,15 +1133,19 @@
     var reg = regiaoDaSelecao(); // só os países, em ordem alfabética (sem agrupar por região)
     Object.keys(D.paises).filter(function (k) { return D.paises[k].r; }).sort(porNome)
       .forEach(function (k) { sp.appendChild(el('option', { value: 'p:' + k, text: nomePais(k) })); });
-    Object.keys(D.estados).forEach(function (k) {
-      var g4 = el('optgroup', { label: t('estadosIrPara')(nomePais(k)) });
-      D.estados[k].slice().sort(function (a, b) { return a.nome.localeCompare(b.nome, estado.l); })
-        .forEach(function (e) { g4.appendChild(el('option', { value: 'e:' + e.id, text: e.nome })); });
-      sp.appendChild(g4);
-    });
+    var se = document.getElementById('filtro-estado'), pe = paisDaSelecao(); // estados: só no país com estados (piloto: Brasil)
+    se.textContent = ''; se.setAttribute('aria-label', t('filtroEstado')); se.parentNode.title = t('filtroEstado');
+    se.parentNode.hidden = !pe;
+    document.body.classList.toggle('com-estados', !!pe);
+    if (pe) {
+      se.appendChild(el('option', { value: '', text: t('escolhaEstado') }));
+      D.estados[pe].slice().sort(function (a, b) { return a.nome.localeCompare(b.nome, estado.l); })
+        .forEach(function (e) { se.appendChild(el('option', { value: 'e:' + e.id, text: e.nome })); });
+      se.value = s && s.tipo === 'e' ? 'e:' + s.id : '';
+    }
     sr.value = reg ? 'r:' + reg : '';
     sa.value = s && (s.tipo === 'a' || s.tipo === 'g') ? s.tipo + ':' + s.id : '';
-    sp.value = s && (s.tipo === 'p' || s.tipo === 'e') ? s.tipo + ':' + s.id : '';
+    sp.value = s && s.tipo === 'p' ? 'p:' + s.id : s && s.tipo === 'e' && D.estadoPorId[s.id] ? 'p:' + D.estadoPorId[s.id].pais : '';
   }
   function atualizarBotoes() {
     document.querySelectorAll('#idioma button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.l === estado.l ? 'true' : 'false'); });
@@ -1198,7 +1202,7 @@
     document.getElementById('modo').addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return; estado.modo = b.dataset.m; atualizarModo(); restyle();
     });
-    ['filtro-regiao', 'filtro-pais', 'filtro-area'].forEach(function (id) {
+    ['filtro-regiao', 'filtro-pais', 'filtro-estado', 'filtro-area'].forEach(function (id) {
       document.getElementById(id).addEventListener('change', function (e) {
         var v = e.target.value; if (!v) { renderIrPara(); return; }
         selecionar({ tipo: v.slice(0, 1), id: v.slice(2) }, true);

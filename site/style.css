@@ -361,3 +361,7 @@ button { font: inherit; color: inherit; }
   .lentes .segmentado { display: none; }
   .lentes #lentes-select { display: block; min-height: 34px; }
 }
+/* Filtro de estado: só aparece com o Brasil (ou um estado dele) selecionado */
+.ir-para[hidden] { display: none !important; }
+@media (max-width: 1180px) and (min-width: 821px) { .com-estados .ir-para select { width: 118px; } }
+@media (max-width: 400px) { .com-estados .sobretitulo { font-size: 9.5px; letter-spacing: .03em; } .com-estados .controles { gap: 3px; } .com-estados .ir-para, .com-estados .botao-tema { width: 33px; } }
