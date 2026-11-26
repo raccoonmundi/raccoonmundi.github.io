@@ -40,7 +40,7 @@
       fronteiras: 'Borders: Natural Earth (de facto status); disputed areas are hatched.',
       creditos: 'Map: Raccoon Mundi, with data from ',
       legTitulo: 'Geopolitical stories, last 24 h', menos: 'fewer', mais: 'more',
-      corPor: 'Color by', corVolume: 'Volume', corTom: 'Tone', legTituloTom: 'Tone of the coverage, last 24 h',
+      corPor: 'Color by', corPaises: 'Countries', corVolume: 'Volume', corTom: 'Tone', legTituloTom: 'Tone of the coverage, last 24 h',
       tomMenos: 'more negative', tomMais: 'less negative', tomMedio: function (v) { return 'tone ' + v; },
       tomPainel: function (v) { return 'Average tone of the coverage (24 h): ' + v + ' (GDELT scale, negative = more negative wording).'; },
       legSem: 'No stories', legSemColeta: 'Not collected yet', legDisputa: 'Disputed area (Natural Earth)',
@@ -93,7 +93,7 @@
       fronteiras: 'Fronteiras: Natural Earth (situação de fato); áreas disputadas hachuradas.',
       creditos: 'Mapa: Raccoon Mundi, com dados do ',
       legTitulo: 'Notícias geopolíticas, últimas 24 h', menos: 'menos', mais: 'mais',
-      corPor: 'Cor por', corVolume: 'Quantidade', corTom: 'Tom', legTituloTom: 'Tom da cobertura, últimas 24 h',
+      corPor: 'Cor por', corPaises: 'Países', corVolume: 'Quantidade', corTom: 'Tom', legTituloTom: 'Tom da cobertura, últimas 24 h',
       tomMenos: 'mais negativo', tomMais: 'menos negativo', tomMedio: function (v) { return 'tom ' + v; },
       tomPainel: function (v) { return 'Tom médio da cobertura (24 h): ' + v + ' (escala do GDELT; negativo = linguagem mais negativa).'; },
       legSem: 'Sem notícias', legSemColeta: 'Ainda sem coleta', legDisputa: 'Área disputada (Natural Earth)',
@@ -128,6 +128,7 @@
     claro: {
       cores: ['#f6e3d6', '#eebfa2', '#e0916a', '#c9643a', '#a8400f'],
       tons: ['#a8352c', '#dc8a76', '#eee5d9', '#93c3bf', '#2f8580'],
+      paises: ['#efe0a8', '#c5dba8', '#f3c7a4', '#d8c9e6', '#e9bfc8', '#d9c9a9'], // mapa político: vizinhos com cores diferentes
       zero: '#e9e3d7', semColeta: '#dcd7ce', semRegiao: '#e4dfd6', amostraBorda: '#d6cfc2',
       bordaRegiao: '#ffffff', bordaMacro: '#ffffff', bordaPais: '#7d776c', bordaEstado: 'rgba(255,255,255,0.95)',
       destaque: '#1f2a33', sombra: '#1f2a33', sombraOp: 0.45,
@@ -140,6 +141,7 @@
     escuro: {
       cores: ['#4b3126', '#713c23', '#9d4b23', '#cc602b', '#f3874e'],
       tons: ['#d2604f', '#8a4a40', '#3b4046', '#3e706c', '#6ec0b8'],
+      paises: ['#6d6440', '#4c6140', '#70523e', '#574c69', '#6a4651', '#5f5444'],
       zero: '#2c333a', semColeta: '#20272e', semRegiao: '#262d34', amostraBorda: '#454f58',
       bordaRegiao: '#111820', bordaMacro: '#0d151b', bordaPais: '#5b656e', bordaEstado: 'rgba(13,21,27,0.95)',
       destaque: '#f3ede3', sombra: '#000000', sombraOp: 0.8,
@@ -159,7 +161,7 @@
   var VISTAS_PAIS = { 'US': [[40, -98], 3], 'RU': [[62, 95], 2.5], 'NZ': [[-41, 173], 4.5], 'FJ': [[-17.8, 178], 6], 'FR': [[46.6, 2.4], 5] };
   var LIMIAR_PAISES = 4;
 
-  var estado = { l: 'en', h: 24, modo: 'regioes', sel: null, cor: 'volume' };
+  var estado = { l: 'en', h: 24, modo: 'regioes', sel: null, cor: 'paises' };
   var LIMITES_TOM = [-4, -3, -2, -1];
   var D = { paises: {}, macros: [], macroPorId: {}, temas: [], temaPorId: {}, areas: [], areaPorId: {}, estados: {}, estadoPorId: {}, itens: [], porPais: {},
             volume: {}, coletados: null, gerado: null, teste: false };
@@ -264,6 +266,7 @@
   }
   /* cor de um país (modo Países) ou da região dele (modo Regiões), por quantidade ou por tom */
   function corDoValor(k, r) {
+    if (estado.cor === 'paises') return D.corPais && D.corPais[k] !== undefined ? P.paises[D.corPais[k] % P.paises.length] : P.semRegiao;
     if (estado.cor === 'tom') return estado.modo === 'regioes' ? corTom(tomRegiao(r)) : corTom(coletado(k) ? D.tom[k] : null);
     return estado.modo === 'regioes' ? cor(volRegiao(r), LIMITES_REGIAO) : cor(coletado(k) ? (volPais(k) || 0) : null, LIMITES_PAIS);
   }
@@ -426,7 +429,7 @@
   function lerRota() {
     var q = new URLSearchParams(location.hash.replace(/^#/, ''));
     if (q.get('l') === 'pt' || q.get('l') === 'en') estado.l = q.get('l');
-    estado.cor = q.get('c') === 'tom' ? 'tom' : 'volume';
+    estado.cor = ['volume', 'tom'].indexOf(q.get('c')) >= 0 ? q.get('c') : 'paises'; // ao abrir: cada país com a sua cor
     if (['12', '24', '48'].indexOf(q.get('h')) >= 0) estado.h = +q.get('h');
     if (q.get('e') && D.estadoPorId[q.get('e')]) estado.sel = { tipo: 'e', id: q.get('e') };
     else if (q.get('a') && D.areaPorId[q.get('a')]) estado.sel = { tipo: 'a', id: q.get('a') };
@@ -442,7 +445,7 @@
     if (estado.sel) q.set(estado.sel.tipo, estado.sel.id);
     if (estado.l !== 'en') q.set('l', estado.l);
     if (estado.h !== 24) q.set('h', String(estado.h));
-    if (estado.cor === 'tom') q.set('c', 'tom');
+    if (estado.cor !== 'paises') q.set('c', estado.cor);
     var h = q.toString();
     history.replaceState(null, '', h ? '#' + h : location.pathname + location.search);
   }
@@ -946,17 +949,19 @@
   function mudarCor(m) { estado.cor = m; gravarRota(); renderLegenda(); renderPainel(); restyle(); }
   function renderLegenda() {
     var g = document.getElementById('legenda'); g.textContent = ''; g.removeAttribute('aria-hidden');
-    var porTom = estado.cor === 'tom';
+    var porTom = estado.cor === 'tom', soPaises = estado.cor === 'paises';
     var botao = function (m, txt) {
       return el('button', { type: 'button', 'aria-pressed': estado.cor === m ? 'true' : 'false', text: txt, on: { click: function () { mudarCor(m); } } });
     };
     g.appendChild(el('div', { class: 'cor-por-linha' }, [el('span', { text: t('corPor') }),
-      el('div', { class: 'segmentado cor-por', role: 'group', 'aria-label': t('corPor') }, [botao('volume', t('corVolume')), botao('tom', t('corTom'))])]));
-    g.appendChild(el('div', { text: t(porTom ? 'legTituloTom' : 'legTitulo') }));
-    g.appendChild(el('div', { class: 'escala' }, (porTom ? P.tons : P.cores).map(function (c) { return el('span', { style: 'background:' + c }); })));
-    g.appendChild(el('div', { style: 'display:flex;justify-content:space-between' }, [el('span', { text: t(porTom ? 'tomMenos' : 'menos') }), el('span', { text: t(porTom ? 'tomMais' : 'mais') })]));
-    if (!porTom) g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.zero + ';border:1px solid ' + P.amostraBorda }), t('legSem')]));
-    if (D.teste || !D.gerado) g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.semColeta }), t('legSemColeta')]));
+      el('div', { class: 'segmentado cor-por', role: 'group', 'aria-label': t('corPor') }, [botao('paises', t('corPaises')), botao('volume', t('corVolume')), botao('tom', t('corTom'))])]));
+    if (!soPaises) { // com cada país na sua cor, não há escala de notícias
+      g.appendChild(el('div', { text: t(porTom ? 'legTituloTom' : 'legTitulo') }));
+      g.appendChild(el('div', { class: 'escala' }, (porTom ? P.tons : P.cores).map(function (c) { return el('span', { style: 'background:' + c }); })));
+      g.appendChild(el('div', { style: 'display:flex;justify-content:space-between' }, [el('span', { text: t(porTom ? 'tomMenos' : 'menos') }), el('span', { text: t(porTom ? 'tomMais' : 'mais') })]));
+      if (!porTom) g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.zero + ';border:1px solid ' + P.amostraBorda }), t('legSem')]));
+      if (D.teste || !D.gerado) g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.semColeta }), t('legSemColeta')]));
+    }
     g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.legDisputa }), t('legDisputa')]));
     if (G.guerraMeta) {
       g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.legOcupado }), t('legOcupado')(dataCurta(G.guerraMeta.data))]));
@@ -1120,8 +1125,10 @@
     carregar('geo/zonas_guerra.geojson').catch(function () { return null; }),
     carregar('data/areas.json').catch(function () { return []; }),
     carregar('data/estados.json').catch(function () { return {}; }),
-    carregar('geo/estados/BR.geojson').catch(function () { return null; })
+    carregar('geo/estados/BR.geojson').catch(function () { return null; }),
+    carregar('data/cores_paises.json').catch(function () { return {}; })
   ]).then(function (r) {
+    D.corPais = r[11] || {};
     Object.keys(r[9] || {}).forEach(function (k) {
       if (k.charAt(0) === '_') return;
       D.estados[k] = r[9][k];
