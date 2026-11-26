@@ -506,7 +506,7 @@ def estados():
 
 def main():
     caminho = os.path.join(RAIZ, "site", "data", "monumentos.json")
-    lista = [dict(m) for m in ORIGINAIS] + paises()  # + estados()
+    lista = [dict(m) for m in ORIGINAIS] + paises() + estados()
     ids = [m["id"] for m in lista]
     assert len(ids) == len(set(ids)), "id repetido"
     saida = {
