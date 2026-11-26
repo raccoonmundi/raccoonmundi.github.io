@@ -15,9 +15,10 @@ on:
       - "site/**"
       - "robo/**"
       - ".github/workflows/atualizar.yml"
-  # Fase 1: coleta 2x por dia. Horário em UTC: 8h47 e 20h47 = 5h47 e 17h47 em Brasília.
-  # schedule:
-  #   - cron: "47 8,20 * * *"
+  # Coleta 2x por dia (fase de teste, ligado em 26/11/2026). Horário em UTC: 8h47 e 20h47 = 5h47 e 17h47 em Brasília.
+  # Cada rodada também atualiza a área ocupada na Ucrânia (DeepStateMap).
+  schedule:
+    - cron: "47 8,20 * * *"
 
 permissions:
   contents: write
