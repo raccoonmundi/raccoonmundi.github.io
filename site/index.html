@@ -30,10 +30,15 @@
     <h1 data-i18n="titulo">The world through its local press</h1>
   </div>
   <div class="controles">
-    <label class="ir-para">
-      <svg class="icone-busca" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      <span class="sr" data-i18n="irPara">Go to</span>
-      <select id="ir-para" aria-label="Go to"></select>
+    <label class="ir-para" title="Region">
+      <svg class="icone-busca" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.8 5.2 3.8 8.5s-1.2 6.1-3.8 8.5c-2.6-2.4-3.8-5.2-3.8-8.5s1.2-6.1 3.8-8.5z" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+      <span class="sr" data-i18n="filtroRegiao">Region</span>
+      <select id="filtro-regiao" aria-label="Region"></select>
+    </label>
+    <label class="ir-para" title="Country">
+      <svg class="icone-busca" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+      <span class="sr" data-i18n="filtroPais">Country</span>
+      <select id="filtro-pais" aria-label="Country"></select>
     </label>
     <div class="segmentado" role="group" aria-label="Language" id="idioma">
       <button type="button" data-l="en">EN</button>

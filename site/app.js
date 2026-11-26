@@ -7,7 +7,8 @@
 
   var T = {
     en: {
-      mapa: 'MAP', titulo: 'The world through its local press', irPara: 'Go to', escolha: 'Go to…',
+      mapa: 'MAP', titulo: 'The world through its local press', irPara: 'Go to', escolha: 'Go to…', filtroRegiao: 'Region', filtroPais: 'Country', escolhaRegiao: 'Region…', escolhaPais: 'Country…',
+      naRegiao: function (r) { return 'Region: ' + r; }, todosPaises: 'All countries',
       regioes: 'Regions', paises: 'Countries', mundo: 'World', regiao: 'Region', pais: 'Country',
       tema: 'In focus', emFoco: 'IN FOCUS', ultimas: 'Latest from the local press',
       focoAria: 'Most-covered world stories', focoTipo: 'Story in focus', posFoco: function (i, n) { return i + ' of ' + n; },
@@ -59,7 +60,8 @@
       erro: 'Could not load the map data. Try reloading the page.', expandir: 'Expand panel', legenda: 'Legend', modoEscuro: 'Dark mode'
     },
     pt: {
-      mapa: 'MAPA', titulo: 'O mundo pela imprensa local', irPara: 'Ir para', escolha: 'Ir para…',
+      mapa: 'MAPA', titulo: 'O mundo pela imprensa local', irPara: 'Ir para', escolha: 'Ir para…', filtroRegiao: 'Região', filtroPais: 'País', escolhaRegiao: 'Região…', escolhaPais: 'País…',
+      naRegiao: function (r) { return 'Região: ' + r; }, todosPaises: 'Todos os países',
       regioes: 'Regiões', paises: 'Países', mundo: 'Mundo', regiao: 'Região', pais: 'País',
       tema: 'Em foco', emFoco: 'EM FOCO', ultimas: 'O mais recente da imprensa local',
       focoAria: 'Notícias do mundo mais repercutidas', focoTipo: 'Notícia em foco', posFoco: function (i, n) { return i + ' de ' + n; },
@@ -977,27 +979,49 @@
     marcar();
     requestAnimationFrame(function () { faixa.style.setProperty('--duracao', Math.max(20, Math.round(faixa.scrollWidth / 2 / 45)) + 's'); });
   }
+  /* Filtros: um para região (e as áreas em guerra ou disputa) e outro para país (e os estados do piloto).
+     Mostram a seleção atual; com uma região escolhida, os países dela vêm primeiro no filtro de país. */
+  function regiaoDaSelecao() {
+    var s = estado.sel; if (!s) return null;
+    if (s.tipo === 'r') return s.id;
+    var k = s.tipo === 'p' ? s.id : s.tipo === 'e' ? (D.estadoPorId[s.id] || {}).pais : null;
+    return k && D.paises[k] ? D.paises[k].r || null : null;
+  }
   function renderIrPara() {
-    var s = document.getElementById('ir-para'); s.textContent = '';
-    s.setAttribute('aria-label', t('irPara'));
-    s.appendChild(el('option', { value: '', text: t('escolha') }));
+    var sr = document.getElementById('filtro-regiao'), sp = document.getElementById('filtro-pais'), s = estado.sel;
+    var porNome = function (a, b) { return nomePais(a).localeCompare(nomePais(b), estado.l); };
+    sr.textContent = ''; sr.setAttribute('aria-label', t('filtroRegiao')); sr.parentNode.title = t('filtroRegiao');
+    sr.appendChild(el('option', { value: '', text: t('escolhaRegiao') }));
     var g1 = el('optgroup', { label: t('regioes') });
-    D.macros.slice().sort(function (a, b) { return nomeRegiao(a.id).localeCompare(nomeRegiao(b.id)); })
+    D.macros.slice().sort(function (a, b) { return nomeRegiao(a.id).localeCompare(nomeRegiao(b.id), estado.l); })
       .forEach(function (r) { g1.appendChild(el('option', { value: 'r:' + r.id, text: nomeRegiao(r.id) })); });
-    var g2 = el('optgroup', { label: t('paises') });
-    Object.keys(D.paises).filter(function (k) { return D.paises[k].r; })
-      .sort(function (a, b) { return nomePais(a).localeCompare(nomePais(b), estado.l); })
-      .forEach(function (k) { g2.appendChild(el('option', { value: 'p:' + k, text: nomePais(k) })); });
-    var g3 = el('optgroup', { label: t('areasIrPara') });
-    D.areas.slice().sort(function (a, b) { return nomeArea(a).localeCompare(nomeArea(b), estado.l); })
-      .forEach(function (a) { g3.appendChild(el('option', { value: 'a:' + a.id, text: nomeArea(a) })); });
-    s.appendChild(g1); s.appendChild(g2); if (D.areas.length) s.appendChild(g3);
+    sr.appendChild(g1);
+    if (D.areas.length) {
+      var g2 = el('optgroup', { label: t('areasIrPara') });
+      D.areas.slice().sort(function (a, b) { return nomeArea(a).localeCompare(nomeArea(b), estado.l); })
+        .forEach(function (a) { g2.appendChild(el('option', { value: 'a:' + a.id, text: nomeArea(a) })); });
+      sr.appendChild(g2);
+    }
+    sp.textContent = ''; sp.setAttribute('aria-label', t('filtroPais')); sp.parentNode.title = t('filtroPais');
+    sp.appendChild(el('option', { value: '', text: t('escolhaPais') }));
+    var reg = regiaoDaSelecao(), comRegiao = Object.keys(D.paises).filter(function (k) { return D.paises[k].r; });
+    if (reg && D.macroPorId[reg]) {
+      var gr = el('optgroup', { label: t('naRegiao')(nomeRegiao(reg)) });
+      comRegiao.filter(function (k) { return D.paises[k].r === reg; }).sort(porNome)
+        .forEach(function (k) { gr.appendChild(el('option', { value: 'p:' + k, text: nomePais(k) })); });
+      sp.appendChild(gr);
+    }
+    var gt = el('optgroup', { label: reg ? t('todosPaises') : t('paises') });
+    comRegiao.sort(porNome).forEach(function (k) { gt.appendChild(el('option', { value: 'p:' + k, text: nomePais(k) })); });
+    sp.appendChild(gt);
     Object.keys(D.estados).forEach(function (k) {
       var g4 = el('optgroup', { label: t('estadosIrPara')(nomePais(k)) });
       D.estados[k].slice().sort(function (a, b) { return a.nome.localeCompare(b.nome, estado.l); })
         .forEach(function (e) { g4.appendChild(el('option', { value: 'e:' + e.id, text: e.nome })); });
-      s.appendChild(g4);
+      sp.appendChild(g4);
     });
+    sr.value = s && s.tipo === 'a' ? 'a:' + s.id : reg ? 'r:' + reg : '';
+    sp.value = s && (s.tipo === 'p' || s.tipo === 'e') ? s.tipo + ':' + s.id : '';
   }
   function atualizarBotoes() {
     document.querySelectorAll('#idioma button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.l === estado.l ? 'true' : 'false'); });
@@ -1038,7 +1062,7 @@
     estado.sel = sel;
     gravarRota();
     if (sel && sel.tipo !== 'r' && estado.modo !== 'paises') { estado.modo = 'paises'; atualizarModo(); }
-    renderTemas(); renderPainel(); restyle();
+    renderTemas(); renderIrPara(); renderPainel(); restyle();
     if (sel && mover) enquadrar(sel.tipo, sel.id);
     if (sel) document.getElementById('painel').classList.add('aberto');
   }
@@ -1053,9 +1077,11 @@
     document.getElementById('modo').addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return; estado.modo = b.dataset.m; atualizarModo(); restyle();
     });
-    document.getElementById('ir-para').addEventListener('change', function (e) {
-      var v = e.target.value; if (!v) return;
-      selecionar({ tipo: v.slice(0, 1), id: v.slice(2) }, true); e.target.value = '';
+    ['filtro-regiao', 'filtro-pais'].forEach(function (id) {
+      document.getElementById(id).addEventListener('change', function (e) {
+        var v = e.target.value; if (!v) { renderIrPara(); return; }
+        selecionar({ tipo: v.slice(0, 1), id: v.slice(2) }, true);
+      });
     });
     document.getElementById('alca').addEventListener('click', function () { document.getElementById('painel').classList.toggle('aberto'); });
     document.getElementById('tema').addEventListener('click', function () { aplicarTema(temaAtual() === 'escuro' ? 'claro' : 'escuro', true); });
