@@ -1342,15 +1342,23 @@
     r.appendChild(el('p', {}, [t('creditos'), el('a', { href: 'https://www.naturalearthdata.com', target: '_blank', rel: 'noopener', text: 'Natural Earth' }),
       estado.l === 'pt' ? ' e do ' : ' and ', el('a', { href: 'https://www.gdeltproject.org', target: '_blank', rel: 'noopener', text: 'GDELT' }), '.']));
   }
-  function mudarCor(m) { estado.cor = m; gravarRota(); renderLegenda(); renderPainel(); restyle(); }
+  function mudarCor(m) { estado.cor = m; gravarRota(); renderLentes(); renderLegenda(); renderPainel(); restyle(); }
+  /* Lentes (Cor por): no alto do mapa, à direita; no celular, uma lista compacta */
+  var LENTES = [['paises', 'corPaises'], ['conflitos', 'corConflitos'], ['volume', 'corNoticias'], ['tom', 'corTom']];
+  function renderLentes() {
+    var bs = document.getElementById('lentes-botoes'), sl = document.getElementById('lentes-select');
+    if (!bs || !sl) return;
+    bs.textContent = ''; sl.textContent = '';
+    bs.setAttribute('aria-label', t('corPor')); sl.setAttribute('aria-label', t('corPor'));
+    LENTES.forEach(function (x) {
+      bs.appendChild(el('button', { type: 'button', 'aria-pressed': estado.cor === x[0] ? 'true' : 'false', text: t(x[1]), on: { click: function () { mudarCor(x[0]); } } }));
+      sl.appendChild(el('option', { value: x[0], text: t(x[1]) }));
+    });
+    sl.value = estado.cor;
+  }
   function renderLegenda() {
     var g = document.getElementById('legenda'); g.textContent = ''; g.removeAttribute('aria-hidden');
     var porTom = estado.cor === 'tom', soPaises = estado.cor === 'paises' || estado.cor === 'conflitos';
-    var botao = function (m, txt) {
-      return el('button', { type: 'button', 'aria-pressed': estado.cor === m ? 'true' : 'false', text: txt, on: { click: function () { mudarCor(m); } } });
-    };
-    g.appendChild(el('div', { class: 'cor-por-linha' }, [el('span', { text: t('corPor') }),
-      el('div', { class: 'segmentado cor-por', role: 'group', 'aria-label': t('corPor') }, [botao('paises', t('corPaises')), botao('conflitos', t('corConflitos')), botao('volume', t('corNoticias')), botao('tom', t('corTom'))])]));
     if (estado.cor === 'conflitos') {
       g.appendChild(el('div', { text: t('legConflitos') }));
       ['guerra', 'conflito', 'fora', 'atingido', 'tensao', 'nenhum'].forEach(function (sc) {
@@ -1481,7 +1489,7 @@
     renderLegenda(); restyle();
   }
   function renderTudo() {
-    traduzirInterface(); atualizarBotoes(); renderTemas(); renderIrPara(); renderLegenda(); renderPainel(); renderRodape(); restyle();
+    traduzirInterface(); atualizarBotoes(); renderTemas(); renderIrPara(); renderLentes(); renderLegenda(); renderPainel(); renderRodape(); restyle();
   }
 
   function selecionar(sel, mover) {
@@ -1510,6 +1518,7 @@
         selecionar({ tipo: v.slice(0, 1), id: v.slice(2) }, true);
       });
     });
+    document.getElementById('lentes-select').addEventListener('change', function (e) { mudarCor(e.target.value); });
     document.getElementById('alca').addEventListener('click', function () { document.getElementById('painel').classList.toggle('aberto'); });
     document.getElementById('tema').addEventListener('click', function () { aplicarTema(temaAtual() === 'escuro' ? 'claro' : 'escuro', true); });
     try {

@@ -348,3 +348,16 @@ button { font: inherit; color: inherit; }
 .legenda .cor-por button { flex: 1 1 auto; padding: 4px 6px; font-size: 12px; white-space: nowrap; }
 .painel .aviso.situacao .nome-conf { font-weight: 700; color: var(--tinta); }
 .painel .papel-conf { font-size: 12px; font-weight: 700; color: var(--tinta-2); margin: 10px 0 4px; }
+/* Lentes (Cor por) no alto do mapa */
+.lentes {
+  position: absolute; top: 12px; right: 12px; z-index: 500; display: flex; align-items: center; gap: 8px;
+  background: var(--vidro); border-radius: 10px; padding: 4px 4px 4px 10px; box-shadow: 0 2px 8px var(--sombra);
+}
+.lentes-rotulo { font-size: 12px; font-weight: 600; color: var(--tinta-2); white-space: nowrap; }
+.lentes .segmentado { box-shadow: none; }
+.lentes #lentes-select { display: none; font: inherit; font-size: 13px; padding: 6px 8px; border: 1px solid var(--borda); border-radius: 8px; background: var(--superficie); color: var(--tinta); }
+@media (max-width: 820px) {
+  .lentes { top: 10px; right: 12px; padding: 3px 3px 3px 8px; gap: 6px; }
+  .lentes .segmentado { display: none; }
+  .lentes #lentes-select { display: block; min-height: 34px; }
+}
