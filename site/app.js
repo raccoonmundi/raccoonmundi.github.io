@@ -362,8 +362,22 @@
       });
       if (melhor) melhor.push(k); else grupos.push([k]);
     });
+    var juntou = true, cruzar = function (ga, gb) { // semelhança média entre dois grupos e o par mais forte
+      var soma = 0, forte = 0, q = 0;
+      ga.forEach(function (x) { gb.forEach(function (y) { var r = sim(pesos[x], pesos[y]); soma += r[1]; q++; if (r[0] > forte) forte = r[0]; }); });
+      return [forte, soma / q];
+    };
+    while (juntou) { // segunda passada: junta grupos da mesma história que a ordem de chegada separou
+      juntou = false;
+      for (var a = 0; a < grupos.length && !juntou; a++) {
+        for (var b = a + 1; b < grupos.length && !juntou; b++) {
+          var c = cruzar(grupos[a], grupos[b]);
+          if (c[0] >= 6 && c[1] >= 0.25) { grupos[a] = grupos[a].concat(grupos[b]); grupos.splice(b, 1); juntou = true; }
+        }
+      }
+    }
     var lista = grupos.map(function (g) {
-      var membros = g.map(function (k) { return its[k]; });
+      var membros = g.map(function (k) { return its[k]; }).sort(function (x, y) { return x.visto_em < y.visto_em ? 1 : -1; });
       if (!membros.some(function (i) { return i.nivel === 1; })) return null;
       var fontes = {}, veiculos = {}, citados = {};
       membros.forEach(function (i) {
