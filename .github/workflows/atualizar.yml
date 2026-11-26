@@ -8,6 +8,10 @@ on:
         description: "Códigos ISO separados por vírgula (vazio = padrão do robo/config.json)"
         required: false
         default: ""
+      revezamento:
+        description: "Uso interno do robô: deixe vazio"
+        required: false
+        default: ""
   # Qualquer mudança no site, no robô ou nos temas (a rodada do Raccoon Mundi grava site/data/temas.json)
   push:
     branches: [main]
@@ -15,26 +19,27 @@ on:
       - "site/**"
       - "robo/**"
       - ".github/workflows/atualizar.yml"
-  # Quase em tempo real (ligado em 26/11/2026): a cada 15 min, 2 min depois de o GDELT publicar o arquivo novo
-  # (:00, :15, :30, :45). Cada rodada também atualiza a área ocupada na Ucrânia (DeepStateMap) e publica o site.
-  # A rodada das 10h40 UTC (7h40 em Brasília) também grava os dados no repositório (1x por dia).
+  # Quase em tempo real: quem mantém o ritmo de 15 em 15 min é o revezamento (job "revezar", robo/revezar.py):
+  # cada rodada espera o próximo :02/:17/:32/:47 (2 min depois de o GDELT publicar o arquivo novo) e dispara a seguinte.
+  # O agendador do GitHub não disparou nenhuma vez neste repositório (26/11/2026), então ele fica só de reserva:
+  # se o revezamento parar, a rodada agendada (quando o GitHub rodar) o religa.
   schedule:
-    - cron: "2,17,32,47 * * * *"
-    - cron: "40 10 * * *"
+    - cron: "52 * * * *"
 
 permissions:
   contents: write
   pages: write
   id-token: write
-
-concurrency:
-  group: atualizar-mapa
-  cancel-in-progress: false
+  actions: write  # o revezamento dispara a próxima rodada
 
 jobs:
   coletar:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    # Uma coleta por vez (a espera do revezamento fica fora disso, para não segurar as rodadas de push)
+    concurrency:
+      group: atualizar-mapa
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
         with:
@@ -105,9 +110,18 @@ jobs:
           path: .estado-robo
           key: estado-robo-${{ github.run_id }}
 
-      - name: Gravar dados no repositório (1x por dia, e quando a rodada vem de push ou é manual)
-        if: github.event_name != 'schedule' || github.event.schedule == '40 10 * * *'
+      - name: Gravar dados no repositório (rodada de push ou manual, e 1x por dia nas automáticas)
+        env:
+          GATILHO: ${{ github.event_name }}
+          REVEZAMENTO: ${{ github.event.inputs.revezamento }}
         run: |
+          horas=$(git show HEAD:site/data/noticias.json | python -c "import json,sys,datetime as d; g=json.load(sys.stdin)['gerado_em']; print(int((d.datetime.now(d.timezone.utc)-d.datetime.fromisoformat(g.replace('Z','+00:00'))).total_seconds()//3600))" || echo 99)
+          if [ "$GATILHO" = "push" ] || { [ "$GATILHO" = "workflow_dispatch" ] && [ "$REVEZAMENTO" != "sim" ]; } || [ "$horas" -ge 23 ]; then
+            echo "Gravando (gatilho: $GATILHO; último registro no repositório há ${horas} h)."
+          else
+            echo "Rodada automática: os dados ficam só no cache e no site (último registro no repositório há ${horas} h)."
+            exit 0
+          fi
           git config user.name "robo-raccoon-mundi"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add site/data/noticias.json site/geo/zonas_guerra.geojson 2>/dev/null || git add site/data/noticias.json
@@ -136,9 +150,29 @@ jobs:
   publicar:
     needs: coletar
     runs-on: ubuntu-latest
+    concurrency:
+      group: publicar-site
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - id: deploy
         uses: actions/deploy-pages@v4
+
+  # Passa o bastão: espera o próximo horário de coleta e dispara a rodada seguinte.
+  # Roda mesmo se a coleta falhar (o robô tenta de novo daqui a 15 min); rodada cancelada à mão não passa o bastão.
+  revezar:
+    needs: publicar
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: robo/revezar.py
+          sparse-checkout-cone-mode: false
+      - name: Esperar o próximo arquivo do GDELT e disparar a próxima rodada
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 robo/revezar.py

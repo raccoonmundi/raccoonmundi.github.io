@@ -67,4 +67,9 @@ Monumentos 3D em estilo maquete (blocos próprios, sem modelos de terceiros): `s
 
 ## Quase em tempo real
 
-O workflow roda a cada 15 minutos (2 min depois de cada arquivo novo do GDELT). Entre as rodadas, o histórico do robô fica no cache do GitHub Actions (`robo/estado.py`); os dados só vão para o repositório uma vez por dia (rodada das 7h40 de Brasília) e quando a execução vem de um push ou é manual. A página confere `data/noticias.json` a cada 5 minutos e se atualiza sem recarregar.
+O workflow roda a cada 15 minutos (2 min depois de cada arquivo novo do GDELT, em :02, :17, :32 e :47). Quem mantém o ritmo é o **revezamento** (`robo/revezar.py`, job `revezar`): no fim de cada rodada ele espera o próximo horário e dispara a rodada seguinte. Foi preciso porque o agendador do GitHub (`on: schedule`) não disparou nenhuma vez neste repositório; o `cron` ficou só de reserva, de hora em hora, para religar o revezamento se ele parar. Qualquer push ou rodada manual também religa.
+
+- **Parar:** cancele a rodada em andamento na aba Actions (rodada cancelada não passa o bastão) ou desative o workflow.
+- **Nunca dois revezamentos:** antes de disparar, a rodada confere se há outra mais nova na fila ou em andamento; se houver, é ela quem passa o bastão.
+
+Entre as rodadas, o histórico do robô fica no cache do GitHub Actions (`robo/estado.py`); os dados vão para o repositório quando a execução vem de um push ou é manual, e uma vez por dia nas rodadas automáticas (quando o último registro tem 23 h ou mais). A página confere `data/noticias.json` a cada 5 minutos e se atualiza sem recarregar.
