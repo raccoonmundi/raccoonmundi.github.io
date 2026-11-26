@@ -61,6 +61,7 @@
     if (!relogio) { relogio = el('div', { class: 'relogio-mapa' }); document.getElementById('mapa').appendChild(relogio); }
     var h = new Intl.DateTimeFormat(estado.l === 'pt' ? 'pt-BR' : 'en-GB', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit' }).format(agora);
     relogio.textContent = (estado.l === 'pt' ? 'Dia e noite agora · ' + h + ' em Brasília' : 'Day and night now · ' + h + ' Brasília time');
+    if (typeof agendarMonumentos === 'function') agendarMonumentos(); // a luz dos monumentos segue o horário
   }
   function base() { return location.href.replace(/[#?].*$/, '').replace(/[^/]*$/, ''); }
   function pequeno() { return window.innerWidth < 820; }
@@ -119,6 +120,7 @@
         selPreench: { type: 'geojson', data: VAZIO },
         noite: { type: 'geojson', data: VAZIO },
         selContorno: { type: 'geojson', data: VAZIO },
+        monumentos: { type: 'geojson', data: VAZIO },
         rotulos: { type: 'geojson', data: VAZIO }
       },
       layers: [
@@ -158,6 +160,10 @@
             'fill-extrusion-opacity': 1, 'fill-extrusion-vertical-gradient': true } },
         { id: 'sel-3d-padrao', type: 'fill-extrusion', source: 'selPreench', filter: ['has', 'padrao'], layout: { visibility: TRES_D ? 'visible' : 'none' },
           paint: { 'fill-extrusion-pattern': ['get', 'padrao'], 'fill-extrusion-height': ALTURA, 'fill-extrusion-base': 0, 'fill-extrusion-opacity': 1 } },
+        // monumentos 3D (maquete): peças com base e topo próprios, recalculados conforme o zoom
+        { id: 'monumentos', type: 'fill-extrusion', source: 'monumentos',
+          paint: { 'fill-extrusion-color': ['get', 'cor'], 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-base': ['get', 'b'],
+            'fill-extrusion-opacity': 1, 'fill-extrusion-vertical-gradient': false } },
         { id: 'sel-borda', type: 'line', source: 'selContorno', layout: { 'line-join': 'round' },
           paint: { 'line-color': P.destaque, 'line-width': 2, 'line-translate': [0, -2] } },
         { id: 'hover-pais', type: 'line', source: 'paises', filter: ['==', ['get', 'k'], ''], paint: { 'line-color': P.destaque, 'line-width': 2 } },
@@ -171,7 +177,8 @@
             'text-size': ['match', ['get', 'tipo'], 'regiao', pequeno() ? 10.5 : 12, 'estado', pequeno() ? 9 : 10, pequeno() ? 9.5 : 10.5],
             'text-letter-spacing': ['match', ['get', 'tipo'], 'regiao', 0.12, 0.07],
             'text-transform': 'uppercase', 'text-max-width': 9, 'text-line-height': 1.15,
-            'symbol-sort-key': ['get', 'prio'], 'text-padding': 3
+            'symbol-sort-key': ['get', 'prio'], 'text-padding': 3,
+            'text-offset': ['coalesce', ['get', 'off'], ['literal', [0, 0]]]
           },
           paint: { 'text-color': css('--rotulo'), 'text-halo-color': css('--halo'), 'text-halo-width': 1.6, 'text-halo-blur': 0.6 } }
       ]
@@ -211,6 +218,7 @@
     atualizarDestaque();
     atualizarRotulos();
     atualizarNoite();
+    atualizarMonumentos();
   }
 
   function featuresDaArea(id) {
@@ -280,7 +288,10 @@
         if (D.macroPorId[id]) fs.push(ponto(ROTULOS_REGIAO[id], { nome: nomeRegiao(id), tipo: 'regiao', prio: i, mz: 0 }));
       });
     } else {
-      if (pe) D.estados[pe].forEach(function (e) { fs.push(ponto([e.ly, e.lx], { nome: e.nome, uf: e.uf, tipo: 'estado', prio: 50, mz: 0 })); });
+      if (pe) D.estados[pe].forEach(function (e) {
+        var temMon = MON.some(function (m) { return m.estado === e.id; }); // o rótulo desce para não cobrir a maquete
+        fs.push(ponto([e.ly, e.lx], { nome: e.nome, uf: e.uf, tipo: 'estado', prio: 50, mz: 0, off: temMon ? [0, 1.6] : [0, 0] }));
+      });
       Object.keys(D.paises).forEach(function (k) {
         var p = D.paises[k];
         if (!p.r || p.lx === undefined || k === pe) return;
@@ -294,6 +305,122 @@
     var k = f.properties.k, r = f.properties.r;
     if (!r) return null;
     return textoHover(k, r);
+  }
+
+  /* ---------- monumentos 3D (maquete) ----------
+     Blocos próprios em fill-extrusion, lidos de data/monumentos.json (sem modelos de terceiros).
+     As medidas das peças são "unidades de tela" (≈ 1 px no zoom 3), convertidas em metros conforme o zoom:
+     o monumento fica com tamanho de tela quase fixo, crescendo um pouco ao aproximar.
+     Aparecem a partir do zoom de país (MapLibre ≥ 3) ou quando o país do monumento está na seleção;
+     com a seleção erguida no 3D, ficam em cima dela. À noite (horário real), ficam mais escuros.
+     globo.html?monumentos=0 desliga. */
+  var MONUMENTOS = !/[?&]monumentos=0(&|$)/.test(location.search), ZOOM_MONUMENTOS = 3;
+  var MON = [], MON_POR_ID = {}, monDesde = {}, monQuadro = 0, monChave = '';
+  function alturaSelecao(z) { // mesmo valor da expressão ALTURA (linear entre os níveis inteiros)
+    z = Math.max(0, Math.min(8, z));
+    var a = Math.floor(z), b = Math.min(8, a + 1), f = z - a;
+    return 700000 / Math.pow(2, a) * (1 - f) + 700000 / Math.pow(2, b) * f;
+  }
+  function escalaMonumento(z) { return 2 * Math.pow(2, (Math.max(1.5, Math.min(7, z)) - 3) * 0.45); }
+  function anelRet(x, y, w, d) { var a = w / 2, b = d / 2; return [[x - a, y - b], [x + a, y - b], [x + a, y + b], [x - a, y + b], [x - a, y - b]]; }
+  function anelCirc(x, y, r, n) {
+    var pts = [];
+    for (var i = 0; i < n; i++) { var g = (i + 0.5) / n * 2 * Math.PI; pts.push([x + r * Math.cos(g), y + r * Math.sin(g)]); }
+    pts.push(pts[0]); return pts;
+  }
+  function anelOcto(x, y, l, c) {
+    var a = l / 2, k = a - c;
+    var pts = [[x - k, y - a], [x + k, y - a], [x + a, y - k], [x + a, y + k], [x + k, y + a], [x - k, y + a], [x - a, y + k], [x - a, y - k]];
+    pts.push(pts[0]); return pts;
+  }
+  function anelEstrela(x, y, r1, r2, n) {
+    var pts = [];
+    for (var i = 0; i < n * 2; i++) { var g = Math.PI / 2 + i / (n * 2) * 2 * Math.PI, r = i % 2 ? r2 : r1; pts.push([x + r * Math.cos(g), y + r * Math.sin(g)]); }
+    pts.push(pts[0]); return pts;
+  }
+  function pecasDe(m) { // cada peça vira { anel, b, t, c } (em unidades)
+    if (m._pecas) return m._pecas;
+    var out = [];
+    (m.pecas || []).forEach(function (p) {
+      var f = p[0];
+      if (f === 'r') out.push({ anel: anelRet(p[1], p[2], p[3], p[4]), b: p[5], t: p[6], c: p[7] });
+      else if (f === 'c') out.push({ anel: anelCirc(p[1], p[2], p[3], p[7] || 10), b: p[4], t: p[5], c: p[6] });
+      else if (f === 'o') out.push({ anel: anelOcto(p[1], p[2], p[3], p[4]), b: p[5], t: p[6], c: p[7] });
+      else if (f === 'e') out.push({ anel: anelEstrela(p[1], p[2], p[3], p[4], p[5]), b: p[6], t: p[7], c: p[8] });
+      else if (f === 'deg') { // pirâmide em degraus: cada degrau é um bloco um pouco menor
+        var n = p[4], h = p[5] / n, b0 = p[8] || 0;
+        for (var i = 0; i < n; i++) { var l = p[3] * (1 - i / n); out.push({ anel: anelRet(p[1], p[2], l, l), b: b0 + i * h, t: b0 + (i + 1) * h, c: i % 2 && p[7] ? p[7] : p[6] }); }
+      }
+    });
+    return (m._pecas = out);
+  }
+  function escurecer(hex, k) {
+    var n = parseInt(hex.slice(1), 16);
+    return '#' + [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(function (v) { return ('0' + Math.round(v * k).toString(16)).slice(-2); }).join('');
+  }
+  function luzDoLugar(m, sol) { // 1 de dia; mais escuro à noite, com crepúsculo entre o sol a −6° e a +4°
+    if (!sol) return 1;
+    var r = Math.PI / 180;
+    var alt = Math.asin(Math.sin(m.lat * r) * Math.sin(sol.lat * r) + Math.cos(m.lat * r) * Math.cos(sol.lat * r) * Math.cos((m.lon - sol.lon) * r)) / r;
+    return 0.68 + 0.32 * Math.max(0, Math.min(1, (alt + 6) / 10)); // à noite, ~o mesmo escurecimento da sombra do mapa
+  }
+  function selecaoDosMonumentos() { // países da seleção e o que está erguido no 3D
+    var s = estado.sel;
+    if (!s) return { paises: [], estado: null };
+    if (s.tipo === 'p') return { paises: [s.id], estado: null };
+    if (s.tipo === 'e') return { paises: [], estado: s.id, pais: (D.estadoPorId[s.id] || {}).pais };
+    if (s.tipo === 'r') return { paises: Object.keys(regiaoDoPais).filter(function (k) { return regiaoDoPais[k] === s.id; }), estado: null };
+    if (s.tipo === 't') return { paises: ((D.temaPorId[s.id] || {}).paises || []), estado: null };
+    return { paises: [], estado: null };
+  }
+  function atualizarMonumentos() {
+    if (!MAPA_PRONTO || !MON.length || !mapa.getSource('monumentos')) return;
+    var z = Math.round(mapa.getZoom() * 20) / 20, agora = performance.now(), sel = selecaoDosMonumentos();
+    var sol = NOITE ? posicaoSol(agoraReal()) : null, escuro = temaAtual() === 'escuro', animando = false, lista = [];
+    MON.forEach(function (m) {
+      var naSelecao = sel.paises.indexOf(m.pais) >= 0 || sel.pais === m.pais;
+      if (!MONUMENTOS || !(z >= ZOOM_MONUMENTOS || naSelecao)) { delete monDesde[m.id]; return; }
+      if (!monDesde[m.id]) monDesde[m.id] = agora;
+      var f = Math.min(1, (agora - monDesde[m.id]) / 450);
+      if (f < 1) animando = true;
+      var erguido = TRES_D && (sel.estado ? sel.estado === m.estado : sel.paises.indexOf(m.pais) >= 0);
+      lista.push({ m: m, cresce: 1 - Math.pow(1 - f, 3), base: erguido ? alturaSelecao(z) : 0, luz: Math.round(luzDoLugar(m, sol) * (escuro ? 0.88 : 1) * 40) / 40 });
+    });
+    var chave = z + '|' + lista.map(function (x) { return x.m.id + ':' + x.cresce.toFixed(3) + ':' + Math.round(x.base) + ':' + x.luz; }).join(',');
+    if (chave !== monChave) {
+      monChave = chave;
+      var fs = [];
+      lista.forEach(function (x) {
+        var m = x.m, u = 40075016.686 * Math.cos(m.lat * Math.PI / 180) / (512 * Math.pow(2, z)) * escalaMonumento(z); // metros por unidade
+        var kx = u / (111320 * Math.cos(m.lat * Math.PI / 180)), ky = u / 110574;
+        pecasDe(m).forEach(function (p) {
+          fs.push({ type: 'Feature', properties: { m: m.id, cor: x.luz < 1 ? escurecer(p.c, x.luz) : p.c, b: x.base + p.b * u * x.cresce, h: x.base + p.t * u * x.cresce },
+            geometry: { type: 'Polygon', coordinates: [p.anel.map(function (q) { return [m.lon + q[0] * kx, m.lat + q[1] * ky]; })] } });
+        });
+      });
+      mapa.getSource('monumentos').setData({ type: 'FeatureCollection', features: fs });
+    }
+    if (animando) agendarMonumentos();
+  }
+  function agendarMonumentos() {
+    if (!monQuadro) monQuadro = requestAnimationFrame(function () { monQuadro = 0; atualizarMonumentos(); });
+  }
+  function carregarMonumentos() {
+    if (!MONUMENTOS) return;
+    fetch('data/monumentos.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : { monumentos: [] }; }).then(function (j) {
+      MON = j.monumentos || [];
+      MON.forEach(function (m) { MON_POR_ID[m.id] = m; });
+      ultimaChaveRotulos = ''; atualizarRotulos();
+      atualizarMonumentos();
+    }).catch(function () { /* sem monumentos: o resto do mapa segue igual */ });
+  }
+  function monumentoEm(pt) {
+    if (!MON.length || !mapa.getLayer('monumentos')) return null;
+    var fs = mapa.queryRenderedFeatures(pt, { layers: ['monumentos'] });
+    return fs.length ? MON_POR_ID[fs[0].properties.m] || null : null;
+  }
+  function textoMonumento(m) {
+    return el('div', {}, [el('strong', { text: estado.l === 'pt' ? m.nome_pt : m.nome_en }), el('br'), estado.l === 'pt' ? m.lugar_pt : m.lugar_en]);
   }
 
   /* câmera */
@@ -407,8 +534,12 @@
       ultimaChaveRotulos = '';
       restyle();
       if (estado.sel) enquadrar(estado.sel.tipo, estado.sel.id);
+      carregarMonumentos();
     });
+    mapa.on('zoom', agendarMonumentos);
     mapa.on('mousemove', function (e) {
+      var mon = monumentoEm(e.point);
+      if (mon) { mapa.getCanvas().style.cursor = 'pointer'; marcarHover(null); mostrarDica(e.point, textoMonumento(mon)); return; }
       var x = alvo(e.point);
       mapa.getCanvas().style.cursor = x ? 'pointer' : '';
       marcarHover(x);
@@ -419,6 +550,8 @@
     mapa.on('movestart', esconderDica);
     mapa.on('click', function (e) {
       esconderDica();
+      var mon = monumentoEm(e.point); // monumento: abre o estado (ou o país) onde ele fica
+      if (mon) { selecionar(mon.estado && D.estadoPorId[mon.estado] ? { tipo: 'e', id: mon.estado } : { tipo: 'p', id: mon.pais }, false); return; }
       var x = alvo(e.point); if (!x) return;
       if (x.tipo === 'a') selecionar({ tipo: 'a', id: x.f.properties.a }, mapa.getZoom() + DZ < 4);
       else if (x.tipo === 'e') selecionar({ tipo: 'e', id: x.f.properties.id }, false);

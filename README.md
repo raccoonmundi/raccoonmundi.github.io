@@ -63,3 +63,4 @@ Mapa: Raccoon Mundi, com dados do Natural Earth e do GDELT.
 `site/globo.js` é gerado: tudo o que não é mapa vem de `site/app.js` e a parte do mapa vem de `ferramentas/motor_globo.js`.
 Depois de mudar qualquer um dos dois, rode `python3 ferramentas/montar_globo.py`.
 No globo, a seleção sobe em 3D e a câmera inclina; `globo.html?3d=0` volta ao destaque plano (sombra, área erguida e contorno).
+Monumentos 3D em estilo maquete (`site/data/monumentos.json`, blocos próprios, sem modelos de terceiros) aparecem a partir do zoom de país ou quando o país do monumento está selecionado; `globo.html?monumentos=0` desliga.

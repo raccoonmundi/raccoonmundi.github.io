@@ -144,7 +144,7 @@
   var VISTAS = { // regiões que cruzam a linha de data: enquadramento manual
     'russia': [[62, 95], 2.5], 'oceania': [[-22, 155], 3], 'america-do-norte': [[46, -100], 2.5]
   };
-  var VISTAS_PAIS = { 'US': [[40, -98], 3], 'RU': [[62, 95], 2.5], 'NZ': [[-41, 173], 4.5], 'FJ': [[-17.8, 178], 6] };
+  var VISTAS_PAIS = { 'US': [[40, -98], 3], 'RU': [[62, 95], 2.5], 'NZ': [[-41, 173], 4.5], 'FJ': [[-17.8, 178], 6], 'FR': [[46.6, 2.4], 5] };
   var LIMIAR_PAISES = 4;
 
   var estado = { l: 'en', h: 24, modo: 'regioes', sel: null, cor: 'volume' };
