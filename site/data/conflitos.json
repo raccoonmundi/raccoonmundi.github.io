@@ -1,0 +1,893 @@
+{
+ "_comentario": "Classificação de conflitos do Raccoon Mundi (lente Conflitos). Curada: proposta pelo Claude a partir de UCDP, ACLED e Crisis Group e aprovada pelo Kauê; revista toda semana. Situação do país: guerra (no território, 1.000+ mortes no ano), fora (luta fora do território, mesmo recebendo ataques em casa), conflito (combate abaixo disso ou guerra em cessar-fogo frágil), atingido (terceiro atingido, ex.: bases dos EUA no Golfo), tensao (ameaça militar sem combate). Mortes em 2026: até 31/10, levantamento do Blackwing a partir de UCDP e ACLED.",
+ "atualizado": "2026-11-25",
+ "conflitos": [
+  {
+   "id": "russia-ucrania",
+   "tipo": "guerra",
+   "nome_pt": "Guerra Rússia × Ucrânia",
+   "nome_en": "Russia–Ukraine war",
+   "partes_pt": "Rússia × Ucrânia",
+   "partes_en": "Russia vs Ukraine",
+   "desde": "2022",
+   "situacao_pt": "Combate ativo; as conversas de novembro só chegaram a um acordo de princípio sobre troca de prisioneiros.",
+   "situacao_en": "Active fighting; November talks only reached agreement in principle on prisoner exchanges.",
+   "paises": {
+    "UA": "guerra",
+    "RU": "fora"
+   },
+   "mortos_2026": 70675
+  },
+  {
+   "id": "ira-eua-israel",
+   "tipo": "guerra",
+   "nome_pt": "Guerra do Irã",
+   "nome_en": "Iran war",
+   "partes_pt": "Irã × EUA e Israel",
+   "partes_en": "Iran vs the US and Israel",
+   "desde": "2026-02",
+   "situacao_pt": "Começou com ataques dos EUA e de Israel ao Irã; o Irã revidou na região e travou o Estreito de Ormuz. Ataques em terra e a petroleiros voltaram em meados de novembro.",
+   "situacao_en": "Began with US and Israeli strikes on Iran; Iran retaliated across the region and disrupted the Strait of Hormuz. Strikes on land and on tankers resumed in mid-November.",
+   "paises": {
+    "IR": "guerra",
+    "US": "fora",
+    "IL": "fora",
+    "KW": "atingido",
+    "BH": "atingido",
+    "JO": "atingido"
+   },
+   "mortos_2026": 3859
+  },
+  {
+   "id": "iemen",
+   "tipo": "guerra",
+   "nome_pt": "Guerra no Iêmen",
+   "nome_en": "Yemen war",
+   "partes_pt": "Houthis × governo do Iêmen e Arábia Saudita",
+   "partes_en": "Houthis vs Yemen's government and Saudi Arabia",
+   "desde": "2014 (retomada em jul/2026)",
+   "situacao_pt": "A luta voltou em julho de 2026; os houthis tomaram a costa do Mar Vermelho e atacam a Arábia Saudita quase todo dia.",
+   "situacao_en": "Fighting resumed in July 2026; the Houthis took the Red Sea coast and strike Saudi Arabia almost daily.",
+   "paises": {
+    "YE": "guerra",
+    "SA": "fora"
+   },
+   "mortos_2026": 6504
+  },
+  {
+   "id": "sudao",
+   "tipo": "guerra",
+   "nome_pt": "Guerra civil no Sudão",
+   "nome_en": "Sudanese civil war",
+   "partes_pt": "Exército × RSF",
+   "partes_en": "Army vs RSF",
+   "desde": "2023",
+   "situacao_pt": "O exército retomou terreno em Kordofan; uma missão da ONU viu genocídio nas atrocidades da RSF em El Fasher.",
+   "situacao_en": "The army regained ground in Kordofan; a UN mission found the RSF's El Fasher atrocities amount to genocide.",
+   "paises": {
+    "SD": "guerra"
+   },
+   "mortos_2026": 3977
+  },
+  {
+   "id": "somalia",
+   "tipo": "guerra",
+   "nome_pt": "Somália × al-Shabaab",
+   "nome_en": "Somalia vs al-Shabaab",
+   "partes_pt": "Governo × al-Shabaab",
+   "partes_en": "Government vs al-Shabaab",
+   "desde": "2006",
+   "situacao_pt": "Insurgência ativa, com crise política.",
+   "situacao_en": "Active insurgency amid a political crisis.",
+   "paises": {
+    "SO": "guerra"
+   },
+   "mortos_2026": 3069
+  },
+  {
+   "id": "paquistao-ttp",
+   "tipo": "guerra",
+   "nome_pt": "Paquistão × Talibã paquistanês",
+   "nome_en": "Pakistan vs Pakistani Taliban",
+   "partes_pt": "Governo × TTP",
+   "partes_en": "Government vs TTP",
+   "desde": "2007",
+   "situacao_pt": "Insurgência em Khyber Pakhtunkhwa.",
+   "situacao_en": "Insurgency in Khyber Pakhtunkhwa.",
+   "paises": {
+    "PK": "guerra"
+   },
+   "mortos_2026": 2357
+  },
+  {
+   "id": "paquistao-baloch",
+   "tipo": "guerra",
+   "nome_pt": "Paquistão × separatistas balúchis",
+   "nome_en": "Pakistan vs Baloch insurgents",
+   "partes_pt": "Governo × separatistas balúchis",
+   "partes_en": "Government vs Baloch separatists",
+   "desde": "2004",
+   "situacao_pt": "Violência no Baluchistão subiu muito em 2026.",
+   "situacao_en": "Violence in Balochistan rose sharply in 2026.",
+   "paises": {
+    "PK": "guerra"
+   },
+   "mortos_2026": 1572
+  },
+  {
+   "id": "etiopia-fano",
+   "tipo": "guerra",
+   "nome_pt": "Etiópia × milícias Fano",
+   "nome_en": "Ethiopia vs Fano militias",
+   "partes_pt": "Governo × Fano (Amhara)",
+   "partes_en": "Government vs Fano (Amhara)",
+   "desde": "2023",
+   "situacao_pt": "Combate ativo em Amhara.",
+   "situacao_en": "Active fighting in Amhara.",
+   "paises": {
+    "ET": "guerra"
+   },
+   "mortos_2026": 2116
+  },
+  {
+   "id": "etiopia-tigre",
+   "tipo": "guerra",
+   "nome_pt": "Guerra no Tigré",
+   "nome_en": "Tigray war",
+   "partes_pt": "Governo × TPLF e aliados",
+   "partes_en": "Government vs TPLF and allies",
+   "desde": "2020 (retomada em ago/2026)",
+   "situacao_pt": "Retomada em agosto de 2026; o governo tomou Mekelle em outubro.",
+   "situacao_en": "Resumed in August 2026; government forces took Mekelle in October.",
+   "paises": {
+    "ET": "guerra"
+   },
+   "mortos_2026": 1040
+  },
+  {
+   "id": "nigeria-ei",
+   "tipo": "guerra",
+   "nome_pt": "Nigéria × Estado Islâmico",
+   "nome_en": "Nigeria vs Islamic State",
+   "partes_pt": "Governo × Boko Haram e ISWAP",
+   "partes_en": "Government vs Boko Haram and ISWAP",
+   "desde": "2009",
+   "situacao_pt": "Combate no nordeste.",
+   "situacao_en": "Fighting in the north-east.",
+   "paises": {
+    "NG": "guerra"
+   },
+   "mortos_2026": 2033
+  },
+  {
+   "id": "nigeria-noroeste",
+   "tipo": "guerra",
+   "nome_pt": "Nigéria: grupos armados no noroeste",
+   "nome_en": "Nigeria: armed bands in the north-west",
+   "partes_pt": "Governo × grupos armados",
+   "partes_en": "Government vs armed bands",
+   "desde": "2011",
+   "situacao_pt": "Sequestros em massa e ataques a vilarejos.",
+   "situacao_en": "Mass kidnappings and village raids.",
+   "paises": {
+    "NG": "guerra"
+   },
+   "mortos_2026": 1909
+  },
+  {
+   "id": "burkina-jnim",
+   "tipo": "guerra",
+   "nome_pt": "Burkina Faso × JNIM",
+   "nome_en": "Burkina Faso vs JNIM",
+   "partes_pt": "Governo × JNIM e Estado Islâmico",
+   "partes_en": "Government vs JNIM and Islamic State",
+   "desde": "2015",
+   "situacao_pt": "O país mais atingido do Sahel.",
+   "situacao_en": "The worst-affected Sahel state.",
+   "paises": {
+    "BF": "guerra"
+   },
+   "mortos_2026": 1810
+  },
+  {
+   "id": "mali-jnim",
+   "tipo": "guerra",
+   "nome_pt": "Mali × JNIM",
+   "nome_en": "Mali vs JNIM",
+   "partes_pt": "Governo × JNIM e Frente de Libertação do Azawad",
+   "partes_en": "Government vs JNIM and the Azawad Liberation Front",
+   "desde": "2012",
+   "situacao_pt": "O JNIM declarou bloqueio a Bamako em abril.",
+   "situacao_en": "JNIM declared a blockade of Bamako in April.",
+   "paises": {
+    "ML": "guerra"
+   },
+   "mortos_2026": 1007
+  },
+  {
+   "id": "congo-m23",
+   "tipo": "guerra",
+   "nome_pt": "Guerra no leste do Congo",
+   "nome_en": "Eastern Congo war",
+   "partes_pt": "Exército e milícias × M23/AFC (apoiado por Ruanda)",
+   "partes_en": "Army and militias vs M23/AFC (backed by Rwanda)",
+   "desde": "2021",
+   "situacao_pt": "Combates continuam no Kivu apesar dos acordos de Doha e Washington.",
+   "situacao_en": "Fighting continues in Kivu despite the Doha and Washington agreements.",
+   "paises": {
+    "CD": "guerra"
+   }
+  },
+  {
+   "id": "mianmar",
+   "tipo": "guerra",
+   "nome_pt": "Guerra civil em Mianmar",
+   "nome_en": "Myanmar civil war",
+   "partes_pt": "Junta militar × resistência e grupos étnicos armados",
+   "partes_en": "Military junta vs resistance and ethnic armed groups",
+   "desde": "2021",
+   "situacao_pt": "Guerra civil em todo o país desde o golpe.",
+   "situacao_en": "Nationwide civil war since the coup.",
+   "paises": {
+    "MM": "guerra"
+   }
+  },
+  {
+   "id": "israel-hezbollah",
+   "tipo": "conflito",
+   "nome_pt": "Israel × Hezbollah (Líbano)",
+   "nome_en": "Israel vs Hezbollah (Lebanon)",
+   "partes_pt": "Israel × Hezbollah",
+   "partes_en": "Israel vs Hezbollah",
+   "desde": "2023 (retomada em mar/2026)",
+   "situacao_pt": "Foi guerra este ano; trégua no papel desde abril, com ataques israelenses contínuos.",
+   "situacao_en": "War-level this year; nominal truce since April, with continued Israeli strikes.",
+   "paises": {
+    "LB": "conflito",
+    "IL": "fora"
+   },
+   "mortos_2026": 4597
+  },
+  {
+   "id": "israel-gaza",
+   "tipo": "conflito",
+   "nome_pt": "Israel × Hamas (Gaza)",
+   "nome_en": "Israel vs Hamas (Gaza)",
+   "partes_pt": "Israel × Hamas e grupos aliados",
+   "partes_en": "Israel vs Hamas and allied groups",
+   "desde": "2023",
+   "situacao_pt": "Cessar-fogo desde out/2025, com operação terrestre israelense anunciada em 18/11.",
+   "situacao_en": "Ceasefire since Oct 2025, with an Israeli ground operation announced on 18 Nov.",
+   "paises": {
+    "PS": "conflito",
+    "IL": "fora"
+   },
+   "mortos_2026": 1302
+  },
+  {
+   "id": "siria",
+   "tipo": "conflito",
+   "nome_pt": "Conflitos na Síria",
+   "nome_en": "Conflicts in Syria",
+   "partes_pt": "Governo de transição × Estado Islâmico, grupos locais; posições israelenses",
+   "partes_en": "Transitional government vs Islamic State and local groups; Israeli positions",
+   "desde": "2011",
+   "situacao_pt": "Vários conflitos menores depois de Assad.",
+   "situacao_en": "Several smaller conflicts after Assad.",
+   "paises": {
+    "SY": "conflito"
+   }
+  },
+  {
+   "id": "iraque",
+   "tipo": "conflito",
+   "nome_pt": "Iraque",
+   "nome_en": "Iraq",
+   "partes_pt": "Forças iraquianas × forças dos EUA e de Israel (registro preliminar)",
+   "partes_en": "Iraqi forces vs US and Israeli forces (provisional coding)",
+   "desde": "2026",
+   "situacao_pt": "Conflito novo ligado à guerra do Irã.",
+   "situacao_en": "New conflict linked to the Iran war.",
+   "paises": {
+    "IQ": "conflito"
+   }
+  },
+  {
+   "id": "paquistao-afeganistao",
+   "tipo": "conflito",
+   "nome_pt": "Paquistão × Afeganistão",
+   "nome_en": "Pakistan vs Afghanistan",
+   "partes_pt": "Paquistão × governo talibã",
+   "partes_en": "Pakistan vs the Taliban government",
+   "desde": "2025",
+   "situacao_pt": "Trocas de ataques na fronteira desde fevereiro.",
+   "situacao_en": "Cross-border strikes since February.",
+   "paises": {
+    "AF": "conflito",
+    "PK": "guerra"
+   }
+  },
+  {
+   "id": "afeganistao-interno",
+   "tipo": "conflito",
+   "nome_pt": "Afeganistão interno",
+   "nome_en": "Afghanistan (internal)",
+   "partes_pt": "Talibã × Estado Islâmico-K e Frente de Resistência",
+   "partes_en": "Taliban vs Islamic State-K and the Resistance Front",
+   "desde": "2021",
+   "situacao_pt": "Insurgências de menor escala.",
+   "situacao_en": "Smaller-scale insurgencies.",
+   "paises": {
+    "AF": "conflito"
+   }
+  },
+  {
+   "id": "india",
+   "tipo": "conflito",
+   "nome_pt": "Índia: maoístas e Caxemira",
+   "nome_en": "India: Maoists and Kashmir",
+   "partes_pt": "Forças indianas × insurgentes maoístas; tensão com o Paquistão na Caxemira",
+   "partes_en": "Indian forces vs Maoist insurgents; tension with Pakistan in Kashmir",
+   "desde": "1967",
+   "situacao_pt": "Insurgência no centro e leste; Caxemira em alerta.",
+   "situacao_en": "Insurgency in the centre and east; Kashmir on alert.",
+   "paises": {
+    "IN": "conflito"
+   }
+  },
+  {
+   "id": "sudao-do-sul",
+   "tipo": "conflito",
+   "nome_pt": "Sudão do Sul",
+   "nome_en": "South Sudan",
+   "partes_pt": "Governo × SPLA-IO",
+   "partes_en": "Government vs SPLA-IO",
+   "desde": "2013",
+   "situacao_pt": "Combate armado abaixo do nível de guerra.",
+   "situacao_en": "Armed fighting below war level.",
+   "paises": {
+    "SS": "conflito"
+   }
+  },
+  {
+   "id": "rca",
+   "tipo": "conflito",
+   "nome_pt": "República Centro-Africana",
+   "nome_en": "Central African Republic",
+   "partes_pt": "Governo e forças russas × rebeldes",
+   "partes_en": "Government and Russian forces vs rebels",
+   "desde": "2012",
+   "situacao_pt": "Combate armado abaixo do nível de guerra.",
+   "situacao_en": "Armed fighting below war level.",
+   "paises": {
+    "CF": "conflito"
+   }
+  },
+  {
+   "id": "niger",
+   "tipo": "conflito",
+   "nome_pt": "Níger",
+   "nome_en": "Niger",
+   "partes_pt": "Exército × Estado Islâmico Sahel, JNIM e Boko Haram",
+   "partes_en": "Army vs Islamic State Sahel, JNIM and Boko Haram",
+   "desde": "2015",
+   "situacao_pt": "Combate armado abaixo do nível de guerra.",
+   "situacao_en": "Armed fighting below war level.",
+   "paises": {
+    "NE": "conflito"
+   }
+  },
+  {
+   "id": "camaroes",
+   "tipo": "conflito",
+   "nome_pt": "Camarões (regiões anglófonas)",
+   "nome_en": "Cameroon (Anglophone regions)",
+   "partes_pt": "Exército × separatistas anglófonos",
+   "partes_en": "Army vs Anglophone separatists",
+   "desde": "2017",
+   "situacao_pt": "Combate armado abaixo do nível de guerra.",
+   "situacao_en": "Armed fighting below war level.",
+   "paises": {
+    "CM": "conflito"
+   }
+  },
+  {
+   "id": "mocambique",
+   "tipo": "conflito",
+   "nome_pt": "Moçambique (Cabo Delgado)",
+   "nome_en": "Mozambique (Cabo Delgado)",
+   "partes_pt": "Forças de Moçambique e Ruanda × Estado Islâmico",
+   "partes_en": "Mozambican and Rwandan forces vs Islamic State",
+   "desde": "2017",
+   "situacao_pt": "Combate armado abaixo do nível de guerra.",
+   "situacao_en": "Armed fighting below war level.",
+   "paises": {
+    "MZ": "conflito"
+   }
+  },
+  {
+   "id": "tailandia-sul",
+   "tipo": "conflito",
+   "nome_pt": "Tailândia (sul)",
+   "nome_en": "Thailand (Deep South)",
+   "partes_pt": "Forças tailandesas × insurgentes malaio-muçulmanos",
+   "partes_en": "Thai forces vs Malay-Muslim insurgents",
+   "desde": "2004",
+   "situacao_pt": "Combate armado abaixo do nível de guerra.",
+   "situacao_en": "Armed fighting below war level.",
+   "paises": {
+    "TH": "conflito"
+   }
+  },
+  {
+   "id": "filipinas",
+   "tipo": "conflito",
+   "nome_pt": "Filipinas",
+   "nome_en": "Philippines",
+   "partes_pt": "Forças Armadas × Novo Exército do Povo e grupos islamistas",
+   "partes_en": "Armed forces vs New People's Army and Islamist groups",
+   "desde": "1969",
+   "situacao_pt": "Combate armado abaixo do nível de guerra.",
+   "situacao_en": "Armed fighting below war level.",
+   "paises": {
+    "PH": "conflito"
+   }
+  },
+  {
+   "id": "papua",
+   "tipo": "conflito",
+   "nome_pt": "Indonésia (Papua)",
+   "nome_en": "Indonesia (Papua)",
+   "partes_pt": "Forças indonésias × Exército de Libertação de Papua Ocidental",
+   "partes_en": "Indonesian forces vs West Papua National Liberation Army",
+   "desde": "1965",
+   "situacao_pt": "Combate armado abaixo do nível de guerra.",
+   "situacao_en": "Armed fighting below war level.",
+   "paises": {
+    "ID": "conflito"
+   }
+  },
+  {
+   "id": "mexico",
+   "tipo": "conflito",
+   "nome_pt": "México: cartéis",
+   "nome_en": "Mexico: cartels",
+   "partes_pt": "Cartéis entre si e contra as forças de segurança",
+   "partes_en": "Cartels against each other and the security forces",
+   "desde": "2006",
+   "situacao_pt": "Combate armado abaixo do nível de guerra.",
+   "situacao_en": "Armed fighting below war level.",
+   "paises": {
+    "MX": "conflito"
+   }
+  },
+  {
+   "id": "haiti",
+   "tipo": "conflito",
+   "nome_pt": "Haiti: gangues",
+   "nome_en": "Haiti: gangs",
+   "partes_pt": "Polícia e missão internacional × coalizão de gangues Viv Ansanm",
+   "partes_en": "Police and international mission vs the Viv Ansanm gang coalition",
+   "desde": "2021",
+   "situacao_pt": "Combate armado abaixo do nível de guerra.",
+   "situacao_en": "Armed fighting below war level.",
+   "paises": {
+    "HT": "conflito"
+   }
+  },
+  {
+   "id": "colombia",
+   "tipo": "conflito",
+   "nome_pt": "Colômbia",
+   "nome_en": "Colombia",
+   "partes_pt": "Forças Armadas × ELN, dissidências das FARC e Clan del Golfo",
+   "partes_en": "Armed forces vs ELN, FARC dissidents and Clan del Golfo",
+   "desde": "1964",
+   "situacao_pt": "Combate armado abaixo do nível de guerra.",
+   "situacao_en": "Armed fighting below war level.",
+   "paises": {
+    "CO": "conflito"
+   }
+  },
+  {
+   "id": "equador",
+   "tipo": "conflito",
+   "nome_pt": "Equador",
+   "nome_en": "Ecuador",
+   "partes_pt": "Forças Armadas × crime organizado",
+   "partes_en": "Armed forces vs organised crime",
+   "desde": "2024",
+   "situacao_pt": "Combate armado abaixo do nível de guerra.",
+   "situacao_en": "Armed fighting below war level.",
+   "paises": {
+    "EC": "conflito"
+   }
+  },
+  {
+   "id": "benin-togo",
+   "tipo": "conflito",
+   "nome_pt": "Benin e Togo (norte)",
+   "nome_en": "Benin and Togo (north)",
+   "partes_pt": "Exércitos × JNIM",
+   "partes_en": "Armies vs JNIM",
+   "desde": "2021",
+   "situacao_pt": "O conflito do Sahel chegando ao litoral.",
+   "situacao_en": "The Sahel conflict reaching the coast.",
+   "paises": {
+    "BJ": "conflito",
+    "TG": "conflito"
+   }
+  },
+  {
+   "id": "china-taiwan",
+   "tipo": "tensao",
+   "nome_pt": "China × Taiwan",
+   "nome_en": "China–Taiwan",
+   "partes_pt": "China × Taiwan",
+   "partes_en": "China vs Taiwan",
+   "desde": "2022",
+   "situacao_pt": "Pressão militar sem combate.",
+   "situacao_en": "Military pressure without fighting.",
+   "paises": {
+    "CN": "tensao",
+    "TW": "tensao"
+   }
+  },
+  {
+   "id": "russia-otan",
+   "tipo": "tensao",
+   "nome_pt": "Rússia × OTAN (flanco leste)",
+   "nome_en": "Russia–NATO (eastern flank)",
+   "partes_pt": "Rússia × Polônia e Bálticos",
+   "partes_en": "Russia vs Poland and the Baltics",
+   "desde": "2022",
+   "situacao_pt": "Ameaças e incidentes, sem combate.",
+   "situacao_en": "Threats and incidents, no fighting.",
+   "paises": {
+    "PL": "tensao",
+    "LT": "tensao",
+    "LV": "tensao",
+    "EE": "tensao"
+   }
+  },
+  {
+   "id": "etiopia-eritreia",
+   "tipo": "tensao",
+   "nome_pt": "Etiópia × Eritreia",
+   "nome_en": "Ethiopia–Eritrea",
+   "partes_pt": "Etiópia × Eritreia",
+   "partes_en": "Ethiopia vs Eritrea",
+   "desde": "2025",
+   "situacao_pt": "Ruptura diplomática e tensão na fronteira.",
+   "situacao_en": "Diplomatic rupture and border tension.",
+   "paises": {
+    "ER": "tensao"
+   }
+  },
+  {
+   "id": "eua-venezuela",
+   "tipo": "tensao",
+   "nome_pt": "EUA × Venezuela",
+   "nome_en": "US–Venezuela",
+   "partes_pt": "EUA × Venezuela",
+   "partes_en": "US vs Venezuela",
+   "desde": "2026",
+   "situacao_pt": "Operação americana em janeiro, encerrada no dia seguinte.",
+   "situacao_en": "A US operation in January, over the next day.",
+   "paises": {
+    "VE": "tensao"
+   }
+  },
+  {
+   "id": "tailandia-camboja",
+   "tipo": "tensao",
+   "nome_pt": "Tailândia × Camboja",
+   "nome_en": "Thailand–Cambodia",
+   "partes_pt": "Tailândia × Camboja",
+   "partes_en": "Thailand vs Cambodia",
+   "desde": "2025",
+   "situacao_pt": "Combates na fronteira terminaram com cessar-fogo.",
+   "situacao_en": "Border fighting ended in a ceasefire.",
+   "paises": {
+    "KH": "tensao"
+   }
+  }
+ ],
+ "paises": {
+  "AF": {
+   "situacao": "conflito",
+   "conflitos": [
+    "paquistao-afeganistao",
+    "afeganistao-interno"
+   ]
+  },
+  "BF": {
+   "situacao": "guerra",
+   "conflitos": [
+    "burkina-jnim"
+   ]
+  },
+  "BH": {
+   "situacao": "atingido",
+   "conflitos": [
+    "ira-eua-israel"
+   ]
+  },
+  "BJ": {
+   "situacao": "conflito",
+   "conflitos": [
+    "benin-togo"
+   ]
+  },
+  "CD": {
+   "situacao": "guerra",
+   "conflitos": [
+    "congo-m23"
+   ]
+  },
+  "CF": {
+   "situacao": "conflito",
+   "conflitos": [
+    "rca"
+   ]
+  },
+  "CM": {
+   "situacao": "conflito",
+   "conflitos": [
+    "camaroes"
+   ]
+  },
+  "CN": {
+   "situacao": "tensao",
+   "conflitos": [
+    "china-taiwan"
+   ]
+  },
+  "CO": {
+   "situacao": "conflito",
+   "conflitos": [
+    "colombia"
+   ]
+  },
+  "EC": {
+   "situacao": "conflito",
+   "conflitos": [
+    "equador"
+   ]
+  },
+  "EE": {
+   "situacao": "tensao",
+   "conflitos": [
+    "russia-otan"
+   ]
+  },
+  "ER": {
+   "situacao": "tensao",
+   "conflitos": [
+    "etiopia-eritreia"
+   ]
+  },
+  "ET": {
+   "situacao": "guerra",
+   "conflitos": [
+    "etiopia-fano",
+    "etiopia-tigre"
+   ]
+  },
+  "HT": {
+   "situacao": "conflito",
+   "conflitos": [
+    "haiti"
+   ]
+  },
+  "ID": {
+   "situacao": "conflito",
+   "conflitos": [
+    "papua"
+   ]
+  },
+  "IL": {
+   "situacao": "fora",
+   "conflitos": [
+    "ira-eua-israel",
+    "israel-hezbollah",
+    "israel-gaza"
+   ]
+  },
+  "IN": {
+   "situacao": "conflito",
+   "conflitos": [
+    "india"
+   ]
+  },
+  "IQ": {
+   "situacao": "conflito",
+   "conflitos": [
+    "iraque"
+   ]
+  },
+  "IR": {
+   "situacao": "guerra",
+   "conflitos": [
+    "ira-eua-israel"
+   ]
+  },
+  "JO": {
+   "situacao": "atingido",
+   "conflitos": [
+    "ira-eua-israel"
+   ]
+  },
+  "KH": {
+   "situacao": "tensao",
+   "conflitos": [
+    "tailandia-camboja"
+   ]
+  },
+  "KW": {
+   "situacao": "atingido",
+   "conflitos": [
+    "ira-eua-israel"
+   ]
+  },
+  "LB": {
+   "situacao": "conflito",
+   "conflitos": [
+    "israel-hezbollah"
+   ]
+  },
+  "LT": {
+   "situacao": "tensao",
+   "conflitos": [
+    "russia-otan"
+   ]
+  },
+  "LV": {
+   "situacao": "tensao",
+   "conflitos": [
+    "russia-otan"
+   ]
+  },
+  "ML": {
+   "situacao": "guerra",
+   "conflitos": [
+    "mali-jnim"
+   ]
+  },
+  "MM": {
+   "situacao": "guerra",
+   "conflitos": [
+    "mianmar"
+   ]
+  },
+  "MX": {
+   "situacao": "conflito",
+   "conflitos": [
+    "mexico"
+   ]
+  },
+  "MZ": {
+   "situacao": "conflito",
+   "conflitos": [
+    "mocambique"
+   ]
+  },
+  "NE": {
+   "situacao": "conflito",
+   "conflitos": [
+    "niger"
+   ]
+  },
+  "NG": {
+   "situacao": "guerra",
+   "conflitos": [
+    "nigeria-ei",
+    "nigeria-noroeste"
+   ]
+  },
+  "PH": {
+   "situacao": "conflito",
+   "conflitos": [
+    "filipinas"
+   ]
+  },
+  "PK": {
+   "situacao": "guerra",
+   "conflitos": [
+    "paquistao-ttp",
+    "paquistao-baloch",
+    "paquistao-afeganistao"
+   ]
+  },
+  "PL": {
+   "situacao": "tensao",
+   "conflitos": [
+    "russia-otan"
+   ]
+  },
+  "PS": {
+   "situacao": "conflito",
+   "conflitos": [
+    "israel-gaza"
+   ]
+  },
+  "RU": {
+   "situacao": "fora",
+   "conflitos": [
+    "russia-ucrania"
+   ]
+  },
+  "SA": {
+   "situacao": "fora",
+   "conflitos": [
+    "iemen"
+   ]
+  },
+  "SD": {
+   "situacao": "guerra",
+   "conflitos": [
+    "sudao"
+   ]
+  },
+  "SO": {
+   "situacao": "guerra",
+   "conflitos": [
+    "somalia"
+   ]
+  },
+  "SS": {
+   "situacao": "conflito",
+   "conflitos": [
+    "sudao-do-sul"
+   ]
+  },
+  "SY": {
+   "situacao": "conflito",
+   "conflitos": [
+    "siria"
+   ]
+  },
+  "TG": {
+   "situacao": "conflito",
+   "conflitos": [
+    "benin-togo"
+   ]
+  },
+  "TH": {
+   "situacao": "conflito",
+   "conflitos": [
+    "tailandia-sul"
+   ]
+  },
+  "TW": {
+   "situacao": "tensao",
+   "conflitos": [
+    "china-taiwan"
+   ]
+  },
+  "UA": {
+   "situacao": "guerra",
+   "conflitos": [
+    "russia-ucrania"
+   ]
+  },
+  "US": {
+   "situacao": "fora",
+   "conflitos": [
+    "ira-eua-israel"
+   ]
+  },
+  "VE": {
+   "situacao": "tensao",
+   "conflitos": [
+    "eua-venezuela"
+   ]
+  },
+  "YE": {
+   "situacao": "guerra",
+   "conflitos": [
+    "iemen"
+   ]
+  }
+ }
+}

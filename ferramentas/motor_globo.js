@@ -71,7 +71,7 @@
     var r = regiaoDoPais[k], grupo = paisesDoGrupo(estado.sel);
     if (!r) return { cor: P.semRegiao, op: 1 };
     var c = corDoValor(k, r);
-    return { cor: c, op: grupo && grupo.indexOf(k) < 0 ? 0.35 : 1 };
+    return { cor: c, op: grupo && grupo.indexOf(k) < 0 ? 0.35 : 1, fora: estado.cor === 'conflitos' && situacaoDe(k) === 'fora' ? 1 : 0 };
   }
   function estiloDisputa() { return { color: P.disputa, weight: 1.1 }; }
   function estiloGuerra(f) { return { color: P.guerra, weight: f && f.properties.tipo === 'ocupado' ? 1.4 : 0.8 }; }
@@ -129,6 +129,9 @@
           paint: { 'fill-color': ['coalesce', ['feature-state', 'cor'], P.semRegiao], 'fill-opacity': ['coalesce', ['feature-state', 'op'], 1] } },
         { id: 'paises-linha', type: 'line', source: 'paises', layout: { 'line-join': 'round' },
           paint: { 'line-color': P.bordaRegiao, 'line-width': 0.4, 'line-opacity': 0.9 } },
+        // lente Conflitos: contorno vermelho em quem luta fora do próprio território
+        { id: 'paises-fora', type: 'line', source: 'paises', layout: { 'line-join': 'round' },
+          paint: { 'line-color': P.conf.foraLinha, 'line-width': 2.2, 'line-opacity': ['coalesce', ['feature-state', 'fora'], 0] } },
         { id: 'macros-linha', type: 'line', source: 'macros', layout: { 'line-join': 'round' },
           paint: { 'line-color': P.bordaMacro, 'line-width': 1.6 } },
         { id: 'estados', type: 'fill', source: 'estados', layout: { visibility: 'none' }, paint: { 'fill-color': '#000', 'fill-opacity': 0 } },
@@ -203,6 +206,7 @@
     p('paises', 'fill-color', ['coalesce', ['feature-state', 'cor'], P.semRegiao]);
     p('rotulos', 'text-color', css('--rotulo')); p('rotulos', 'text-halo-color', css('--halo'));
     p('noite', 'fill-opacity', temaAtual() === 'escuro' ? 0.42 : 0.3);
+    p('paises-fora', 'line-color', P.conf.foraLinha);
   }
 
   function restyle() {

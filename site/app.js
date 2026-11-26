@@ -40,7 +40,11 @@
       fronteiras: 'Borders: Natural Earth (de facto status); disputed areas are hatched.',
       creditos: 'Map: Raccoon Mundi, with data from ',
       legTitulo: 'Geopolitical stories, last 24 h', menos: 'fewer', mais: 'more',
-      corPor: 'Color by', corPaises: 'Countries', corVolume: 'Volume', corTom: 'Tone', legTituloTom: 'Tone of the coverage, last 24 h',
+      corPor: 'Color by', corPaises: 'Countries', corConflitos: 'Conflicts', corNoticias: 'News',
+      sit: { guerra: 'At war on its territory', conflito: 'Armed conflict on its territory', fora: 'At war abroad', atingido: 'Hit as a third party', tensao: 'Tension, no fighting', nenhum: 'No conflict' },
+      legConflitos: 'Conflict status', situacaoPais: 'Conflict status', desde: 'since', mortos26: function (n) { return n.toLocaleString('en-US') + ' killed in 2026 (to 31 Oct)'; },
+      fonteConf: function (d) { return 'Raccoon Mundi classification based on UCDP, ACLED and Crisis Group, reviewed weekly. Updated ' + d + '.'; },
+      foraDica: 'outline only', terceiroDica: 'e.g. US bases hit in the Gulf', corVolume: 'Volume', corTom: 'Tone', legTituloTom: 'Tone of the coverage, last 24 h',
       tomMenos: 'more negative', tomMais: 'less negative', tomMedio: function (v) { return 'tone ' + v; },
       tomPainel: function (v) { return 'Average tone of the coverage (24 h): ' + v + ' (GDELT scale, negative = more negative wording).'; },
       legSem: 'No stories', legSemColeta: 'Not collected yet', legDisputa: 'Disputed area (Natural Earth)',
@@ -93,7 +97,11 @@
       fronteiras: 'Fronteiras: Natural Earth (situação de fato); áreas disputadas hachuradas.',
       creditos: 'Mapa: Raccoon Mundi, com dados do ',
       legTitulo: 'Notícias geopolíticas, últimas 24 h', menos: 'menos', mais: 'mais',
-      corPor: 'Cor por', corPaises: 'Países', corVolume: 'Quantidade', corTom: 'Tom', legTituloTom: 'Tom da cobertura, últimas 24 h',
+      corPor: 'Cor por', corPaises: 'Países', corConflitos: 'Conflitos', corNoticias: 'Notícias',
+      sit: { guerra: 'Em guerra no território', conflito: 'Conflito armado no território', fora: 'Em guerra fora do território', atingido: 'Terceiro atingido', tensao: 'Tensão, sem combate', nenhum: 'Sem conflito' },
+      legConflitos: 'Situação de conflito', situacaoPais: 'Situação de conflito', desde: 'desde', mortos26: function (n) { return n.toLocaleString('pt-BR') + ' mortos em 2026 (até 31/10)'; },
+      fonteConf: function (d) { return 'Classificação do Raccoon Mundi com base em UCDP, ACLED e Crisis Group, revista toda semana. Atualizada em ' + d + '.'; },
+      foraDica: 'só contorno', terceiroDica: 'ex.: bases dos EUA atingidas no Golfo', corVolume: 'Quantidade', corTom: 'Tom', legTituloTom: 'Tom da cobertura, últimas 24 h',
       tomMenos: 'mais negativo', tomMais: 'menos negativo', tomMedio: function (v) { return 'tom ' + v; },
       tomPainel: function (v) { return 'Tom médio da cobertura (24 h): ' + v + ' (escala do GDELT; negativo = linguagem mais negativa).'; },
       legSem: 'Sem notícias', legSemColeta: 'Ainda sem coleta', legDisputa: 'Área disputada (Natural Earth)',
@@ -129,6 +137,7 @@
       cores: ['#f6e3d6', '#eebfa2', '#e0916a', '#c9643a', '#a8400f'],
       tons: ['#a8352c', '#dc8a76', '#eee5d9', '#93c3bf', '#2f8580'],
       paises: ['#efe0a8', '#c5dba8', '#f3c7a4', '#d8c9e6', '#e9bfc8', '#d9c9a9'], // mapa político: vizinhos com cores diferentes
+      conf: { guerra: '#a32d2d', conflito: '#e07a3f', atingido: '#eab0bf', tensao: '#f2d38a', nenhum: '#e4e0d6', foraLinha: '#a32d2d' },
       zero: '#e9e3d7', semColeta: '#dcd7ce', semRegiao: '#e4dfd6', amostraBorda: '#d6cfc2',
       bordaRegiao: '#ffffff', bordaMacro: '#ffffff', bordaPais: '#7d776c', bordaEstado: 'rgba(255,255,255,0.95)',
       destaque: '#1f2a33', sombra: '#1f2a33', sombraOp: 0.45,
@@ -142,6 +151,7 @@
       cores: ['#4b3126', '#713c23', '#9d4b23', '#cc602b', '#f3874e'],
       tons: ['#d2604f', '#8a4a40', '#3b4046', '#3e706c', '#6ec0b8'],
       paises: ['#6d6440', '#4c6140', '#70523e', '#574c69', '#6a4651', '#5f5444'],
+      conf: { guerra: '#d9534a', conflito: '#c86a35', atingido: '#8a4f60', tensao: '#7a6638', nenhum: '#2f363d', foraLinha: '#ff7b5a' },
       zero: '#2c333a', semColeta: '#20272e', semRegiao: '#262d34', amostraBorda: '#454f58',
       bordaRegiao: '#111820', bordaMacro: '#0d151b', bordaPais: '#5b656e', bordaEstado: 'rgba(13,21,27,0.95)',
       destaque: '#f3ede3', sombra: '#000000', sombraOp: 0.8,
@@ -247,7 +257,8 @@
     if (!v.length) return [1, 2, 3, 4];
     return [0.2, 0.4, 0.6, 0.8].map(function (q) { return v[Math.floor(q * (v.length - 1))]; });
   }
-  function textoHover(k, r) { // nome + notícias (+ tom, no modo de cor por tom)
+  function textoHover(k, r) { // nome + notícias (+ tom, no modo de cor por tom; situação, na lente de conflitos)
+    if (estado.cor === 'conflitos' && k) return nomePais(k) + ' · ' + t('sit')[situacaoDe(k)];
     var tom = estado.cor === 'tom' ? (estado.modo === 'regioes' ? tomRegiao(r) : (coletado(k) ? D.tom[k] : null)) : null;
     var sufixo = tom === null || tom === undefined ? '' : ' · ' + t('tomMedio')(fmtTom(tom));
     if (estado.modo === 'regioes') { var vr = volRegiao(r); return nomeRegiao(r) + (vr === null ? '' : ' · ' + t('noticias')(vr)) + sufixo; }
@@ -265,7 +276,9 @@
     return P.tons[P.tons.length - 1];
   }
   /* cor de um país (modo Países) ou da região dele (modo Regiões), por quantidade ou por tom */
+  function situacaoDe(k) { var x = D.conf && D.conf.paises && D.conf.paises[k]; return x ? x.situacao : 'nenhum'; }
   function corDoValor(k, r) {
+    if (estado.cor === 'conflitos') { var sc = situacaoDe(k); return P.conf[sc === 'fora' ? 'nenhum' : sc] || P.conf.nenhum; } // quem luta fora ganha só o contorno
     if (estado.cor === 'paises') return D.corPais && D.corPais[k] !== undefined ? P.paises[D.corPais[k] % P.paises.length] : P.semRegiao;
     if (estado.cor === 'tom') return estado.modo === 'regioes' ? corTom(tomRegiao(r)) : corTom(coletado(k) ? D.tom[k] : null);
     return estado.modo === 'regioes' ? cor(volRegiao(r), LIMITES_REGIAO) : cor(coletado(k) ? (volPais(k) || 0) : null, LIMITES_PAIS);
@@ -429,7 +442,7 @@
   function lerRota() {
     var q = new URLSearchParams(location.hash.replace(/^#/, ''));
     if (q.get('l') === 'pt' || q.get('l') === 'en') estado.l = q.get('l');
-    estado.cor = ['volume', 'tom'].indexOf(q.get('c')) >= 0 ? q.get('c') : 'paises'; // ao abrir: cada país com a sua cor
+    estado.cor = ['volume', 'tom', 'conflitos'].indexOf(q.get('c')) >= 0 ? q.get('c') : 'paises'; // ao abrir: cada país com a sua cor
     if (['12', '24', '48'].indexOf(q.get('h')) >= 0) estado.h = +q.get('h');
     if (q.get('e') && D.estadoPorId[q.get('e')]) estado.sel = { tipo: 'e', id: q.get('e') };
     else if (q.get('a') && D.areaPorId[q.get('a')]) estado.sel = { tipo: 'a', id: q.get('a') };
@@ -459,6 +472,7 @@
       ? { fillColor: fill, fillOpacity: 1, color: P.bordaRegiao, weight: 0.4, opacity: 0.9, lineJoin: 'round' }
       : { fillColor: fill, fillOpacity: 1, color: P.bordaPais, weight: 0.8, opacity: 0.85, lineJoin: 'round' };
     if (grupo && grupo.indexOf(k) < 0) s.fillOpacity = 0.35;
+    if (estado.cor === 'conflitos' && situacaoDe(k) === 'fora') { s.color = P.conf.foraLinha; s.weight = 2.2; s.opacity = 1; }
     return s;
   }
   function estiloMacro() {
@@ -833,6 +847,17 @@
       add(el('button', { type: 'button', class: 'voltar', text: t('voltar')(nomeRegiao(p.r)), on: { click: function () { selecionar({ tipo: 'r', id: p.r }, true); } } }));
       add(el('div', { class: 'tipo', text: t('pais') + ' · ' + nomeRegiao(p.r) }));
       add(el('h2', { text: nomePais(s.id) }));
+      var conf = D.conf && D.conf.paises && D.conf.paises[s.id];
+      if (conf) { // situação de conflito: classificação curada, com o motivo e a fonte
+        add(el('div', { class: 'aviso situacao sit-' + conf.situacao }, [el('div', { class: 'titulo-aviso', text: t('situacaoPais') + ': ' + t('sit')[conf.situacao] })]
+          .concat(conf.conflitos.map(function (id) {
+            var cf = D.confPorId[id]; if (!cf) return null;
+            var meta = [estado.l === 'pt' ? cf.partes_pt : cf.partes_en, t('desde') + ' ' + cf.desde];
+            if (cf.mortos_2026) meta.push(t('mortos26')(cf.mortos_2026));
+            return el('p', {}, [el('strong', { text: estado.l === 'pt' ? cf.nome_pt : cf.nome_en }), el('br'), meta.join(' · '), el('br'),
+              el('span', { class: 'sit-texto', text: estado.l === 'pt' ? cf.situacao_pt : cf.situacao_en })]);
+          }).filter(Boolean)).concat([el('p', { class: 'fonte-conf', text: t('fonteConf')(dataCurta(D.conf.atualizado)) })])));
+      }
       if (G.guerraMeta && s.id === 'UA') add(el('p', { class: 'aviso guerra' }, [t('ocupacaoUA')(dataCurta(G.guerraMeta.data)) + ' ',
         el('a', { href: '#a=ucrania', text: t('verArea') + ' →', on: { click: function (e) { e.preventDefault(); selecionar({ tipo: 'a', id: 'ucrania' }, true); } } })]));
       var dele = D.areas.filter(function (a) { return (a.paises || []).indexOf(s.id) >= 0 && (a.id !== 'ucrania' || s.id !== 'UA'); });
@@ -949,12 +974,20 @@
   function mudarCor(m) { estado.cor = m; gravarRota(); renderLegenda(); renderPainel(); restyle(); }
   function renderLegenda() {
     var g = document.getElementById('legenda'); g.textContent = ''; g.removeAttribute('aria-hidden');
-    var porTom = estado.cor === 'tom', soPaises = estado.cor === 'paises';
+    var porTom = estado.cor === 'tom', soPaises = estado.cor === 'paises' || estado.cor === 'conflitos';
     var botao = function (m, txt) {
       return el('button', { type: 'button', 'aria-pressed': estado.cor === m ? 'true' : 'false', text: txt, on: { click: function () { mudarCor(m); } } });
     };
     g.appendChild(el('div', { class: 'cor-por-linha' }, [el('span', { text: t('corPor') }),
-      el('div', { class: 'segmentado cor-por', role: 'group', 'aria-label': t('corPor') }, [botao('paises', t('corPaises')), botao('volume', t('corVolume')), botao('tom', t('corTom'))])]));
+      el('div', { class: 'segmentado cor-por', role: 'group', 'aria-label': t('corPor') }, [botao('paises', t('corPaises')), botao('conflitos', t('corConflitos')), botao('volume', t('corNoticias')), botao('tom', t('corTom'))])]));
+    if (estado.cor === 'conflitos') {
+      g.appendChild(el('div', { text: t('legConflitos') }));
+      ['guerra', 'conflito', 'fora', 'atingido', 'tensao', 'nenhum'].forEach(function (sc) {
+        var amostra = sc === 'fora' ? 'background:' + P.conf.nenhum + ';border:2px solid ' + P.conf.foraLinha : 'background:' + P.conf[sc];
+        var dica = sc === 'fora' ? ' (' + t('foraDica') + ')' : sc === 'atingido' ? ' (' + t('terceiroDica') + ')' : '';
+        g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: amostra }), t('sit')[sc] + dica]));
+      });
+    }
     if (!soPaises) { // com cada país na sua cor, não há escala de notícias
       g.appendChild(el('div', { text: t(porTom ? 'legTituloTom' : 'legTitulo') }));
       g.appendChild(el('div', { class: 'escala' }, (porTom ? P.tons : P.cores).map(function (c) { return el('span', { style: 'background:' + c }); })));
@@ -968,6 +1001,7 @@
       g.appendChild(el('div', { class: 'linha' }, [el('span', { class: 'amostra', style: 'background:' + P.legContestado }), t('legContestado')]));
     }
     if (D.areas.length) g.appendChild(el('div', { class: 'dica', text: t('legClique') }));
+    if (estado.cor === 'conflitos' && D.conf && D.conf.atualizado) g.appendChild(el('div', { class: 'dica', text: t('fonteConf')(dataCurta(D.conf.atualizado)) }));
   }
   /* Em foco: esteira com as 5 notícias do mundo mais repercutidas. Passa sozinha e para com o mouse ou o foco;
      quem prefere menos movimento vê a lista parada, com rolagem. */
@@ -1126,9 +1160,12 @@
     carregar('data/areas.json').catch(function () { return []; }),
     carregar('data/estados.json').catch(function () { return {}; }),
     carregar('geo/estados/BR.geojson').catch(function () { return null; }),
-    carregar('data/cores_paises.json').catch(function () { return {}; })
+    carregar('data/cores_paises.json').catch(function () { return {}; }),
+    carregar('data/conflitos.json').catch(function () { return null; })
   ]).then(function (r) {
     D.corPais = r[11] || {};
+    D.conf = r[12] || { paises: {}, conflitos: [] }; D.confPorId = {};
+    (D.conf.conflitos || []).forEach(function (cf) { D.confPorId[cf.id] = cf; });
     Object.keys(r[9] || {}).forEach(function (k) {
       if (k.charAt(0) === '_') return;
       D.estados[k] = r[9][k];
